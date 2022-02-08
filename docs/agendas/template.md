@@ -47,6 +47,7 @@ In italics, you will find some additional explanations of the agenda points. You
         - IntelliJ
 
 - Read about the Moskow method
+- Next thuesday make a draft so we can discuss it during the meeting
 
 # Action points for next week (Scrum board)
 *Every week you fill the Scrum board with new action points for that week. See the to do list for the items you should implement.*
