@@ -11,7 +11,7 @@ Add your own name (do not add the names for others!) to the section below.
 | Profile Picture                                            | Name            | Email                              |
 |------------------------------------------------------------|-----------------|------------------------------------|
 | <img src="docs/profile_pictures/pf_Bryan.jfif" width="80"> | Bryan Wassenaar | B.J.A.Wassenaar@student.tudelft.nl |
-| <img src =""> | Bulboaca Alexandru-Eugen | A.Bulboaca@student.tudelft.nl |
+| <img src ="" width = "80" >| Bulboaca Alexandru-Eugen | A.Bulboaca@student.tudelft.nl |
 
 <!-- Instructions (remove once assignment has been completed -->
 <!-- - Add (only!) your own name to the table above (use Markdown formatting) -->
