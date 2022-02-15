@@ -1,4 +1,4 @@
-###Meeting notes
+## Meeting notes
 
 * Date: 15/02/2022
 * Location: Drebbelweg - 35, Instruction Room 1
