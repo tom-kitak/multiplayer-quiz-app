@@ -11,7 +11,7 @@ Add your own name (do not add the names for others!) to the section below.
 | Profile Picture                                                  | Name                     | Email                              |
 |------------------------------------------------------------------|--------------------------|------------------------------------|
 | <img src="docs/profile_pictures/pf_Bryan.jpg" width="80">        | Bryan Wassenaar          | B.J.A.Wassenaar@student.tudelft.nl |
-| <img src ="docs/profile_pictures/photo_eugen.jfif" width = "80"> | Bulboaca Alexandru-Eugen | A.Bulboaca@student.tudelft.nl      |
+| <img src ="docs/profile_pictures/pf_Eugen.jpg" width = "80"> | Bulboaca Alexandru-Eugen | A.Bulboaca@student.tudelft.nl      |
 | <img src ="docs/profile_pictures/pf_Lukasz.jpg" width = "80">    | Łukasz Rek		          | Rek@student.tudelft.nl             |
 | <img src ="docs/profile_pictures/pf_Tom.jpg" width = "80">       | Tom Kitak		      | tkitak@student.tudelft.nl             |
 
