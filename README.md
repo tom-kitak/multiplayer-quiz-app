@@ -14,6 +14,7 @@ Add your own name (do not add the names for others!) to the section below.
 | <img src ="docs/profile_pictures/pf_Eugen.jpg" width = "80"> | Bulboaca Alexandru-Eugen | A.Bulboaca@student.tudelft.nl      |
 | <img src ="docs/profile_pictures/pf_Lukasz.jpg" width = "80">    | Łukasz Rek		          | Rek@student.tudelft.nl             |
 | <img src ="docs/profile_pictures/pf_Tom.jpg" width = "80">       | Tom Kitak		      | tkitak@student.tudelft.nl             |
+| <img src ="docs/profile_pictures/pf_Laurens.jpg" width = "80"> | Laurens Michielsen | L.L.Michielsen@student.tudelft.nl | 
 
 <!-- Instructions (remove once assignment has been completed -->
 <!-- - Add (only!) your own name to the table above (use Markdown formatting) -->
