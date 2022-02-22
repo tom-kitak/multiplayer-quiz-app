@@ -8,9 +8,13 @@ Add your own name (do not add the names for others!) to the section below.
 
 ## Group members
 
-| Profile Picture | Name | Email |
-|---|---|---|
-| ![](https://eu.ui-avatars.com/api/?name=OOPP&length=4&size=50&color=DDD&background=777&font-size=0.325) | Your Name Here | Y.NameHere@student.tudelft.nl |
+| Profile Picture                                                  | Name                     | Email                              |
+|------------------------------------------------------------------|--------------------------|------------------------------------|
+| <img src="docs/profile_pictures/pf_Bryan.jpg" width="80">        | Bryan Wassenaar          | B.J.A.Wassenaar@student.tudelft.nl |
+| <img src ="docs/profile_pictures/pf_Eugen.jpg" width = "80"> | Bulboaca Alexandru-Eugen | A.Bulboaca@student.tudelft.nl      |
+| <img src ="docs/profile_pictures/pf_Lukasz.jpg" width = "80">    | Łukasz Rek		          | Rek@student.tudelft.nl             |
+| <img src ="docs/profile_pictures/pf_Tom.jpg" width = "80">       | Tom Kitak		      | tkitak@student.tudelft.nl             |
+| <img src ="docs/profile_pictures/pf_Laurens.jpg" width = "80"> | Laurens Michielsen | L.L.Michielsen@student.tudelft.nl | 
 
 <!-- Instructions (remove once assignment has been completed -->
 <!-- - Add (only!) your own name to the table above (use Markdown formatting) -->
