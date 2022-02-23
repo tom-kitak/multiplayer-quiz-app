@@ -22,32 +22,6 @@ In italics, you will find some additional explanations of the agenda points. You
 *The items below are things you should look into after the first meeting. During the meeting you can divide (some of) the work between the team members, so that everybody has something to do afterwards.*
 
  - Read Resources and Tools (on BrightSpace)
- - Make sure you have a Mattermost channel (your TA will create one for you)
- - It is your job that you and your team contribute (equally)
-	 - If there is a problem it is your job to notify the TA
- - Create a planning and put it on GitLab
-	 - Implement all items on the todo list
- - Discuss a cake rule: If you are late or not there at all, you have to bring cake (or something similar)
- - Things to research:
-	 - Scrum (see lecture 1) 
-        - How are you going to use scrum in the team?
-    - Git (see lecture 2)
-        - How does it work?
-        - What is branching?
-    - Gradle (see lecture 4)
-        - What does it do?
-        - How do you add a library to the build file?
-    - Code structure (see lecture 4)
-        - How will you use packages?
-        - What will your code structure look like? (UML)
-     - GUI
-        - OpenFX
-     - IDE
-        - Eclipse
-        - IntelliJ
-
-- Read about the Moskow method
-- Next thuesday make a draft so we can discuss it during the meeting
 
 # Action points for next week (Scrum board)
 *Every week you fill the Scrum board with new action points for that week. See the to do list for the items you should implement.*
