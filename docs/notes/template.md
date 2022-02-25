@@ -1,7 +1,7 @@
 ## Meeting notes
 
-* Date: 22/02/2022
-* Location: 
+* Date: {Insert Here}
+* Location: {Insert Here}
 * Time: 14:45-15:45
 * Attendees: Eugen Bulboaca, Tom Kitak, Laurens Michielsen, Łukasz Rek, Bryan Wassenaar
 
@@ -14,7 +14,7 @@
 * 
 
 ## Feedback round
-X
+*
 
 ## Any questions?
-X
+* 
