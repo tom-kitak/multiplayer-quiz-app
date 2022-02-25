@@ -5,6 +5,7 @@ This information can be added throughout the course, except for the names of the
 Add your own name (do not add the names for others!) to the section below.
 
 ## Description of project
+We have made a quizzz application. This application consists of a game with 2 possible game modes. First of all you can play single player. In this game mode you will try to beat your own high score by answering the questions right and as quick as possible. The other game mode is multiplayer. In multiplayer you will compete against different players to get the highest score out of the players in your lobby. The goal of the game is to have fun and become a bit more aware of our energy usage.
 
 ## Group members
 
