@@ -67,8 +67,8 @@ public class PersonController {
 
     }
 
-    @DeleteMapping(path ="delete")
-    public ResponseEntity delete(@RequestBody long id){
+    @DeleteMapping(path ="/delete/{id}")
+    public ResponseEntity delete(@PathVariable("id") long id){
         if(id < 0){
             return ResponseEntity.badRequest().build();
         }
