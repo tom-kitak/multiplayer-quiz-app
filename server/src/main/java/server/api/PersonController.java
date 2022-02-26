@@ -31,7 +31,7 @@ public class PersonController {
         if(id < 0 || !repo.existsById(id)){
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(repo.getById(id));
+        return ResponseEntity.ok(repo.findById(id).get());
     }
 
     @PostMapping(path =  "post")
@@ -56,8 +56,8 @@ public class PersonController {
         }
 
         if(repo.existsById(id)){
-            repo.getById(id).firstName = person.firstName;
-            repo.getById(id).lastName = person.lastName;
+            repo.findById(id).get().setFirstName(person.firstName);
+            repo.findById(id).get().setLastName(person.lastName);
         }
         else{
             person.setId(id);
@@ -81,6 +81,6 @@ public class PersonController {
     @GetMapping("rnd")
     public ResponseEntity<Person>  getRandomPerson(){
         var idx = random.nextInt((int) repo.count());
-        return ResponseEntity.ok(repo.getById((long) idx));
+        return ResponseEntity.ok(repo.findById((long) idx).get());
     }
 }
