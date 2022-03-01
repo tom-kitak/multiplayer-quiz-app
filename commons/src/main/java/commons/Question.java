@@ -13,7 +13,7 @@ public class Question {
     private final int rightAnswer;
     private ArrayList<Integer> wrongAnswers;
 
-    /**Generates new Question Object
+    /**Generates new Question Object.
      * @param question the String that represents the question itself
      * @param rightAnswer the integer that is the right answer to the question in wh
      */
@@ -24,7 +24,7 @@ public class Question {
     }
 
 
-    /**Generates wrong answers to the question
+    /**Generates wrong answers to the question.
      * @param rightAnswer the right answer to the question
      * @return ArrayList with 3 wrong answers;
      */
@@ -40,9 +40,7 @@ public class Question {
             return randomAnswers;
         } else {
             int min = (int) Math.round(0.49*rightAnswer);
-            int max = (int) Math.round(1.51*rightAnswer);
             while(randomAnswers.size()<3){
-                //int number = ThreadLocalRandom.current().nextInt(min, max+1);
                 double factor = Math.random();
                 int number = (int) ((factor*rightAnswer) + min);
                 if(!randomAnswers.contains(number)&&number!=rightAnswer){
@@ -76,7 +74,7 @@ public class Question {
         return this.wrongAnswers;
     }
 
-    /**checks if two objects are equal
+    /**checks if two objects are equal.
      * @param o the object we want to compare this Question with
      * @return true iff o and this Question have the same right answer and
      * the same question
