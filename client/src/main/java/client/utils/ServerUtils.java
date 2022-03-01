@@ -33,16 +33,7 @@ import jakarta.ws.rs.core.GenericType;
 public class ServerUtils {
 
     private static final String SERVER = "http://localhost:8080/";
-
-    public void getQuotesTheHardWay() throws IOException {
-        var url = new URL("http://localhost:8080/api/quotes");
-        var is = url.openConnection().getInputStream();
-        var br = new BufferedReader(new InputStreamReader(is));
-        String line;
-        while ((line = br.readLine()) != null) {
-            System.out.println(line);
-        }
-    }
+    
     //CHECKSTYLE:OFF
     public List<Quote> getQuotes() {
         return ClientBuilder.newClient(new ClientConfig()) //
