@@ -15,6 +15,9 @@
  */
 package client;
 
+import client.scenes.EndScreenCtrl;
+import client.scenes.HomeScreenCtrl;
+import client.scenes.QuizScreenCtrl;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
@@ -26,7 +29,8 @@ public class MyModule implements Module {
     @Override
     public void configure(Binder binder) {
         binder.bind(MainCtrl.class).in(Scopes.SINGLETON);
-        binder.bind(AddQuoteCtrl.class).in(Scopes.SINGLETON);
-        binder.bind(QuoteOverviewCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(HomeScreenCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(QuizScreenCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(EndScreenCtrl.class).in(Scopes.SINGLETON);
     }
 }
