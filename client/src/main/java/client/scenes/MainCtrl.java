@@ -24,34 +24,47 @@ public class MainCtrl {
 
     private Stage primaryStage;
 
-    private QuoteOverviewCtrl overviewCtrl;
-    private Scene overview;
+    private HomeScreenCtrl homeScreenCtrl;
+    private Scene homeScreen;
 
-    private AddQuoteCtrl addCtrl;
-    private Scene add;
+    private QuizScreenCtrl quizScreenCtrl;
+    private Scene quizScreen;
 
-    public void initialize(Stage primaryStage, Pair<QuoteOverviewCtrl, Parent> overview,
-            Pair<AddQuoteCtrl, Parent> add) {
+    private EndScreenCtrl endScreenCtrl;
+    private Scene endScreen;
+
+    public void initialize(Stage primaryStage,
+                           Pair<HomeScreenCtrl, Parent> homeScreenPair,
+                           Pair<QuizScreenCtrl, Parent> quizScreenPair,
+                           Pair<EndScreenCtrl, Parent> endScreenPair) {
+
         this.primaryStage = primaryStage;
-        this.overviewCtrl = overview.getKey();
-        this.overview = new Scene(overview.getValue());
 
-        this.addCtrl = add.getKey();
-        this.add = new Scene(add.getValue());
+        this.homeScreenCtrl = homeScreenPair.getKey();
+        this.homeScreen = new Scene(homeScreenPair.getValue());
 
-        showOverview();
+        this.quizScreenCtrl = quizScreenPair.getKey();
+        this.quizScreen = new Scene(quizScreenPair.getValue());
+
+        this.endScreenCtrl = endScreenPair.getKey();
+        this.endScreen = new Scene(endScreenPair.getValue());
+
+        showHomeScreen();
         primaryStage.show();
     }
 
-    public void showOverview() {
-        primaryStage.setTitle("Quotes: Overview");
-        primaryStage.setScene(overview);
-        overviewCtrl.refresh();
+    public void showHomeScreen() {
+        primaryStage.setTitle("Home Screen");
+        primaryStage.setScene(homeScreen);
     }
 
-    public void showAdd() {
-        primaryStage.setTitle("Quotes: Adding Quote");
-        primaryStage.setScene(add);
-        add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
+    public void showQuizScreen() {
+        primaryStage.setTitle("Quiz Screen");
+        primaryStage.setScene(quizScreen);
+    }
+
+    public void showEndScreen() {
+        primaryStage.setTitle("End Screen");
+        primaryStage.setScene(endScreen);
     }
 }
