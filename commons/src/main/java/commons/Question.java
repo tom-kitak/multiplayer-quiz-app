@@ -4,7 +4,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
@@ -43,7 +42,9 @@ public class Question {
             int min = (int) Math.round(0.49*rightAnswer);
             int max = (int) Math.round(1.51*rightAnswer);
             while(randomAnswers.size()<3){
-                int number = ThreadLocalRandom.current().nextInt(min, max+1);
+                //int number = ThreadLocalRandom.current().nextInt(min, max+1);
+                double factor = Math.random();
+                int number = (int) ((factor*rightAnswer) + min);
                 if(!randomAnswers.contains(number)&&number!=rightAnswer){
                     randomAnswers.add(number);
                 }
