@@ -45,7 +45,7 @@ public class QuizScreenCtrl implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Question question = server.getQuestion();
+//        Question question = server.getQuestion();
     }
 
     /**
