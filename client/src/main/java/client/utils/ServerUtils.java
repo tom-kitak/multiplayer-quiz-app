@@ -43,7 +43,7 @@ public class ServerUtils {
             System.out.println(line);
         }
     }
-
+    //CHECKSTYLE:OFF
     public List<Quote> getQuotes() {
         return ClientBuilder.newClient(new ClientConfig()) //
                 .target(SERVER).path("api/quotes") //
@@ -59,4 +59,5 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON) //
                 .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
     }
+    //CHECKSTYLE:ON
 }
