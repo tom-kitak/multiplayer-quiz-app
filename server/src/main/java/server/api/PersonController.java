@@ -5,8 +5,10 @@ import java.util.Random;
 
 import commons.Person;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
+// CHECKSTYLE:OFF
+import org.springframework.web.bind.annotation.*;
+// CHECKSTYLE:ON
 import server.database.PersonRepository;
 
 
