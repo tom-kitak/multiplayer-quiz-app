@@ -100,6 +100,9 @@ public class Question {
      */
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);
+        String result = "Question: \nquestion=" + this.question +"\nrightAnswer=" + this.rightAnswer +
+                "\nwrongAnswers=[" + wrongAnswers.get(0) +", " + wrongAnswers.get(1) + ", "
+                + wrongAnswers.get(2) + "]";
+        return result;
     }
 }
