@@ -3,7 +3,6 @@ package server.api;
 import java.util.List;
 import java.util.Random;
 
-import commons.Person;
 import org.springframework.http.ResponseEntity;
 
 // CHECKSTYLE:OFF
