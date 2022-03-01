@@ -29,8 +29,8 @@ class PlayerTest {
     @Test
     void setScore() {
         Player p = new Player("Jim");
-        p.setScore(55);
-        assertEquals(55, p.getScore());
+        p.setScore(56);
+        assertEquals(56, p.getScore());
     }
 
     @Test
