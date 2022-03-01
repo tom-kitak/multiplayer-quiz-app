@@ -33,6 +33,13 @@ public class MainCtrl {
     private EndScreenCtrl endScreenCtrl;
     private Scene endScreen;
 
+    /**
+     * This method should be adjusted if you want to add new screens.
+     * @param primaryStage
+     * @param homeScreenPair
+     * @param quizScreenPair
+     * @param endScreenPair
+     */
     public void initialize(Stage primaryStage,
                            Pair<HomeScreenCtrl, Parent> homeScreenPair,
                            Pair<QuizScreenCtrl, Parent> quizScreenPair,

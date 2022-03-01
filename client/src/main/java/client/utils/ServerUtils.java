@@ -33,7 +33,7 @@ public class ServerUtils {
 
     public Question getQuestion() {
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("/question") //
+                .target(SERVER).path("/api/question") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<Question>() {});
@@ -41,7 +41,7 @@ public class ServerUtils {
 
     public Player sendPlayerState(Player player) {
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("/player") //
+                .target(SERVER).path("/api/player") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .post(Entity.entity(player, APPLICATION_JSON), Player.class);
