@@ -1,6 +1,6 @@
 ## Meeting notes
 
-* Date: 22/02/2022
+* Date: 01/03/2022
 * Location: Drebbelweg IZ-2
 * Time: 14:45-15:45
 * Attendees: Eugen Bulboaca, Tom Kitak, Laurens Michielsen, Łukasz Rek, Bryan Wassenaar
@@ -21,13 +21,13 @@
 * Tom Kitak: agenda
 * Łukasz Rek: next week note taker
 * api endpoints: make them functional
-* Teamwork 4A
-* Łukasz Rek: Serverside and repository
-* Tom Kitak, Eugen Bulboaca, Laurens Michielsen: frontend
-* Bryan Wassenaar: serverside
+* Teamwork 4A(Friday)
+* Łukasz Rek: Serverside and repository(Sunday)
+* Tom Kitak, Eugen Bulboaca, Laurens Michielsen: frontend(Sunday)
+* Bryan Wassenaar: serverside(Sunday)
 * start developer branch
-* Finalize HCI-report
-* Activity bank: everyone makes 4 activities
+* Finalize HCI-report(Friday)
+* Activity bank: everyone makes 4 activities(Friday)
 * Make plan of implementation
 
 ## Feedback round
