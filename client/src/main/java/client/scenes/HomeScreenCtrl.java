@@ -19,7 +19,7 @@ public class HomeScreenCtrl {
 
     @FXML
     void playSingleplayerButtonPressed(ActionEvent event) {
-        mainCtrl.showQuizScreen();
+        mainCtrl.showQuizScreen(1);
     }
 
 }

@@ -65,13 +65,37 @@ public class MainCtrl {
         primaryStage.setScene(homeScreen);
     }
 
-    public void showQuizScreen() {
+    /**
+     * Method shows a new quiz screen
+     * @param questionNo indicates which question are we on
+     */
+    public void showQuizScreen(int questionNo) {
         primaryStage.setTitle("Quiz Screen");
+        ///we need to make a class for quiz screen to include all the elements,
+        ///the setter methods for this will just make use of the fact that quizScreen
+        ///is a scene. QuizScreen extends Scene
+        ///this.quizScreen.setQuestionNumber(questionNo);
         primaryStage.setScene(quizScreen);
     }
 
     public void showEndScreen() {
         primaryStage.setTitle("End Screen");
         primaryStage.setScene(endScreen);
+    }
+
+    public void showAnswers() {
+    }
+
+
+    /**
+     * The method calls for the screen to show the next quiz question
+     * @param questionNo calls the next slide as long as the question number is not 21
+     */
+    public void nextSlide(int questionNo) {
+        if(questionNo <= 20){
+            questionNo++;
+            showQuizScreen(questionNo);
+        }
+        else showEndScreen();
     }
 }
