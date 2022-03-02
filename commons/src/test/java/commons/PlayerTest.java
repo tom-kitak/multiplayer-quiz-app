@@ -3,8 +3,10 @@ package commons;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 class PlayerTest {
 
@@ -41,9 +43,30 @@ class PlayerTest {
     }
 
     @Test
+    void testInequality(){
+        Player p = new Player("Jo");
+        Player q = new Player("La");
+        assertNotEquals(p, q);
+    }
+
+    @Test
     void testToString() {
         String result = "Player: \nusername=Jim\nscore=0";
         Player p = new Player("Jim");
         assertEquals(result, p.toString());
+    }
+
+    @Test
+    void testHash(){
+        Player p = new Player("j");
+        Player q = new Player("q");
+        assertNotEquals(p.hashCode(), q.hashCode());
+    }
+
+    @Test
+    void testHash2(){
+        Player p = new Player("j");
+        Player q = new Player("j");
+        assertEquals(p.hashCode(), q.hashCode());
     }
 }
