@@ -83,10 +83,6 @@ public class MainCtrl {
         primaryStage.setScene(endScreen);
     }
 
-    public void showAnswers() {
-    }
-
-
     /**
      * The method calls for the screen to show the next quiz question
      * @param questionNo calls the next slide as long as the question number is not 21

@@ -1,6 +1,7 @@
 package client.scenes;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,11 +23,14 @@ public class QuizScreenCtrl implements Initializable {
     private TimerTask timerTask;
     private final int[] seconds = {0};
 
-    @FXML
-    private Button buttonR01C0;
+    private String correctAnswer;
+    private List<Button> listOfButtons;
 
     @FXML
     private Button buttonR0C0;
+
+    @FXML
+    private Button buttonR01C0;
 
     @FXML
     private Button buttonR0C1;
@@ -68,7 +72,10 @@ public class QuizScreenCtrl implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        listOfButtons = List.of(buttonR0C0, buttonR0C1,
+                                buttonR01C0, buttonR1C1);
 //        Question question = server.getQuestion();
+//        correctAnswer = question.
     }
 
     /**
@@ -83,12 +90,12 @@ public class QuizScreenCtrl implements Initializable {
 
 
     /**
-     * The method is called wither when any button is pressed or the seconds reach 20
+     * The method is called whether when any button is pressed or the seconds reach 20
      * The answering timer closes and the players will receive their points
      * The timer for showing the answer (5 seconds) starts, after which the next slide is shown
      */
     void rightAnswersTimer(){
-        mainCtrl.showAnswers();
+        showAnswers();
         timer.cancel();
         //player.increasePoints(20 - seconds[0])
         Timer timer = new Timer();
@@ -118,6 +125,16 @@ public class QuizScreenCtrl implements Initializable {
     @FXML
     void pressedR1C1(ActionEvent event) {
         rightAnswersTimer();
+    }
+
+    public void showAnswers(){
+        for(Button button : listOfButtons) {
+            if (button.getText().equals(correctAnswer)){
+                button.setStyle("-fx-background-color: #2986cc; ");
+            } else {
+                button.setStyle("-fx-background-color: #ff0000; ");
+            }
+        }
     }
 
 }
