@@ -75,7 +75,7 @@ public class QuizScreenCtrl implements Initializable {
         listOfButtons = List.of(buttonR0C0, buttonR0C1,
                                 buttonR01C0, buttonR1C1);
 //        Question question = server.getQuestion();
-//        correctAnswer = question.
+        correctAnswer = "Correct answer will be extracted from question";
     }
 
     /**
@@ -127,6 +127,10 @@ public class QuizScreenCtrl implements Initializable {
         rightAnswersTimer();
     }
 
+    /**
+     * When called buttons that contain incorrect answer will be colored red.
+     * Correct option will be colored green.
+     */
     public void showAnswers(){
         for(Button button : listOfButtons) {
             if (button.getText().equals(correctAnswer)){

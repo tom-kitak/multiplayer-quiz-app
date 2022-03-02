@@ -26,6 +26,10 @@ import client.scenes.MainCtrl;
 
 public class MyModule implements Module {
 
+    /**
+     * indicating which objects we want to have as singletons
+     * @param binder
+     */
     @Override
     public void configure(Binder binder) {
         binder.bind(MainCtrl.class).in(Scopes.SINGLETON);
