@@ -4,7 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import com.google.inject.Inject;
 import client.utils.ServerUtils;
-import commons.Question;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.event.ActionEvent;
@@ -49,7 +49,7 @@ public class QuizScreenCtrl implements Initializable {
     }
 
     /**
-     * Main ctrl used here only for demonstration
+     * Main ctrl used here only for demonstration.
      * @param event
      */
     @FXML

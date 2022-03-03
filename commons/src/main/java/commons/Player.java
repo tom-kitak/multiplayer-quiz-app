@@ -56,4 +56,12 @@ public class Player {
     public int hashCode() {
         return Objects.hash(username, score);
     }
+
+    /**
+     * @return a String representation of this Player Object
+     */
+    @Override
+    public String toString(){
+        return "Player:\nusername: " + this.username +"\nscore: "+ this.score;
+    }
 }

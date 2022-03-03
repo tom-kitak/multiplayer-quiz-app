@@ -1,11 +1,10 @@
 package commons;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+
 
 import java.util.ArrayList;
 import java.util.Objects;
 
-import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 public class Question {
 
@@ -100,6 +99,8 @@ public class Question {
      */
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);
+        return "Question: \nquestion: " + this.question + "\nrightAnswer: " + this.rightAnswer
+                + "\nwrongAnswers: " + this.wrongAnswers.get(0) + ", " + this.wrongAnswers.get(1) +
+                ", " + this.wrongAnswers.get(2);
     }
 }
