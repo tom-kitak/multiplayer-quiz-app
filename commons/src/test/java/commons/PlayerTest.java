@@ -80,4 +80,12 @@ class PlayerTest {
         assertTrue(test.contains("Player:")&&test.contains("username")&&test.contains("Ja")
                     && test.contains("score:") &&test.contains("0"));
     }
+
+    @Test
+    void testUpdateScore(){
+        Player player3 = new Player("Jim");
+        player3.setScore(55);
+        player3.upDateScore(5);
+        assertTrue(60 == player3.getScore());
+    }
 }

@@ -10,12 +10,12 @@
 
 <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.QuizScreenCtrl">
    <children>
-      <Text fx:id="questionField" strokeType="OUTSIDE" strokeWidth="0.0" text="Question text">
+      <Text fx:id="questionField" accessibleText="~" strokeType="OUTSIDE" strokeWidth="0.0" text="Question text" wrappingWidth="448.2719268798828">
          <font>
             <Font size="20.0" />
          </font>
       </Text>
-      <GridPane alignment="CENTER">
+      <GridPane accessibleText="*" alignment="CENTER">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -25,10 +25,10 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="buttonR01C0" mnemonicParsing="false" onAction="#pressedR1C0" prefHeight="26.0" prefWidth="334.0" text="buttonR01C0" GridPane.rowIndex="1" />
-            <Button fx:id="buttonR1C1" mnemonicParsing="false" onAction="#pressedR1C1" prefHeight="26.0" prefWidth="385.0" text="buttonR1C1" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Button fx:id="buttonR0C0" mnemonicParsing="false" onAction="#pressedR0C0" prefHeight="26.0" prefWidth="318.0" text="buttonR0C0" textAlignment="CENTER" />
-            <Button fx:id="buttonR0C1" mnemonicParsing="false" onAction="#pressedR0C1" prefHeight="26.0" prefWidth="306.0" text="buttonR0C1" GridPane.columnIndex="1" />
+            <Button fx:id="buttonR01C0" accessibleText="~" mnemonicParsing="false" onAction="#pressedR1C0" prefHeight="26.0" prefWidth="334.0" text="buttonR01C0" GridPane.rowIndex="1" />
+            <Button fx:id="buttonR1C1" accessibleText="~" mnemonicParsing="false" onAction="#pressedR1C1" prefHeight="26.0" prefWidth="385.0" text="buttonR1C1" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Button fx:id="buttonR0C0" accessibleText="~" mnemonicParsing="false" onAction="#pressedR0C0" prefHeight="26.0" prefWidth="318.0" text="buttonR0C0" textAlignment="CENTER" />
+            <Button fx:id="buttonR0C1" accessibleText="~" mnemonicParsing="false" onAction="#pressedR0C1" prefHeight="26.0" prefWidth="306.0" text="buttonR0C1" GridPane.columnIndex="1" />
          </children>
       </GridPane>
    </children>

@@ -15,6 +15,7 @@
  */
 package client.scenes;
 
+import commons.SingleGame;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -65,13 +66,18 @@ public class MainCtrl {
         primaryStage.setScene(homeScreen);
     }
 
-    public void showQuizScreen() {
+    public void showQuizScreen(SingleGame game) {
         primaryStage.setTitle("Quiz Screen");
+        quizScreenCtrl.startGame(game);
         primaryStage.setScene(quizScreen);
     }
 
     public void showEndScreen() {
         primaryStage.setTitle("End Screen");
         primaryStage.setScene(endScreen);
+    }
+
+    public void showAnswers(){
+
     }
 }
