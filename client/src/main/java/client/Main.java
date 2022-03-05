@@ -49,6 +49,15 @@ public class Main extends Application {
                 "client", "scenes", "EndScreen.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
+        primaryStage.setOnCloseRequest(e -> {
+            e.consume();
+            closeProgram();
+        });
         mainCtrl.initialize(primaryStage, HomeScreenPair, QuizScreenPair, EndScreenPair);
+    }
+
+    private void closeProgram() {
+        Boolean answer = ConfirmBoxCtrl.display("Alert", "Are you sure you want to close?");
+        if(answer) System.exit(0);
     }
 }

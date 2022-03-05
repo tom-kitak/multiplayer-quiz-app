@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.ConfirmBoxCtrl;
 import client.utils.ServerUtils;
 import commons.Player;
 import commons.Question;
@@ -49,6 +50,10 @@ public class HomeScreenCtrl {
         mainCtrl.showQuizScreen(game);
     }
 
-
+    @FXML
+    void exitButtonPressed(ActionEvent event){
+        boolean answer = ConfirmBoxCtrl.display("Alert", "Are you sure you want to exit?");
+        if(answer) System.exit(0);
+    }
 
 }

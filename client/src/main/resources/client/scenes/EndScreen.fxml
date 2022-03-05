@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.EndScreenCtrl">
+<AnchorPane prefHeight="526.0" prefWidth="836.0" style="-fx-background-color: #3b3f46ff#3b3f46ff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.EndScreenCtrl">
    <children>
-      <Button mnemonicParsing="false" onAction="#returnToHomePagePressed" text="Return to home page">
+      <Button layoutX="312.0" layoutY="243.0" mnemonicParsing="false" onAction="#returnToHomePagePressed" style="-fx-background-color: #888888ff;" text="Return to home page">
          <font>
             <Font size="21.0" />
          </font>
       </Button>
    </children>
-</VBox>
+</AnchorPane>
