@@ -98,4 +98,11 @@ class SingleGameTest {
         assertTrue(result.contains("SingleGame")&&result.contains(player.toString())
                     &&result.contains(question.toString())&&result.contains("questionNumber"));
     }
+
+    @Test
+    void testNextQuestion(){
+        Question question2 = new Question("new", 1200);
+        game1.nextQuestion(question2);
+        assertTrue(game1.getQuestionNumber() == 2 && game1.getCurrentQuestion().equals(question2));
+    }
 }

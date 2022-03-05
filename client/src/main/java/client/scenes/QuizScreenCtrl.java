@@ -73,24 +73,31 @@ public class QuizScreenCtrl implements Initializable {
      */
     @FXML
     void pressedR0C0() {
-        mainCtrl.showEndScreen();
+        showRightAnswer();
+        setNextQuestion();
 
     }
 
     @FXML
     void pressedR0C1(ActionEvent event) {
-
-
+        showRightAnswer();
+        setNextQuestion();
     }
+
+
 
     @FXML
     void pressedR1C0(ActionEvent event) {
+        showRightAnswer();
+        setNextQuestion();
 
 
     }
 
     @FXML
     void pressedR1C1(ActionEvent event) {
+        showRightAnswer();
+        setNextQuestion();
     }
 
     /**Sets the fields of the QuizScreen with the given question and answers.
@@ -166,6 +173,20 @@ public class QuizScreenCtrl implements Initializable {
     public void stopTimer(){
         timer.cancel();
         timerOver = true;
+    }
+
+    /**
+     * Will set the Next Question or redirect to the endscreen based on the SingleGame's questionNumber.
+     */
+    public void setNextQuestion() {
+        if(this.game.getQuestionNumber()>=20){
+            mainCtrl.showEndScreen();
+        } else {
+            // Question nextQuestion = server.getQuestion();
+            Question nextQuestion = new Question("descriptive", 120000);
+            this.game.nextQuestion(nextQuestion);
+            setQuestionFields(this.game);
+        }
     }
 
 

@@ -90,4 +90,12 @@ public class SingleGame {
         return "SingleGame: \n" + this.player.toString() +"\nquestionNumber: " + this.questionNumber
                 +"\n" + this.currentQuestion.toString();
     }
+
+    /**Updates the questionNumber and currentQuestion of this SingleGame.
+     * @param question the new currentQuestion
+     */
+    public void nextQuestion(Question question){
+        this.currentQuestion = question;
+        this.questionNumber++;
+    }
 }
