@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import client.ConfirmBoxCtrl;
 import com.google.inject.Inject;
 import client.utils.ServerUtils;
 
@@ -98,6 +99,12 @@ public class QuizScreenCtrl implements Initializable {
     void pressedR1C1(ActionEvent event) {
         showRightAnswer();
         setNextQuestion();
+    }
+
+    @FXML
+    void backButton(ActionEvent event){
+        boolean answer = ConfirmBoxCtrl.display("Alert", "Are you sure you want to exit the game session?");
+        if(answer) mainCtrl.showEndScreen();
     }
 
     /**Sets the fields of the QuizScreen with the given question and answers.
