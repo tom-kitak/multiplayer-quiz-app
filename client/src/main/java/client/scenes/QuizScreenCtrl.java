@@ -20,7 +20,6 @@ import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 
 public class QuizScreenCtrl implements Initializable {
-
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private Timer timer;
@@ -74,14 +73,16 @@ public class QuizScreenCtrl implements Initializable {
      */
     @FXML
     void pressedR0C0() {
-        showRightAnswer();
+        showRightAnswer(buttonR0C0);
+        waitingToSeeAnswers(buttonR0C0);
         setNextQuestion();
 
     }
 
     @FXML
     void pressedR0C1(ActionEvent event) {
-        showRightAnswer();
+        showRightAnswer(buttonR0C1);
+        waitingToSeeAnswers(buttonR0C1);
         setNextQuestion();
     }
 
@@ -89,22 +90,23 @@ public class QuizScreenCtrl implements Initializable {
 
     @FXML
     void pressedR1C0(ActionEvent event) {
-        showRightAnswer();
+        showRightAnswer(buttonR01C0);
+        waitingToSeeAnswers(buttonR01C0);
         setNextQuestion();
-
 
     }
 
     @FXML
     void pressedR1C1(ActionEvent event) {
-        showRightAnswer();
+        showRightAnswer(buttonR1C1);
+        waitingToSeeAnswers(buttonR1C1);
         setNextQuestion();
     }
 
     @FXML
-    void backButton(ActionEvent event){
+    void backButton(){
         boolean answer = ConfirmBoxCtrl.display("Alert", "Are you sure you want to exit the game session?");
-        if(answer) mainCtrl.showEndScreen();
+        if(answer) mainCtrl.showHomeScreen();
     }
 
     /**Sets the fields of the QuizScreen with the given question and answers.
@@ -114,11 +116,10 @@ public class QuizScreenCtrl implements Initializable {
         Question question = game.getCurrentQuestion();
         ArrayList<Integer> answers = new ArrayList<>(4);
         answers.add(question.getRightAnswer());
+        seconds[0] = 0;
 
         ArrayList<Integer> wrongAnswers = question.getWrongAnswers();
-        for(int i : wrongAnswers){
-            answers.add(i);
-        }
+        answers.addAll(wrongAnswers);
 
         ArrayList<Button> buttons = new ArrayList<>(4);
         buttons.add(buttonR0C0);
@@ -173,13 +174,93 @@ public class QuizScreenCtrl implements Initializable {
         timer.scheduleAtFixedRate(timerTask, 0, 1000);
     }
 
-    public void showRightAnswer(){
+    /**
+     * Compares all the buttons to see which one is the correct one to indicate the player.
+     * @param button is the button the player has chosen
+     */
+    public void showRightAnswer(Button button){
+        if(Integer.parseInt(buttonR1C1.getText()) == game.getCurrentQuestion().getRightAnswer())
+            rightColor(buttonR1C1);
+        if(Integer.parseInt(buttonR01C0.getText()) == game.getCurrentQuestion().getRightAnswer())
+            rightColor(buttonR01C0);
+        if(Integer.parseInt(buttonR0C1.getText()) == game.getCurrentQuestion().getRightAnswer())
+            rightColor(buttonR0C1);
+        if(Integer.parseInt(buttonR0C0.getText()) == game.getCurrentQuestion().getRightAnswer())
+            rightColor(buttonR0C0);
+        if(Integer.parseInt(button.getText()) == game.getCurrentQuestion().getRightAnswer())
+            rightColor(button);
+        else wrongColor(button);
 
+    }
+
+    public void rightColor(Button button){
+        button.setStyle("-fx-background-color: #f2a443ff; ");
+    }
+
+    public void normalColor(Button button){
+        button.setStyle("-fx-background-color: #888888ff; ");
+    }
+
+    private void wrongColor(Button button) {
+        button.setStyle("-fx-background-color: #916868ff; ");
     }
 
     public void stopTimer(){
         timer.cancel();
         timerOver = true;
+    }
+
+
+    /**
+     * The function makes the leaves 3 seconds for the user to see the right answer.
+     * It also disables the buttons meanwhile.
+     */
+    public void waitingToSeeAnswers(Button button){
+        Timer timer = new Timer();
+        seconds[0] = 0;
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if(seconds[0] < 3) {
+                    seconds[0]++;
+                    disableAll();
+                }
+                else {
+                    initializeButtons();
+                    timer.cancel();
+                }
+            }
+        };
+        timer.scheduleAtFixedRate(task, 0, 1000);
+
+    }
+
+    /**
+     * Disables all button and makes their opacity normal again.
+     */
+    public void disableAll(){
+        buttonR0C0.setDisable(true);
+        buttonR0C0.setOpacity(1);
+        buttonR0C1.setDisable(true);
+        buttonR0C1.setOpacity(1);
+        buttonR01C0.setDisable(true);
+        buttonR01C0.setOpacity(1);
+        buttonR1C1.setDisable(true);
+        buttonR1C1.setOpacity(1);
+    }
+
+    /**
+     * Gives the buttons their initial color and makes them functinable again.
+     */
+    public void initializeButtons(){
+        buttonR0C0.setDisable(false);
+        buttonR0C1.setDisable(false);
+        buttonR01C0.setDisable(false);
+        buttonR1C1.setDisable(false);
+        normalColor(buttonR0C0);
+        normalColor(buttonR01C0);
+        normalColor(buttonR0C1);
+        normalColor(buttonR1C1);
     }
 
     /**
