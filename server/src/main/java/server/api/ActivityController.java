@@ -1,6 +1,5 @@
 package server.api;
 
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.ResponseEntity;
 //CHECKSTYLE:OFF
 import org.springframework.web.bind.annotation.*;
