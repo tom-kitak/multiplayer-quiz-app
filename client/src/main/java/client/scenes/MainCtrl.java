@@ -34,6 +34,9 @@ public class MainCtrl {
     private EndScreenCtrl endScreenCtrl;
     private Scene endScreen;
 
+    private Scene howToPlayScreen;
+    private HowToPlayCtrl howToPlayCtrl;
+
     /**
      * This method should be adjusted if you want to add new screens.
      * @param primaryStage
@@ -44,7 +47,8 @@ public class MainCtrl {
     public void initialize(Stage primaryStage,
                            Pair<HomeScreenCtrl, Parent> homeScreenPair,
                            Pair<QuizScreenCtrl, Parent> quizScreenPair,
-                           Pair<EndScreenCtrl, Parent> endScreenPair) {
+                           Pair<EndScreenCtrl, Parent> endScreenPair,
+                           Pair<HowToPlayCtrl, Parent> howToPlayPair) {
 
         this.primaryStage = primaryStage;
 
@@ -56,6 +60,9 @@ public class MainCtrl {
 
         this.endScreenCtrl = endScreenPair.getKey();
         this.endScreen = new Scene(endScreenPair.getValue());
+
+        this.howToPlayCtrl = howToPlayPair.getKey();
+        this.howToPlayScreen = new Scene(howToPlayPair.getValue());
 
         showHomeScreen();
         primaryStage.show();
@@ -79,5 +86,10 @@ public class MainCtrl {
 
     public void showAnswers(){
 
+    }
+
+    public void showHowToPlay() {
+        primaryStage.setTitle("How To Play");
+        primaryStage.setScene(howToPlayScreen);
     }
 }

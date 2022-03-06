@@ -56,4 +56,9 @@ public class HomeScreenCtrl {
         if(answer) System.exit(0);
     }
 
+    @FXML
+    void howToPlay(){
+        mainCtrl.showHowToPlay();
+    }
+
 }
