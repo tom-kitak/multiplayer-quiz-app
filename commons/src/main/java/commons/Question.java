@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 
+
 public class Question {
 
     private final String question;
@@ -99,8 +100,9 @@ public class Question {
      */
     @Override
     public String toString() {
-        return "Question: \nquestion: " + this.question + "\nrightAnswer: " + this.rightAnswer
-                + "\nwrongAnswers: " + this.wrongAnswers.get(0) + ", " + this.wrongAnswers.get(1) +
-                ", " + this.wrongAnswers.get(2);
+        String result = "Question: \nquestion=" + this.question +"\nrightAnswer=" + this.rightAnswer +
+                "\nwrongAnswers=[" + wrongAnswers.get(0) +", " + wrongAnswers.get(1) + ", "
+                + wrongAnswers.get(2) + "]";
+        return result;
     }
 }
