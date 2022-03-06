@@ -1,6 +1,6 @@
 package server.api;
 
-import commons.Question;
+import commons.Question_Bryan;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +26,7 @@ public class QuestionController {
     }
 
     @GetMapping(path = {"", "/"})
-    public ResponseEntity<Question> getQuestion() {
+    public ResponseEntity<Question_Bryan> getQuestion() {
         if (repo.count() < 4)
             return ResponseEntity.internalServerError().build();
         Activity[] activities = new Activity[4];
@@ -39,7 +39,7 @@ public class QuestionController {
                 i--;
             }
         }
-        Question question = convertActivity(activities);
+        Question_Bryan question = convertActivity(activities);
         if (question == null)
             return ResponseEntity.internalServerError().build();
         return ResponseEntity.ok(question);

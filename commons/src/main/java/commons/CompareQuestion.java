@@ -1,6 +1,6 @@
 package commons;
 
-public class CompareQuestion extends Question{
+public class CompareQuestion extends Question_Bryan {
     /**
      * Constructor matching super for comparison question.
      * @param answers The answers for this question, index 0 is the correct one.

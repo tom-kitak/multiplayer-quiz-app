@@ -5,7 +5,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public abstract class Question {
+public abstract class Question_Bryan {
 
     private final String[] answerTitles;
     private final int[] answerWattages;
@@ -15,7 +15,7 @@ public abstract class Question {
      * @param answerTitles The answers for this question, index 0 is the correct one.
      * @param answerWattages The wattage's for this question, index 0 is the correct one.
      */
-    public Question(String[] answerTitles, int[] answerWattages) {
+    public Question_Bryan(String[] answerTitles, int[] answerWattages) {
         if (answerTitles != null && answerWattages != null && answerTitles.length == 4 && answerWattages.length == 4) {
             this.answerTitles = answerTitles;
             this.answerWattages = answerWattages;
@@ -65,9 +65,9 @@ public abstract class Question {
     public boolean equals(Object o) {
         if (this == o) return true;
 
-        if (!(o instanceof Question)) return false;
+        if (!(o instanceof Question_Bryan)) return false;
 
-        Question question = (Question) o;
+        Question_Bryan question = (Question_Bryan) o;
 
         return new EqualsBuilder().append(answerTitles, question.answerTitles)
                 .append(answerWattages, question.answerWattages).isEquals();
