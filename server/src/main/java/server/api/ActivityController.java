@@ -47,7 +47,7 @@ public class ActivityController {
     public ResponseEntity<Activity> add(@RequestBody Activity activity) {
 
         // Activities with id 0 can't get deleted for some reason.
-        if(activity.getSource() == null || activity.getTitle() == null || activity.id == 0) {
+        if(activity == null || activity.getTitle() == null || activity.getWh() == 0) {
             return ResponseEntity.badRequest().build();
         }
 

@@ -28,8 +28,8 @@ public class ActivityControllerTest {
     @MockBean
     ActivityRepository activityRepository;
 
-    Activity record_1 = new Activity("title", 2, "source");
-    Activity record_2 = new Activity("title2", 3, "source2");
+    Activity record_1 = new Activity("title", 2);
+    Activity record_2 = new Activity("title2", 3);
 
 
     @Test

@@ -55,4 +55,16 @@ public class Activity {
     public int getWh() {
         return wh;
     }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setWh(int wh) {
+        this.wh = wh;
+    }
 }
