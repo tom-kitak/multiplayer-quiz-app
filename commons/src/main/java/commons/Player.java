@@ -50,7 +50,7 @@ public class Player {
     }
 
     /**
-     * @return a hashcode for this Player
+     * @return a hashcode for this Player.
      */
     @Override
     public int hashCode() {
@@ -58,11 +58,18 @@ public class Player {
     }
 
     /**
-     * @return String representation of this Player
+     * @return a String representation of this Player Object.
      */
     @Override
     public String toString(){
-        String result = "Player: \nusername=" + this.username + "\nscore=" + this.score;
-        return result;
+        return "Player:\nusername: " + this.username +"\nscore: "+ this.score;
+    }
+
+
+    /**
+     * @param add the number of points to add
+     */
+    public void upDateScore(int add) {
+        this.score = score + add;
     }
 }
