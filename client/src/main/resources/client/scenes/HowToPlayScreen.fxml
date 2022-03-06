@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="526.0" prefWidth="836.0" style="-fx-background-color: #3b3f46ff#3b3f46ff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.HowToPlayCtrl">
+   <children>
+      <Button layoutX="69.0" layoutY="59.0" mnemonicParsing="false" onAction="#returnToHomePagePressed" onMouseClicked="#returnToHomePagePressed" prefHeight="37.0" prefWidth="88.0" style="-fx-background-color: #f2a443ff#f2a443ff;" text="Back" />
+      <TextField alignment="CENTER" layoutX="309.0" layoutY="108.0" prefHeight="52.0" prefWidth="220.0" style="-fx-background-color: #f2a443ff#f2a443ff #f2a443ff#f2a443ff;" text="How To Play?" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f2a443" height="219.0" layoutX="203.0" layoutY="234.0" stroke="BLACK" strokeType="INSIDE" width="432.0" />
+      <Text layoutX="210.0" layoutY="255.0" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Questions will appear on the screen and you have a limited amount of time to answer them.&#10;&#10;The faster you answer the more points you get if the answer is correct.No answer no points.&#10;&#10;There are multiple choice questions and open questions where you estimate the answer.&#10;&#10;Have fun!" textAlignment="CENTER" wrappingWidth="417.990966796875" />
+   </children>
+</AnchorPane>

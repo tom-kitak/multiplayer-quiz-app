@@ -22,10 +22,11 @@ import java.net.URISyntaxException;
 
 import client.scenes.EndScreenCtrl;
 import client.scenes.HomeScreenCtrl;
+import client.scenes.HowToPlayCtrl;
 import client.scenes.QuizScreenCtrl;
+import client.scenes.MainCtrl;
 import com.google.inject.Injector;
 
-import client.scenes.MainCtrl;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -47,8 +48,19 @@ public class Main extends Application {
                 "client", "scenes", "QuizScreen.fxml");
         var EndScreenPair = FXML.load(EndScreenCtrl.class,
                 "client", "scenes", "EndScreen.fxml");
+        var HowToPlayPair = FXML.load(HowToPlayCtrl.class,
+                "client", "scenes", "HowToPlayScreen.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage, HomeScreenPair, QuizScreenPair, EndScreenPair);
+        primaryStage.setOnCloseRequest(e -> {
+            e.consume();
+            closeProgram();
+        });
+        mainCtrl.initialize(primaryStage, HomeScreenPair, QuizScreenPair, EndScreenPair, HowToPlayPair);
+    }
+
+    private void closeProgram() {
+        boolean answer = ConfirmBoxCtrl.display("Alert", "Are you sure you want to close?");
+        if(answer) System.exit(0);
     }
 }
