@@ -2,7 +2,7 @@ package server.util;
 
 import commons.CompareQuestion;
 import commons.Question_Bryan;
-import server.Activity;
+import commons.Activity;
 
 public class QuestionConversion {
 
