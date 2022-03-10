@@ -14,6 +14,8 @@ import commons.CompareQuestion;
 import commons.Question;
 import commons.WattageQuestion;
 import commons.SingleGame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 
 import javafx.fxml.Initializable;
@@ -27,6 +29,10 @@ public class QuizScreenCtrl implements Initializable {
     private int[] seconds;
     private SingleGame game;
     private boolean timerOver;
+    // Default value can be changed later
+    private final int roundTime = 30;
+    private Timeline timeline;
+    private int timeLeft = roundTime;
 
     @FXML
     private Button buttonR01C0;
@@ -46,6 +52,9 @@ public class QuizScreenCtrl implements Initializable {
     @FXML
     private Button QuestionNumber;
 
+    @FXML
+    private Text timerSpot;
+
     @Inject
     public QuizScreenCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
@@ -55,6 +64,7 @@ public class QuizScreenCtrl implements Initializable {
         seconds[0] = 0;
         this.timerOver = false;
         this.game = null;
+        this.timeLeft = roundTime;
     }
 
     /**
@@ -208,24 +218,39 @@ public class QuizScreenCtrl implements Initializable {
     public void startGame(SingleGame game){
         this.game = game;
         setQuestionFields(game);
+        startRoundTimer();
     }
 
-
-
-    public void startTimer(){
-        TimerTask timerTask = new TimerTask() {
+    public void startRoundTimer(){
+        Timer roundTimer = new Timer();
+        timeLeft = roundTime;
+        timerSpot.setText(convertTimer(timeLeft));
+        TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                if (seconds[0] <= 19)
-                    seconds[0]++;
-                else {
-                    stopTimer();
-                }
-
+                Platform.runLater( () -> {
+                    timerSpot.setText(convertTimer(timeLeft--));
+                    if(timeLeft <= 0 ) {
+                        this.cancel();
+                    }
+                });
             }
         };
-        timer.scheduleAtFixedRate(timerTask, 0, 1000);
+        roundTimer.scheduleAtFixedRate(task, 1, 1000);
     }
+
+
+    public String convertTimer(int time) {
+        StringBuilder resultingTime = new StringBuilder();
+        if(time < 600) {
+            resultingTime.append(0);
+        }
+        resultingTime.append(time / 60);
+        resultingTime.append(":");
+        resultingTime.append(time % 60);
+        return resultingTime.toString();
+    }
+
 
     /**
      * Compares all the buttons to see which one is the correct one to indicate the player.
