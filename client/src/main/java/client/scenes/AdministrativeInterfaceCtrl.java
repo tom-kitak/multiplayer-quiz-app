@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Activity;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -53,7 +54,8 @@ public class AdministrativeInterfaceCtrl implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        colActivityTitle.setCellValueFactory(a -> new SimpleStringProperty());
+        colActivityTitle.setCellValueFactory(col -> new SimpleStringProperty(col.getValue().title));
+        colConsumption.setCellValueFactory(col -> new SimpleIntegerProperty(col.getValue().wh));
     }
 
     @FXML
