@@ -53,7 +53,7 @@ public class AdministrativeInterfaceCtrl implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        colActivityTitle.setCellValueFactory(a -> new SimpleStringProperty());
     }
 
     @FXML
@@ -63,7 +63,7 @@ public class AdministrativeInterfaceCtrl implements Initializable {
 
     @FXML
     void backPressed(ActionEvent event) {
-
+        mainCtrl.showHomeScreen();
     }
 
 
