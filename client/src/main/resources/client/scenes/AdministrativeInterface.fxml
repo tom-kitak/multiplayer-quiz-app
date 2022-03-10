@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AdministrativeInterfaceCtrl">
    <children>
-      <Text layoutX="159.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="T" />
+      <TableView layoutX="6.0" layoutY="61.0" prefHeight="332.0" prefWidth="588.0">
+        <columns>
+          <TableColumn prefWidth="352.79998779296875" text="Activity Title" />
+          <TableColumn prefWidth="134.4000244140625" text="Consuption in Wh" />
+            <TableColumn minWidth="0.0" prefWidth="101.5999755859375" />
+        </columns>
+      </TableView>
+      <Button layoutX="471.0" layoutY="14.0" mnemonicParsing="false" onAction="#addActivityPressed" prefHeight="40.0" prefWidth="114.0" text="Add Activity">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
+      <Text layoutX="195.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Administrator Tools">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Text>
+      <Button layoutX="14.0" layoutY="13.0" mnemonicParsing="false" onAction="#backPressed" prefHeight="40.0" prefWidth="114.0" text="Back">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>
