@@ -20,11 +20,7 @@ import static com.google.inject.Guice.createInjector;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import client.scenes.EndScreenCtrl;
-import client.scenes.HomeScreenCtrl;
-import client.scenes.HowToPlayCtrl;
-import client.scenes.QuizScreenCtrl;
-import client.scenes.MainCtrl;
+import client.scenes.*;
 import com.google.inject.Injector;
 
 import javafx.application.Application;
@@ -50,13 +46,16 @@ public class Main extends Application {
                 "client", "scenes", "EndScreen.fxml");
         var HowToPlayPair = FXML.load(HowToPlayCtrl.class,
                 "client", "scenes", "HowToPlayScreen.fxml");
+        var administrativeInterfacePair = FXML.load(AdministrativeInterfaceCtrl.class,
+                "client", "scenes", "AdministrativeInterface.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         primaryStage.setOnCloseRequest(e -> {
             e.consume();
             closeProgram();
         });
-        mainCtrl.initialize(primaryStage, HomeScreenPair, QuizScreenPair, EndScreenPair, HowToPlayPair);
+        mainCtrl.initialize(primaryStage, HomeScreenPair, QuizScreenPair,
+                EndScreenPair, HowToPlayPair, administrativeInterfacePair);
     }
 
     private void closeProgram() {

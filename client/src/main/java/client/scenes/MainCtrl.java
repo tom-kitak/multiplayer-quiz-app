@@ -34,8 +34,11 @@ public class MainCtrl {
     private EndScreenCtrl endScreenCtrl;
     private Scene endScreen;
 
-    private Scene howToPlayScreen;
     private HowToPlayCtrl howToPlayCtrl;
+    private Scene howToPlayScreen;
+
+    private AdministrativeInterfaceCtrl administrativeInterfaceCtrl;
+    private Scene administrativeInterfaceScene;
 
     /**
      * This method should be adjusted if you want to add new screens.
@@ -48,7 +51,8 @@ public class MainCtrl {
                            Pair<HomeScreenCtrl, Parent> homeScreenPair,
                            Pair<QuizScreenCtrl, Parent> quizScreenPair,
                            Pair<EndScreenCtrl, Parent> endScreenPair,
-                           Pair<HowToPlayCtrl, Parent> howToPlayPair) {
+                           Pair<HowToPlayCtrl, Parent> howToPlayPair,
+                           Pair<AdministrativeInterfaceCtrl, Parent> administrativeInterfacePair) {
 
         this.primaryStage = primaryStage;
 
@@ -63,6 +67,9 @@ public class MainCtrl {
 
         this.howToPlayCtrl = howToPlayPair.getKey();
         this.howToPlayScreen = new Scene(howToPlayPair.getValue());
+
+        this.administrativeInterfaceCtrl = administrativeInterfacePair.getKey();
+        this.administrativeInterfaceScene = new Scene(administrativeInterfacePair.getValue());
 
         showHomeScreen();
         primaryStage.show();
@@ -91,5 +98,10 @@ public class MainCtrl {
     public void showHowToPlay() {
         primaryStage.setTitle("How To Play");
         primaryStage.setScene(howToPlayScreen);
+    }
+
+    public void showAdministratorInterface(){
+        primaryStage.setTitle("Administrator tools");
+        primaryStage.setScene(administrativeInterfaceScene);
     }
 }

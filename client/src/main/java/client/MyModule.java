@@ -15,14 +15,10 @@
  */
 package client;
 
-import client.scenes.EndScreenCtrl;
-import client.scenes.HomeScreenCtrl;
-import client.scenes.QuizScreenCtrl;
+import client.scenes.*;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
-
-import client.scenes.MainCtrl;
 
 public class MyModule implements Module {
 
@@ -32,5 +28,7 @@ public class MyModule implements Module {
         binder.bind(HomeScreenCtrl.class).in(Scopes.SINGLETON);
         binder.bind(QuizScreenCtrl.class).in(Scopes.SINGLETON);
         binder.bind(EndScreenCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(HowToPlayCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(AdministrativeInterfaceCtrl.class).in(Scopes.SINGLETON);
     }
 }

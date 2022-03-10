@@ -61,4 +61,9 @@ public class HomeScreenCtrl {
         mainCtrl.showHowToPlay();
     }
 
+    @FXML
+    void adminToolsPressed(ActionEvent event) {
+        mainCtrl.showAdministratorInterface();
+    }
+
 }
