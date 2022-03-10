@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import commons.Activity;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,6 +28,22 @@ public class AdministrativeInterfaceCtrl implements Initializable {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+
+    private ObservableList<Activity> data;
+
+    @FXML
+    private TableView<Activity> table;
+
+    @FXML
+    private TableColumn<Activity, String> colActivityTitle;
+
+    @FXML
+    private TableColumn<Activity, Integer> colConsumption;
+
+    @FXML
+    private TableColumn<?, ?> colDelete;
+
+
 
     @Inject
     public AdministrativeInterfaceCtrl(ServerUtils server, MainCtrl mainCtrl) {
