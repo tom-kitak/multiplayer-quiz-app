@@ -1,9 +1,43 @@
 package client.scenes;
 
-        import javafx.event.ActionEvent;
-        import javafx.fxml.FXML;
+import client.utils.ServerUtils;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 
-public class AdministrativeInterfaceCtrl {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import com.google.inject.Inject;
+
+import client.utils.ServerUtils;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+
+public class AdministrativeInterfaceCtrl implements Initializable {
+
+    private final ServerUtils server;
+    private final MainCtrl mainCtrl;
+
+    @Inject
+    public AdministrativeInterfaceCtrl(ServerUtils server, MainCtrl mainCtrl) {
+        this.server = server;
+        this.mainCtrl = mainCtrl;
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+    }
 
     @FXML
     void addActivityPressed(ActionEvent event) {
@@ -14,5 +48,6 @@ public class AdministrativeInterfaceCtrl {
     void backPressed(ActionEvent event) {
 
     }
+
 
 }
