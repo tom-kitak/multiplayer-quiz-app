@@ -45,8 +45,8 @@ public class HomeScreenCtrl {
         Player player = new Player(name);
 
         //Question question = server.getQuestion();
-        WattageQuestion question = new WattageQuestion(new String[] {"a", "b", "c", "d"},
-                new int[] {55, 88, 9, 22});
+        Question question = new WattageQuestion(new String[] {"a", "b", "c", "d"},
+                            new int[] {1, 2, 3, 4});
         SingleGame game = new SingleGame(player, question);
 
         mainCtrl.showQuizScreen(game);

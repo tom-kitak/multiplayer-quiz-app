@@ -16,7 +16,6 @@ import commons.WattageQuestion;
 import commons.SingleGame;
 import javafx.fxml.FXML;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
@@ -113,7 +112,7 @@ public class QuizScreenCtrl implements Initializable {
     }
 
     /**
-     * Handles the actions when the backButton is pressed
+     * Handles the actions when the backButton is pressed.
      */
     @FXML
     void backButton(){
@@ -385,7 +384,7 @@ public class QuizScreenCtrl implements Initializable {
                         new int[] {555, 777, 888, 999});
             }
             this.game.nextQuestion(nextQuestion);
-            setQuestionFields(this.game); // updates questionNumber
+            setQuestionFields(this.game);
         }
     }
 

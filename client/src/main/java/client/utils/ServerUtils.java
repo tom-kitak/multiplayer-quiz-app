@@ -19,7 +19,6 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import commons.Player;
 import commons.Question;
-import commons.WattageQuestion;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -30,12 +29,12 @@ public class ServerUtils {
 
     private static final String SERVER = "http://localhost:8080/";
 
-    public WattageQuestion getQuestion() {
+    public Question getQuestion() {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("/api/question")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .get(new GenericType<WattageQuestion>() {});
+                .get(new GenericType<Question>() {});
     }
 
     public Player sendPlayerState(Player player) {
