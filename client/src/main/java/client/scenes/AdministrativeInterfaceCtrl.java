@@ -84,9 +84,9 @@ public class AdministrativeInterfaceCtrl implements Initializable {
     }
 
     public void refresh() {
-//        var activities = server.getAllActivities();
-//        data = FXCollections.observableList(activities);
-//        table.setItems(data);
+        var activities = server.getAllActivities();
+        data = FXCollections.observableList(activities);
+        table.setItems(data);
     }
 }
 
