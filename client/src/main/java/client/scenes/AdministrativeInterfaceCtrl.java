@@ -24,6 +24,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class AdministrativeInterfaceCtrl implements Initializable {
 
@@ -43,7 +44,7 @@ public class AdministrativeInterfaceCtrl implements Initializable {
 
     @FXML
     private TableColumn<Activity, Long> colId;
-    
+
     @Inject
     public AdministrativeInterfaceCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
@@ -52,8 +53,9 @@ public class AdministrativeInterfaceCtrl implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        colActivityTitle.setCellValueFactory(col -> new SimpleStringProperty(col.getValue().title));
-        colConsumption.setCellValueFactory(col -> new SimpleIntegerProperty(col.getValue().wh));
+        colActivityTitle.setCellValueFactory(new PropertyValueFactory<Activity, String>("title"));
+        colConsumption.setCellValueFactory(new PropertyValueFactory<Activity, Integer>("wh"));
+        colId.setCellValueFactory(new PropertyValueFactory<Activity, Long>("id"));
     }
 
     @FXML
