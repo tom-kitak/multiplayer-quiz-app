@@ -15,6 +15,7 @@
  */
 package client.scenes;
 
+import commons.Activity;
 import commons.SingleGame;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -43,6 +44,9 @@ public class MainCtrl {
     private AddActivityCtrl addActivityCtrl;
     private Scene addActivityScreen;
 
+    private EditActivityCtrl editActivityCtrl;
+    private Scene editActivityScreen;
+
     /**
      * This method should be adjusted if you want to add new screens.
      * @param primaryStage
@@ -56,7 +60,8 @@ public class MainCtrl {
                            Pair<EndScreenCtrl, Parent> endScreenPair,
                            Pair<HowToPlayCtrl, Parent> howToPlayPair,
                            Pair<AdministrativeInterfaceCtrl, Parent> administrativeInterfacePair,
-                           Pair<AddActivityCtrl, Parent> addActivityPair) {
+                           Pair<AddActivityCtrl, Parent> addActivityPair,
+                           Pair<EditActivityCtrl, Parent> editActivityPair) {
 
         this.primaryStage = primaryStage;
 
@@ -77,6 +82,9 @@ public class MainCtrl {
 
         this.addActivityCtrl = addActivityPair.getKey();
         this.addActivityScreen = new Scene(addActivityPair.getValue());
+
+        this.editActivityCtrl = editActivityPair.getKey();
+        this.editActivityScreen = new Scene(addActivityPair.getValue());
 
         showHomeScreen();
         primaryStage.show();
@@ -113,5 +121,12 @@ public class MainCtrl {
         primaryStage.setTitle("Add Activity");
         primaryStage.setScene(addActivityScreen);
         addActivityScreen.setOnKeyPressed(e -> addActivityCtrl.keyPressed(e));
+    }
+
+    public void showEditActivity(Activity activity) {
+        primaryStage.setTitle("Edit Activity");
+        primaryStage.setScene(editActivityScreen);
+        editActivityScreen.setOnKeyPressed(e -> editActivityCtrl.keyPressed(e));
+        editActivityCtrl.setActivity(activity);
     }
 }

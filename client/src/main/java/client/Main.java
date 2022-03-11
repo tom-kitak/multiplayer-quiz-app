@@ -50,6 +50,8 @@ public class Main extends Application {
                 "client", "scenes", "AdministrativeInterface.fxml");
         var AddActivityPair = FXML.load(AddActivityCtrl.class,
                 "client", "scenes", "AddActivityInterface.fxml");
+        var EditActivityPair = FXML.load(EditActivityCtrl.class,
+                "client", "scenes", "EditActivityInterface.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         primaryStage.setOnCloseRequest(e -> {
@@ -57,7 +59,8 @@ public class Main extends Application {
             closeProgram();
         });
         mainCtrl.initialize(primaryStage, HomeScreenPair, QuizScreenPair,
-                EndScreenPair, HowToPlayPair, AdministrativeInterfacePair, AddActivityPair);
+                EndScreenPair, HowToPlayPair, AdministrativeInterfacePair,
+                AddActivityPair, EditActivityPair);
     }
 
     private void closeProgram() {
