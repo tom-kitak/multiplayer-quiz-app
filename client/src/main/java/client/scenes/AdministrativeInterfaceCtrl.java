@@ -85,6 +85,9 @@ public class AdministrativeInterfaceCtrl implements Initializable {
         refresh();
     }
 
+    /**
+     * Helper method that makes a request to the server and updates the columns with new data.
+     */
     public void refresh() {
         var activities = server.getAllActivities();
         data = FXCollections.observableList(activities);
