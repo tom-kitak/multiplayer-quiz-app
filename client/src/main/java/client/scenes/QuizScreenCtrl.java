@@ -30,9 +30,10 @@ public class QuizScreenCtrl implements Initializable {
     private SingleGame game;
     private boolean timerOver;
     // Default value can be changed later
-    private final int roundTime = 30;
+    private final int roundTime = 15;
     private Timeline timeline;
     private int timeLeft = roundTime;
+    private TimerTask roundTask;
 
     @FXML
     private Button buttonR01C0;
@@ -84,9 +85,7 @@ public class QuizScreenCtrl implements Initializable {
     @FXML
     void pressedR0C0() {
         showRightAnswer(buttonR0C0);
-        waitingToSeeAnswers(buttonR0C0);
-        setNextQuestion();
-
+        waitingToSeeAnswers();
     }
 
     /**
@@ -95,8 +94,7 @@ public class QuizScreenCtrl implements Initializable {
     @FXML
     void pressedR0C1() {
         showRightAnswer(buttonR0C1);
-        waitingToSeeAnswers(buttonR0C1);
-        setNextQuestion();
+        waitingToSeeAnswers();
     }
 
 
@@ -106,9 +104,7 @@ public class QuizScreenCtrl implements Initializable {
     @FXML
     void pressedR1C0() {
         showRightAnswer(buttonR01C0);
-        waitingToSeeAnswers(buttonR01C0);
-        setNextQuestion();
-
+        waitingToSeeAnswers();
     }
 
     /**
@@ -117,7 +113,7 @@ public class QuizScreenCtrl implements Initializable {
     @FXML
     void pressedR1C1() {
         showRightAnswer(buttonR1C1);
-        waitingToSeeAnswers(buttonR1C1);
+        waitingToSeeAnswers();
         setNextQuestion();
     }
 
@@ -225,18 +221,19 @@ public class QuizScreenCtrl implements Initializable {
         Timer roundTimer = new Timer();
         timeLeft = roundTime;
         timerSpot.setText(convertTimer(timeLeft));
-        TimerTask task = new TimerTask() {
+        roundTask = new TimerTask() {
             @Override
             public void run() {
                 Platform.runLater( () -> {
                     timerSpot.setText(convertTimer(timeLeft--));
-                    if(timeLeft <= 0 ) {
+                    if(timeLeft < 0) {
                         this.cancel();
+                        waitingToSeeAnswers();
                     }
                 });
             }
         };
-        roundTimer.scheduleAtFixedRate(task, 1, 1000);
+        roundTimer.scheduleAtFixedRate(roundTask, 1, 1000);
     }
 
 
@@ -247,6 +244,9 @@ public class QuizScreenCtrl implements Initializable {
         }
         resultingTime.append(time / 60);
         resultingTime.append(":");
+        if(time < 10) {
+            resultingTime.append(0);
+        }
         resultingTime.append(time % 60);
         return resultingTime.toString();
     }
@@ -344,9 +344,35 @@ public class QuizScreenCtrl implements Initializable {
      * The function makes the leaves 3 seconds for the user to see the right answer.
      * It also disables the buttons meanwhile.
      */
-    public void waitingToSeeAnswers(Button button){
+    public void waitingToSeeAnswers(){
         Timer timer = new Timer();
         seconds[0] = 0;
+        roundTask.cancel();
+        if(timeLeft <= 0) {
+            if(game.getCurrentQuestion() instanceof CompareQuestion) {
+                String correct = game.getCurrentQuestion().getCorrectAnswer();
+                if(buttonR0C0.getText().equals(correct)) {
+                    rightColor(buttonR0C0);
+                } else if(buttonR0C1.getText().equals(correct)) {
+                    rightColor(buttonR0C1);
+                } else if(buttonR01C0.getText().equals(correct)) {
+                    rightColor(buttonR01C0);
+                } else if(buttonR1C1.getText().equals(correct)) {
+                    rightColor(buttonR1C1);
+                }
+            } else {
+                int correct = game.getCurrentQuestion().getCorrectWattage();
+                if(Integer.parseInt(buttonR0C0.getText()) == correct) {
+                    rightColor(buttonR0C0);
+                } else if(Integer.parseInt(buttonR0C1.getText()) == correct) {
+                    rightColor(buttonR0C1);
+                } else if(Integer.parseInt(buttonR01C0.getText()) == correct) {
+                    rightColor(buttonR01C0);
+                } else if(Integer.parseInt(buttonR1C1.getText()) == correct) {
+                    rightColor(buttonR1C1);
+                }
+            }
+        }
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -357,11 +383,14 @@ public class QuizScreenCtrl implements Initializable {
                 else {
                     initializeButtons();
                     timer.cancel();
+                    startRoundTimer();
+                    Platform.runLater( () -> {
+                        setNextQuestion();
+                    });
                 }
             }
         };
         timer.scheduleAtFixedRate(task, 0, 1000);
-
     }
 
     /**
