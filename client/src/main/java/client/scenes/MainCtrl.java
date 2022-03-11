@@ -116,5 +116,6 @@ public class MainCtrl {
     public void showAddActivity() {
         primaryStage.setTitle("Add Activity");
         primaryStage.setScene(addActivityScreen);
+//        addActivityScreen.setOnKeyPressed(e -> AddActivityCtrl.keyPressed(e));
     }
 }
