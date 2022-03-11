@@ -60,7 +60,7 @@ public class AdministrativeInterfaceCtrl implements Initializable {
 
     @FXML
     void addActivityPressed(ActionEvent event) {
-
+        mainCtrl.showAddActivity();
     }
 
     @FXML

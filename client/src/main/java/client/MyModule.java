@@ -30,5 +30,7 @@ public class MyModule implements Module {
         binder.bind(EndScreenCtrl.class).in(Scopes.SINGLETON);
         binder.bind(HowToPlayCtrl.class).in(Scopes.SINGLETON);
         binder.bind(AdministrativeInterfaceCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(AddActivityCtrl.class).in(Scopes.SINGLETON);
+
     }
 }

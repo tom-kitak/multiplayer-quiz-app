@@ -40,6 +40,9 @@ public class MainCtrl {
     private AdministrativeInterfaceCtrl administrativeInterfaceCtrl;
     private Scene administrativeInterfaceScene;
 
+    private AddActivityCtrl addActivityCtrl;
+    private Scene addActivityScreen;
+
     /**
      * This method should be adjusted if you want to add new screens.
      * @param primaryStage
@@ -52,7 +55,8 @@ public class MainCtrl {
                            Pair<QuizScreenCtrl, Parent> quizScreenPair,
                            Pair<EndScreenCtrl, Parent> endScreenPair,
                            Pair<HowToPlayCtrl, Parent> howToPlayPair,
-                           Pair<AdministrativeInterfaceCtrl, Parent> administrativeInterfacePair) {
+                           Pair<AdministrativeInterfaceCtrl, Parent> administrativeInterfacePair,
+                           Pair<AddActivityCtrl, Parent> addActivityPair) {
 
         this.primaryStage = primaryStage;
 
@@ -70,6 +74,9 @@ public class MainCtrl {
 
         this.administrativeInterfaceCtrl = administrativeInterfacePair.getKey();
         this.administrativeInterfaceScene = new Scene(administrativeInterfacePair.getValue());
+
+        this.addActivityCtrl = addActivityPair.getKey();
+        this.addActivityScreen = new Scene(addActivityPair.getValue());
 
         showHomeScreen();
         primaryStage.show();
@@ -101,8 +108,13 @@ public class MainCtrl {
     }
 
     public void showAdministratorInterface(){
-        primaryStage.setTitle("Administrator tools");
+        primaryStage.setTitle("Administrator Tools");
         primaryStage.setScene(administrativeInterfaceScene);
         administrativeInterfaceCtrl.refresh();
+    }
+
+    public void showAddActivity() {
+        primaryStage.setTitle("Add Activity");
+        primaryStage.setScene(addActivityScreen);
     }
 }
