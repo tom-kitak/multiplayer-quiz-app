@@ -103,5 +103,6 @@ public class MainCtrl {
     public void showAdministratorInterface(){
         primaryStage.setTitle("Administrator tools");
         primaryStage.setScene(administrativeInterfaceScene);
+        administrativeInterfaceCtrl.refresh();
     }
 }
