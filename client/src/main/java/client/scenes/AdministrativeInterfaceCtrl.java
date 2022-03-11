@@ -42,10 +42,8 @@ public class AdministrativeInterfaceCtrl implements Initializable {
     private TableColumn<Activity, Integer> colConsumption;
 
     @FXML
-    private TableColumn<?, ?> colDelete;
-
-
-
+    private TableColumn<Activity, Long> colId;
+    
     @Inject
     public AdministrativeInterfaceCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
@@ -68,5 +66,23 @@ public class AdministrativeInterfaceCtrl implements Initializable {
         mainCtrl.showHomeScreen();
     }
 
+    @FXML
+    void deleteActivityPressed(ActionEvent event) {
 
+    }
+
+    @FXML
+    void editActivityPressed(ActionEvent event) {
+
+    }
+
+    @FXML
+    void refreshPressed(ActionEvent event) {
+
+    }
 }
+
+
+
+
+

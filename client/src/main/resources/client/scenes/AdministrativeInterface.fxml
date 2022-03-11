@@ -4,32 +4,52 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AdministrativeInterfaceCtrl">
+<AnchorPane prefHeight="478.0" prefWidth="744.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AdministrativeInterfaceCtrl">
    <children>
-      <TableView fx:id="table" layoutX="6.0" layoutY="61.0" prefHeight="332.0" prefWidth="588.0">
+      <TableView fx:id="table" layoutX="6.0" layoutY="61.0" prefHeight="327.0" prefWidth="730.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
         <columns>
-          <TableColumn fx:id="colActivityTitle" prefWidth="352.79998779296875" text="Activity Title" />
-          <TableColumn fx:id="colConsumption" prefWidth="134.4000244140625" text="Consuption in Wh" />
-            <TableColumn fx:id="colDelete" minWidth="0.0" prefWidth="101.5999755859375" />
+            <TableColumn fx:id="colId" prefWidth="81.60003662109375" text="Id" />
+          <TableColumn fx:id="colActivityTitle" prefWidth="512.7999877929688" text="Activity Title" />
+          <TableColumn fx:id="colConsumption" prefWidth="138.0" text="Consuption in Wh" />
         </columns>
       </TableView>
-      <Button layoutX="471.0" layoutY="14.0" mnemonicParsing="false" onAction="#addActivityPressed" prefHeight="40.0" prefWidth="114.0" text="Add Activity">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Button>
       <Text layoutX="195.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Administrator Tools">
          <font>
             <Font size="24.0" />
          </font>
       </Text>
-      <Button layoutX="14.0" layoutY="13.0" mnemonicParsing="false" onAction="#backPressed" prefHeight="40.0" prefWidth="114.0" text="Back">
+      <Button layoutX="14.0" layoutY="13.0" mnemonicParsing="false" onAction="#backPressed" prefHeight="40.0" prefWidth="114.0" text="Back" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
+      <HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="393.0" prefHeight="70.0" prefWidth="486.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#addActivityPressed" prefHeight="53.0" prefWidth="114.0" text="Add">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#editActivityPressed" prefHeight="53.0" prefWidth="114.0" text="Edit">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#deleteActivityPressed" prefHeight="53.0" prefWidth="114.0" text="Delete">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#refreshPressed" prefHeight="53.0" prefWidth="114.0" text="Refresh">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
    </children>
 </AnchorPane>
