@@ -84,7 +84,7 @@ public class MainCtrl {
         this.addActivityScreen = new Scene(addActivityPair.getValue());
 
         this.editActivityCtrl = editActivityPair.getKey();
-        this.editActivityScreen = new Scene(addActivityPair.getValue());
+        this.editActivityScreen = new Scene(editActivityPair.getValue());
 
         showHomeScreen();
         primaryStage.show();
