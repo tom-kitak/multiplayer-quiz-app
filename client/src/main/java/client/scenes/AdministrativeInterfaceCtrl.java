@@ -70,12 +70,16 @@ public class AdministrativeInterfaceCtrl implements Initializable {
 
     @FXML
     void deleteActivityPressed(ActionEvent event) {
-
+        server.deleteActivity(table.getSelectionModel().getSelectedItem());
+        refresh();
     }
 
     @FXML
     void editActivityPressed(ActionEvent event) {
-
+//        Activity activity = table.getSelectionModel().getSelectedItem();
+//        mainCtrl.showAddActivity();
+//        addActivityCtrl.setTitleField(activity.getTitle());
+//        addActivityCtrl.setWhField(Integer.valueOf(activity.getWh()));
     }
 
     @FXML

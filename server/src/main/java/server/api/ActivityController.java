@@ -22,7 +22,7 @@ public class ActivityController {
     /**
      * @return Returns all objects stored in the database.
      */
-    @GetMapping("/getAll")
+    @GetMapping(path = {"", "/", "/getAll"})
     public List<Activity> getAll() {
         return repo.findAll();
     }
