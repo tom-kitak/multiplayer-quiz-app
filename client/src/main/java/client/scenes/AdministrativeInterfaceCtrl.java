@@ -80,7 +80,13 @@ public class AdministrativeInterfaceCtrl implements Initializable {
 
     @FXML
     void refreshPressed(ActionEvent event) {
+        refresh();
+    }
 
+    public void refresh() {
+//        var activities = server.getAllActivities();
+//        data = FXCollections.observableList(activities);
+//        table.setItems(data);
     }
 }
 
