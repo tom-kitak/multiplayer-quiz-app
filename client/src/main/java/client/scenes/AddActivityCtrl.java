@@ -58,18 +58,18 @@ public class AddActivityCtrl {
         return new Activity(titleField.getText(), Integer.valueOf(whField.getText()));
     }
 
-//    public void keyPressed(KeyEvent e) {
-//        switch (e.getCode()) {
-//            case ENTER:
-//                submitActivity();
-//                break;
-//            case ESCAPE:
-//                cancel();
-//                break;
-//            default:
-//                break;
-//        }
-//    }
+    public void keyPressed(KeyEvent e) {
+        switch (e.getCode()) {
+            case ENTER:
+                submitActivity();
+                break;
+            case ESCAPE:
+                cancel();
+                break;
+            default:
+                break;
+        }
+    }
 
     private void clearFields() {
         titleField.clear();

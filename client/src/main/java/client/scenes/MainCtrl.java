@@ -98,10 +98,6 @@ public class MainCtrl {
         primaryStage.setScene(endScreen);
     }
 
-    public void showAnswers(){
-
-    }
-
     public void showHowToPlay() {
         primaryStage.setTitle("How To Play");
         primaryStage.setScene(howToPlayScreen);
@@ -116,6 +112,6 @@ public class MainCtrl {
     public void showAddActivity() {
         primaryStage.setTitle("Add Activity");
         primaryStage.setScene(addActivityScreen);
-//        addActivityScreen.setOnKeyPressed(e -> AddActivityCtrl.keyPressed(e));
+        addActivityScreen.setOnKeyPressed(e -> addActivityCtrl.keyPressed(e));
     }
 }
