@@ -15,10 +15,19 @@
  */
 package client;
 
-import client.scenes.*;
+
+import client.scenes.EndScreenCtrl;
+import client.scenes.HomeScreenCtrl;
+import client.scenes.MainCtrl;
+import client.scenes.QuizScreenCtrl;
+import client.scenes.HowToPlayCtrl;
+import client.scenes.AdministrativeInterfaceCtrl;
+import client.scenes.AddActivityCtrl;
+import client.scenes.EditActivityCtrl;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
+
 
 public class MyModule implements Module {
 
