@@ -66,7 +66,7 @@ public class WattageQuestion extends Question{
      */
     @Override
     public String getQuestionDescription() {
-        return this.getAnswerTitles()[0];
+        return "How many watt hours does " + this.getAnswerTitles()[0] + " consume?";
     }
 
 

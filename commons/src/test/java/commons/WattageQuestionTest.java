@@ -142,7 +142,7 @@ public class WattageQuestionTest {
 
     @Test
     void testGetQuestionDescription(){
-        assertEquals("a", question1.getQuestionDescription());
+        assertEquals("How many watt hours does a consume?", question1.getQuestionDescription());
     }
 
 
