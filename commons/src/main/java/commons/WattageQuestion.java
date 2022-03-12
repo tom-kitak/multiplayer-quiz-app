@@ -5,7 +5,6 @@ package commons;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.util.Objects;
 
 
 public class WattageQuestion extends Question{
