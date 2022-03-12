@@ -114,7 +114,6 @@ public class QuizScreenCtrl implements Initializable {
     void pressedR1C1() {
         showRightAnswer(buttonR1C1);
         waitingToSeeAnswers();
-        setNextQuestion();
     }
 
     /**
