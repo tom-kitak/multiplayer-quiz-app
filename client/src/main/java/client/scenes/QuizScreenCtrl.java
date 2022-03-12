@@ -216,10 +216,14 @@ public class QuizScreenCtrl implements Initializable {
         startRoundTimer();
     }
 
+    /**
+     *  Starts the round timer and stops it when it reaches 0.
+     */
     public void startRoundTimer(){
         Timer roundTimer = new Timer();
         timeLeft = roundTime;
         timerSpot.setText(convertTimer(timeLeft));
+        // If someone wants to stop the timer, they have to use roundTask.cancel().
         roundTask = new TimerTask() {
             @Override
             public void run() {
@@ -236,14 +240,19 @@ public class QuizScreenCtrl implements Initializable {
     }
 
 
-    public String convertTimer(int time) {
+    /** Converts the time in seconds to the displayed String.
+     * @param time remaining time in seconds
+     * @return a string in the minutes:seconds format with
+     *  leading zeroes if required
+     */
+    public static String convertTimer(int time) {
         StringBuilder resultingTime = new StringBuilder();
         if(time < 600) {
             resultingTime.append(0);
         }
         resultingTime.append(time / 60);
         resultingTime.append(":");
-        if(time < 10) {
+        if(time % 60 < 10) {
             resultingTime.append(0);
         }
         resultingTime.append(time % 60);
