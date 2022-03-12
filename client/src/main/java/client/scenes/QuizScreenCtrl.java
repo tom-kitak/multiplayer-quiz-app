@@ -436,15 +436,15 @@ public class QuizScreenCtrl implements Initializable {
         if(this.game.getQuestionNumber()>=20){
             mainCtrl.showEndScreen();
         } else {
-            //Question nextQuestion = server.getQuestion();
-            Question nextQuestion;
-            if(this.game.getQuestionNumber()%2==0){
-                nextQuestion = new WattageQuestion(new String[] {"a", "b", "c", "d"},
-                        new int[] {555, 777, 888, 999});
-            } else {
-                nextQuestion = new CompareQuestion(new String[] {"a", "b", "c", "d"},
-                        new int[] {555, 777, 888, 999});
-            }
+            Question nextQuestion = server.getQuestion();
+//            Question nextQuestion;
+//            if(this.game.getQuestionNumber()%2==0){
+//                nextQuestion = new WattageQuestion(new String[] {"a", "b", "c", "d"},
+//                        new int[] {555, 777, 888, 999});
+//            } else {
+//                nextQuestion = new CompareQuestion(new String[] {"a", "b", "c", "d"},
+//                        new int[] {555, 777, 888, 999});
+//            }
             this.game.nextQuestion(nextQuestion);
             setQuestionFields(this.game);
         }
