@@ -96,7 +96,7 @@ public class WattageQuestionTest {
     }
 
     @Test
-    void testequals(){
+    void testEquals(){
         assertEquals(question1, question2);
     }
 

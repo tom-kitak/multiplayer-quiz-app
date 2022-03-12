@@ -42,13 +42,6 @@ public class WattageQuestion extends Question{
                 .append(this.getAnswerWattages(), question1.getAnswerWattages()).isEquals();
     }
 
-    /**
-     * @return hashcode for this Question
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.getAnswerTitles(), this.getAnswerWattages());
-    }
 
     /**
      * @return a String representation of the object in Multi_Line_Style
@@ -69,9 +62,13 @@ public class WattageQuestion extends Question{
         return "How many watt hours does " + this.getAnswerTitles()[0] + " consume?";
     }
 
-
-
-
-
-
+    /**
+     * Hashcode generator for questions.
+     *
+     * @return Hashcode of this question.
+     */
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

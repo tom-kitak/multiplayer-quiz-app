@@ -22,4 +22,15 @@ public class CompareQuestion extends Question {
     public String getRightAnswer() {
         return this.getCorrectAnswer();
     }
+
+    /**
+     * Hashcode generator for questions.
+     *
+     * @return Hashcode of this question.
+     */
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
 }

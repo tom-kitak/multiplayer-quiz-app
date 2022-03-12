@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.Arrays;
+
 public abstract class Question {
 
     private final String[] answerTitles;
@@ -18,8 +20,8 @@ public abstract class Question {
      */
     public Question(String[] answerTitles, int[] answerWattages) {
         if (answerTitles != null && answerWattages != null && answerTitles.length == 4 && answerWattages.length == 4) {
-            this.answerTitles = answerTitles;
-            this.answerWattages = answerWattages;
+            this.answerTitles = Arrays.copyOf(answerTitles, answerTitles.length);
+            this.answerWattages = Arrays.copyOf(answerWattages, answerWattages.length);
         } else {
             throw new IllegalArgumentException("The provided arrays were null or not length 4.");
         }
@@ -30,7 +32,7 @@ public abstract class Question {
      * @return this.answerTitles.
      */
     public String[] getAnswerTitles() {
-        return answerTitles;
+        return Arrays.copyOf(answerTitles, answerTitles.length);
     }
 
     /**
@@ -38,7 +40,7 @@ public abstract class Question {
      * @return this.answerWattages.
      */
     public int[] getAnswerWattages() {
-        return answerWattages;
+        return Arrays.copyOf(answerWattages, answerWattages.length);
     }
 
     /**
