@@ -28,7 +28,7 @@ public class QuizScreenCtrl implements Initializable {
     private Timer timer;
     private int[] seconds;
     private SingleGame game;
-    private boolean timerOver;
+    private boolean answeredCorrectly;
     // Default value can be changed later
     private final int roundTime = 15;
     private Timeline timeline;
@@ -56,6 +56,9 @@ public class QuizScreenCtrl implements Initializable {
     @FXML
     private Text timerSpot;
 
+    @FXML
+    private Button score;
+
     @Inject
     public QuizScreenCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
@@ -63,7 +66,7 @@ public class QuizScreenCtrl implements Initializable {
         this.timer = new Timer();
         this.seconds = new int[1];
         seconds[0] = 0;
-        this.timerOver = false;
+        this.answeredCorrectly = false;
         this.game = null;
         this.timeLeft = roundTime;
     }
@@ -76,7 +79,7 @@ public class QuizScreenCtrl implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        score.setText("Score: 0");
     }
 
     /**
@@ -289,8 +292,10 @@ public class QuizScreenCtrl implements Initializable {
         if(buttonR1C1.getText().equals(correct))
             rightColor(buttonR1C1);
         if(button != null){
-            if(button.getText().equals(correct))
+            if(button.getText().equals(correct)){
                 rightColor(button);
+                this.answeredCorrectly = true;
+            }
             else
                 wrongColor(button);
         }
@@ -313,8 +318,10 @@ public class QuizScreenCtrl implements Initializable {
         if(Integer.parseInt(buttonR0C0.getText()) == question.getRightAnswer())
             rightColor(buttonR0C0);
         if(button !=null){
-            if (Integer.parseInt(button.getText()) == question.getRightAnswer())
-            rightColor(button);
+            if (Integer.parseInt(button.getText()) == question.getRightAnswer()){
+                rightColor(button);
+                this.answeredCorrectly = true;
+            }
             else wrongColor(button);
         }
 
@@ -340,11 +347,6 @@ public class QuizScreenCtrl implements Initializable {
      */
     private void wrongColor(Button button) {
         button.setStyle("-fx-background-color: #916868ff; ");
-    }
-
-    public void stopTimer(){
-        timer.cancel();
-        timerOver = true;
     }
 
 
@@ -391,14 +393,23 @@ public class QuizScreenCtrl implements Initializable {
                 else {
                     initializeButtons();
                     timer.cancel();
-                    startRoundTimer();
                     Platform.runLater( () -> {
+                        updateScore();
+                        startRoundTimer();
                         setNextQuestion();
                     });
                 }
             }
         };
         timer.scheduleAtFixedRate(task, 0, 1000);
+    }
+
+    public void updateScore() {
+        if(answeredCorrectly){
+            this.game.upDateScore(timeLeft);
+            this.score.setText("Score: " + this.game.getPlayer().getScore());
+        }
+        this.answeredCorrectly = false;
     }
 
     /**
