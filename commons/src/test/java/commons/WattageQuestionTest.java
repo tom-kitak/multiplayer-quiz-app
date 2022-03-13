@@ -19,7 +19,7 @@ public class WattageQuestionTest {
     @BeforeEach
     void setUp() {
         String[] answerTitles = {"a", "b", "c", "d"};
-        int[] wattages = {1, 2, 3, 4};
+        long[] wattages = {1, 2, 3, 4};
         question1 = new WattageQuestion(answerTitles, wattages);
         question2 = new WattageQuestion(answerTitles, wattages);
     }
@@ -48,7 +48,7 @@ public class WattageQuestionTest {
     void testConstructorError3() {
         assertThrows(IllegalArgumentException.class, () -> {
             WattageQuestion question = new WattageQuestion(null,
-                    new int[]{55, 66, 88, 99});
+                    new long[]{55, 66, 88, 99});
         });
     }
 
@@ -56,7 +56,7 @@ public class WattageQuestionTest {
     void testConstructorError_4() {
         assertThrows(IllegalArgumentException.class, () -> {
             CompareQuestion question = new CompareQuestion(new String[]{"a", "b", "c", "d", "d"},
-                    new int[]{2, 2, 2, 2});
+                    new long[]{2, 2, 2, 2});
         });
     }
 
@@ -64,7 +64,7 @@ public class WattageQuestionTest {
     void testConstructorError_5() {
         assertThrows(IllegalArgumentException.class, () -> {
             CompareQuestion question = new CompareQuestion(new String[]{"x", "x", "x", "x"},
-                    new int[]{544, 44, 55});
+                    new long[]{544, 44, 55});
         });
     }
 
@@ -76,7 +76,7 @@ public class WattageQuestionTest {
 
     @Test
     void testGetAnswerWattages(){
-        int[] test = {1, 2, 3, 4};
+        long[] test = {1, 2, 3, 4};
         assertTrue(Arrays.equals(test, question2.getAnswerWattages()));
     }
 
@@ -103,21 +103,21 @@ public class WattageQuestionTest {
     @Test
     void testInequality1(){
         WattageQuestion question = new WattageQuestion(new String[]
-                {"a", "a", "c", "d"}, new int[] {1, 2, 3, 4});
+                {"a", "a", "c", "d"}, new long[] {1, 2, 3, 4});
         assertNotEquals(question, question1);
     }
 
     @Test
     void testInequality2(){
         WattageQuestion question = new WattageQuestion(new String[]
-                {"a", "b", "c", "d"}, new int[] {1, 1, 3, 4});
+                {"a", "b", "c", "d"}, new long[] {1, 1, 3, 4});
         assertNotEquals(question, question1);
     }
 
     @Test
     void testInequality(){
         CompareQuestion question = new CompareQuestion(new String[]{"x", "x", "x", "x"},
-                new int[]{2, 2, 2, 2});
+                new long[]{2, 2, 2, 2});
         assertNotEquals(question, question1);
     }
 
@@ -129,7 +129,7 @@ public class WattageQuestionTest {
     @Test
     void testDifferentHashCodes(){
         CompareQuestion question = new CompareQuestion(new String[]{"x", "x", "x", "x"},
-                new int[]{2, 2, 2, 2});
+                new long[]{2, 2, 2, 2});
         assertNotEquals(question.hashCode(), question1.hashCode());
     }
 

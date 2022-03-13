@@ -22,6 +22,7 @@ import java.net.URISyntaxException;
 
 import client.scenes.EndScreenCtrl;
 import client.scenes.HomeScreenCtrl;
+import client.scenes.ImportActivityCtrl;
 import client.scenes.MainCtrl;
 import client.scenes.QuizScreenCtrl;
 import client.scenes.HowToPlayCtrl;
@@ -59,6 +60,8 @@ public class Main extends Application {
                 "client", "scenes", "AddActivityInterface.fxml");
         var EditActivityPair = FXML.load(EditActivityCtrl.class,
                 "client", "scenes", "EditActivityInterface.fxml");
+        var ImportActivityPair = FXML.load(ImportActivityCtrl.class,
+                "client", "scenes", "ImportActivityInterface.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         primaryStage.setOnCloseRequest(e -> {
@@ -67,7 +70,7 @@ public class Main extends Application {
         });
         mainCtrl.initialize(primaryStage, HomeScreenPair, QuizScreenPair,
                 EndScreenPair, HowToPlayPair, AdministrativeInterfacePair,
-                AddActivityPair, EditActivityPair);
+                AddActivityPair, EditActivityPair, ImportActivityPair);
     }
 
     private void closeProgram() {

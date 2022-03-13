@@ -47,6 +47,9 @@ public class MainCtrl {
     private EditActivityCtrl editActivityCtrl;
     private Scene editActivityScreen;
 
+    private ImportActivityCtrl importActivityCtrl;
+    private Scene importActivityScene;
+
     /**
      * This method should be adjusted if you want to add new screens.
      * @param primaryStage
@@ -61,7 +64,8 @@ public class MainCtrl {
                            Pair<HowToPlayCtrl, Parent> howToPlayPair,
                            Pair<AdministrativeInterfaceCtrl, Parent> administrativeInterfacePair,
                            Pair<AddActivityCtrl, Parent> addActivityPair,
-                           Pair<EditActivityCtrl, Parent> editActivityPair) {
+                           Pair<EditActivityCtrl, Parent> editActivityPair,
+                           Pair<ImportActivityCtrl, Parent> importActivityPair) {
 
         this.primaryStage = primaryStage;
 
@@ -85,6 +89,9 @@ public class MainCtrl {
 
         this.editActivityCtrl = editActivityPair.getKey();
         this.editActivityScreen = new Scene(editActivityPair.getValue());
+
+        this.importActivityCtrl = importActivityPair.getKey();
+        this.importActivityScene = new Scene(importActivityPair.getValue());
 
         showHomeScreen();
         primaryStage.show();
@@ -128,5 +135,11 @@ public class MainCtrl {
         primaryStage.setScene(editActivityScreen);
         editActivityScreen.setOnKeyPressed(e -> editActivityCtrl.keyPressed(e));
         editActivityCtrl.setActivity(activity);
+    }
+
+    public void showImportActivities() {
+        primaryStage.setTitle("Import Activity");
+        primaryStage.setScene(importActivityScene);
+        importActivityScene.setOnKeyPressed(e -> importActivityCtrl.keyPressed(e));
     }
 }

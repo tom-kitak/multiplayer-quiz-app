@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 public abstract class Question {
 
     private final String[] answerTitles;
-    private final int[] answerWattages;
+    private final long[] answerWattages;
 
 
     /**
@@ -29,7 +29,7 @@ public abstract class Question {
      * @param answerTitles The answers for this question, index 0 is the correct one.
      * @param answerWattages The wattage's for this question, index 0 is the correct one.
      */
-    public Question(String[] answerTitles, int[] answerWattages) {
+    public Question(String[] answerTitles, long[] answerWattages) {
         if (answerTitles != null && answerWattages != null && answerTitles.length == 4 && answerWattages.length == 4) {
             this.answerTitles = Arrays.copyOf(answerTitles, answerTitles.length);
             this.answerWattages = Arrays.copyOf(answerWattages, answerWattages.length);
@@ -58,7 +58,7 @@ public abstract class Question {
      * Getter for the answer wattage's.
      * @return this.answerWattages.
      */
-    public int[] getAnswerWattages() {
+    public long[] getAnswerWattages() {
         return Arrays.copyOf(answerWattages, answerWattages.length);
     }
 
@@ -76,7 +76,7 @@ public abstract class Question {
      * @return index 0 of this.answerWattages.
      */
     @JsonIgnore
-    public int getCorrectWattage() {
+    public long getCorrectWattage() {
         return answerWattages[0];
     }
 

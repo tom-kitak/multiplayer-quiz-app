@@ -49,7 +49,9 @@ public class HomeScreenCtrl {
         }
         Player player = new Player(name);
 
+
         Question question = server.getQuestion();
+
         SingleGame game = new SingleGame(player, question);
 
         mainCtrl.showQuizScreen(game);

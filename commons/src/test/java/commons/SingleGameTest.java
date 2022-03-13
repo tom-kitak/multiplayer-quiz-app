@@ -18,7 +18,7 @@ class SingleGameTest {
     void setUp(){
         player = new Player("Jim");
         String[] answerTitles = {"a", "b", "c", "d"};
-        int[] wattages = {1, 2, 3, 4};
+        long[] wattages = {1, 2, 3, 4};
         question = new WattageQuestion(answerTitles, wattages);
         game1 = new SingleGame(player, question);
         game2 = new SingleGame(player, question);
@@ -54,7 +54,7 @@ class SingleGameTest {
     @Test
     void setCurrentQuestion() {
         String[] strings = {"e", "f", "g", "h"};
-        int[] wattages = {1, 55, 100, 77};
+        long[] wattages = {1, 55, 100, 77};
         WattageQuestion question1 = new WattageQuestion(strings, wattages);
         game1.setCurrentQuestion(question1);
         assertEquals(question1, game1.getCurrentQuestion());
@@ -81,7 +81,7 @@ class SingleGameTest {
     @Test
     void testInequality2(){
         String[] strings = {"e", "f", "g", "h"};
-        int[] wattages = {1, 55, 100, 77};
+        long[] wattages = {1, 55, 100, 77};
         WattageQuestion question1 = new WattageQuestion(strings, wattages);
         game1.setCurrentQuestion(question1);
         assertNotEquals(game1, game2);
@@ -95,7 +95,7 @@ class SingleGameTest {
     @Test
     void testHashCode2(){
         String[] strings = {"e", "f", "g", "h"};
-        int[] wattages = {1, 55, 100, 77};
+        long[] wattages = {1, 55, 100, 77};
         WattageQuestion question1 = new WattageQuestion(strings, wattages);
         game1.setCurrentQuestion(question1);
         assertNotEquals(game1.hashCode(), game2.hashCode());
@@ -111,7 +111,7 @@ class SingleGameTest {
     @Test
     void testNextQuestion(){
         String[] strings = {"e", "f", "g", "h"};
-        int[] wattages = {1, 55, 100, 77};
+        long[] wattages = {1, 55, 100, 77};
         WattageQuestion question1 = new WattageQuestion(strings, wattages);
         game1.nextQuestion(question1);
         assertTrue(game1.getQuestionNumber() == 2 && game1.getCurrentQuestion().equals(question1));

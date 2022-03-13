@@ -184,20 +184,20 @@ public class QuizScreenCtrl implements Initializable {
         buttons.add(buttonR01C0);
         buttons.add(buttonR1C1);
         //make an ArrayList of all the answers
-        ArrayList<Integer> answers = new ArrayList<>(4);
-        int[] temp = wattageQuestion.getAnswerWattages();
-        for (int i: temp){
+        ArrayList<Long> answers = new ArrayList<>(4);
+        long[] temp = wattageQuestion.getAnswerWattages();
+        for (long i: temp){
             answers.add(i);
         }
         //assign a random value to a random button
         for(int i = 3; i >=1; i--){
             int indexAnswer = this.generateIndex(i);
             int indexButton  = this.generateIndex(i);
-            buttons.get(indexButton).setText(Integer.toString(answers.get(indexAnswer)));
+            buttons.get(indexButton).setText(Long.toString(answers.get(indexAnswer)));
             answers.remove(indexAnswer);
             buttons.remove(indexButton);
         }
-        buttons.get(0).setText(Integer.toString(answers.get(0)));
+        buttons.get(0).setText(Long.toString(answers.get(0)));
     }
 
     /**
@@ -371,7 +371,7 @@ public class QuizScreenCtrl implements Initializable {
                     rightColor(buttonR1C1);
                 }
             } else {
-                int correct = game.getCurrentQuestion().getCorrectWattage();
+                long correct = game.getCurrentQuestion().getCorrectWattage();
                 if(Integer.parseInt(buttonR0C0.getText()) == correct) {
                     rightColor(buttonR0C0);
                 } else if(Integer.parseInt(buttonR0C1.getText()) == correct) {
@@ -447,6 +447,7 @@ public class QuizScreenCtrl implements Initializable {
         if(this.game.getQuestionNumber()>=20){
             mainCtrl.showEndScreen();
         } else {
+
             Question nextQuestion = server.getQuestion();
 //            Question nextQuestion;
 //            if(this.game.getQuestionNumber()%2==0){
@@ -456,6 +457,7 @@ public class QuizScreenCtrl implements Initializable {
 //                nextQuestion = new CompareQuestion(new String[] {"a", "b", "c", "d"},
 //                        new int[] {555, 777, 888, 999});
 //            }
+
             this.game.nextQuestion(nextQuestion);
             setQuestionFields(this.game);
         }

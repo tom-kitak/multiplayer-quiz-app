@@ -14,7 +14,7 @@ public class WattageQuestion extends Question{
      * @param answers The answers for this question, index 0 is the correct one.
      * @param wattage The wattage's for this question, index 0 is the correct one.
      */
-    public WattageQuestion(String[] answers, int[] wattage) {
+    public WattageQuestion(String[] answers, long[] wattage) {
         super(answers, wattage);
 
     }
@@ -29,7 +29,7 @@ public class WattageQuestion extends Question{
      * @return the rightAnswer attribute of this object
      */
     @JsonIgnore
-    public int getRightAnswer() {
+    public long getRightAnswer() {
         return this.getCorrectWattage();
     }
 
