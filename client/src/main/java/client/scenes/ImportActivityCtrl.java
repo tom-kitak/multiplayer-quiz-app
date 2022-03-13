@@ -1,0 +1,90 @@
+package client.scenes;
+
+import client.utils.ServerUtils;
+import com.google.inject.Inject;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
+
+public class ImportActivityCtrl {
+
+    private final ServerUtils server;
+    private final MainCtrl mainCtrl;
+
+    @Inject
+    public ImportActivityCtrl(ServerUtils server, MainCtrl mainCtrl) {
+        this.server = server;
+        this.mainCtrl = mainCtrl;
+    }
+
+    @FXML
+    private TextField pathField;
+
+    @FXML
+    void cancelPressed(ActionEvent event) {
+        cancel();
+    }
+
+    @FXML
+    void submitPressed(ActionEvent event) {
+        submitActivity();
+    }
+
+    /**
+     * Activity that was created with user input is send to the server.
+     */
+    public void submitActivity(){
+        /*
+        try {
+            server.addActivity(extractActivity());
+        } catch (WebApplicationException e) {
+
+            var alert = new Alert(Alert.AlertType.ERROR);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+            return;
+        }
+
+        clearFields();
+        mainCtrl.showAdministratorInterface();
+
+         */
+    }
+
+
+    /**
+     * Non-essential method whose purpose is to make usage of the app more convenient.
+     * If ENTER is pressed, activity is submitted.
+     * If ESCAPE is pressed, activity is discarded, and you are returned to Administrative Interface.
+     * @param e
+     */
+    public void keyPressed(KeyEvent e) {
+        switch (e.getCode()) {
+            case ENTER:
+                submitActivity();
+                break;
+            case ESCAPE:
+                cancel();
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Helper method to make clearing fields more convenient.
+     */
+    private void clearFields() {
+        pathField.clear();
+    }
+
+    /**
+     * The activity and user input is discarded and user is returned to Administrative Interface.
+     */
+    private void cancel(){
+        clearFields();
+        mainCtrl.showAdministratorInterface();
+    }
+}

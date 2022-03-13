@@ -73,6 +73,11 @@ public class AdministrativeInterfaceCtrl implements Initializable {
         refresh();
     }
 
+    @FXML
+    void importPressed(ActionEvent event) {
+        mainCtrl.showImportActivities();
+    }
+
     /**
      * Helper method that makes a request to the server and updates the columns with new data.
      */
