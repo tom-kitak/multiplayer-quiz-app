@@ -30,6 +30,8 @@ import org.glassfish.jersey.client.ClientConfig;
 
 import server.Score;
 
+import java.util.List;
+
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.util.List;
@@ -82,5 +84,12 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .delete();
+    }
+    public List<Score> getAllScores() {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/score/get")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<List<Score>>() {});
     }
 }
