@@ -1,106 +1,105 @@
 package commons;
 
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.Arrays;
+
+public abstract class Question {
+
+    private final String[] answerTitles;
+    private final int[] answerWattages;
 
 
-public class Question {
-
-    private final String question;
-    private final int rightAnswer;
-    private ArrayList<Integer> wrongAnswers;
-
-    /**Generates new Question Object.
-     * @param question the String that represents the question itself
-     * @param rightAnswer the integer that is the right answer to the question in wh
+    /**
+     * The general constructor for questions.
+     * @param answerTitles The answers for this question, index 0 is the correct one.
+     * @param answerWattages The wattage's for this question, index 0 is the correct one.
      */
-    public Question(String question, int rightAnswer) {
-        this.question = question;
-        this.rightAnswer = rightAnswer;
-        wrongAnswers = assignWrongAnswers(rightAnswer);
-    }
-
-
-    /**Generates wrong answers to the question.
-     * @param rightAnswer the right answer to the question
-     * @return ArrayList with 3 wrong answers;
-     */
-    public ArrayList<Integer> assignWrongAnswers(int rightAnswer) {
-        ArrayList<Integer> randomAnswers = new ArrayList<>(3);
-
-        if (rightAnswer <= 3){
-            for (int i =1; i <= 4; i++){
-                if(i!=rightAnswer){
-                    randomAnswers.add(i);
-                }
-            }
-            return randomAnswers;
+    public Question(String[] answerTitles, int[] answerWattages) {
+        if (answerTitles != null && answerWattages != null && answerTitles.length == 4 && answerWattages.length == 4) {
+            this.answerTitles = Arrays.copyOf(answerTitles, answerTitles.length);
+            this.answerWattages = Arrays.copyOf(answerWattages, answerWattages.length);
         } else {
-            int min = (int) Math.round(0.49*rightAnswer);
-            while(randomAnswers.size()<3){
-                double factor = Math.random();
-                int number = (int) ((factor*rightAnswer) + min);
-                if(!randomAnswers.contains(number)&&number!=rightAnswer){
-                    randomAnswers.add(number);
-                }
-            }
-            return  randomAnswers;
-
+            throw new IllegalArgumentException("The provided arrays were null or not length 4.");
         }
-
     }
 
     /**
-     * @return the question attribute
+     * Getter for the answer title's.
+     * @return this.answerTitles.
      */
-    public String getQuestion() {
-        return this.question;
+    public String[] getAnswerTitles() {
+        return Arrays.copyOf(answerTitles, answerTitles.length);
     }
 
     /**
-     * @return the rightAnswer attribute of this object
+     * Getter for the answer wattage's.
+     * @return this.answerWattages.
      */
-    public int getRightAnswer() {
-        return this.rightAnswer;
+    public int[] getAnswerWattages() {
+        return Arrays.copyOf(answerWattages, answerWattages.length);
     }
 
     /**
-     * @return the list of wrong answers of this Object
+     * Getter for the correct answer title.
+     * @return index 0 of this.answerTitles.
      */
-    public ArrayList<Integer> getWrongAnswers() {
-        return this.wrongAnswers;
+    public String getCorrectAnswer() {
+        return answerTitles[0];
     }
 
-    /**checks if two objects are equal.
-     * @param o the object we want to compare this Question with
-     * @return true iff o and this Question have the same right answer and
-     * the same question
+    /**
+     * Getter for the correct answer wattage.
+     * @return index 0 of this.answerWattages.
+     */
+    public int getCorrectWattage() {
+        return answerWattages[0];
+    }
+
+    /**
+     * Equals method for this object.
+     * @param o Object to be compared against.
+     * @return True if the objects are equal, false otherwise.
      */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Question question1 = (Question) o;
-        return rightAnswer == question1.rightAnswer && question.equals(question1.question);
+
+        if (!(o instanceof Question)) return false;
+
+        Question question = (Question) o;
+
+        return new EqualsBuilder().append(answerTitles, question.answerTitles)
+                .append(answerWattages, question.answerWattages).isEquals();
     }
 
     /**
-     * @return hashcode for this Question
+     * Hashcode generator for questions.
+     * @return Hashcode of this question.
      */
     @Override
     public int hashCode() {
-        return Objects.hash(question, rightAnswer);
+        return new HashCodeBuilder(17, 37).append(answerTitles).append(answerWattages).toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("answerTitles", answerTitles)
+                .append("answerWattages", answerWattages)
+                .toString();
     }
 
     /**
-     * @return a String representation of the object in Multi_Line_Style
+     * @return a String that represents the description of
+     * the question that will be shown to the client
      */
-    @Override
-    public String toString() {
-        return "Question: \nquestion: " + this.question + "\nrightAnswer: " + this.rightAnswer
-                + "\nwrongAnswers: " + this.wrongAnswers.get(0) + ", " + this.wrongAnswers.get(1) +
-                ", " + this.wrongAnswers.get(2);
-    }
+    public abstract String getQuestionDescription();
+
+
+
+
 }
