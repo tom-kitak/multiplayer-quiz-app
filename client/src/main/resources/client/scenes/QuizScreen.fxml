@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="526.0" prefWidth="836.0" style="-fx-background-color: #3b3f46ff#3b3f46ff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.QuizScreenCtrl">
+<AnchorPane fx:id="timerField" prefHeight="526.0" prefWidth="836.0" style="-fx-background-color: #3b3f46ff#3b3f46ff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.QuizScreenCtrl">
    <children>
       <Text fx:id="questionField" accessibleText="~" layoutX="422.0" layoutY="130.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Question text" wrappingWidth="358.2719268798828">
          <font>
@@ -19,11 +19,18 @@
       <Button fx:id="buttonR0C0" accessibleText="~" layoutX="67.0" layoutY="305.0" mnemonicParsing="false" onAction="#pressedR0C0" prefHeight="51.0" prefWidth="318.0" style="-fx-background-color: #888888ff#888888ff;" text="buttonR0C0" textAlignment="CENTER" />
       <Button fx:id="buttonR0C1" accessibleText="~" layoutX="489.0" layoutY="305.0" mnemonicParsing="false" onAction="#pressedR0C1" prefHeight="51.0" prefWidth="306.0" style="-fx-background-color: #888888ff;" text="buttonR0C1" />
       <ImageView fitHeight="182.0" fitWidth="255.0" layoutX="67.0" layoutY="81.0" pickOnBounds="true" preserveRatio="true" />
-      <Pane disable="true" layoutX="373.0" layoutY="243.0" prefHeight="41.0" prefWidth="129.0" style="-fx-background-color: #f2cfa4ff;" />
+      <Pane disable="true" layoutX="373.0" layoutY="243.0" prefHeight="41.0" prefWidth="129.0" style="-fx-background-color: #f2cfa4ff;">
+         <children>
+            <Text fx:id="timerSpot" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="00:00" textAlignment="CENTER" wrappingWidth="129.0">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Text>
+         </children></Pane>
       <Button layoutX="67.0" layoutY="471.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="222.0" style="-fx-background-color: WHITE;" text="Joker#1" />
       <Button layoutX="573.0" layoutY="471.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="222.0" style="-fx-background-color: WHITE;" text="Joker#3" />
       <Button layoutX="326.0" layoutY="471.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="222.0" style="-fx-background-color: WHITE;" text="Joker#2" />
-      <Button layoutX="558.0" layoutY="39.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="222.0" style="-fx-background-color: WHITE;" text="LeaderBoard + Score" />
+      <Button fx:id="score" layoutX="558.0" layoutY="39.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="222.0" style="-fx-background-color: WHITE;" text="LeaderBoard + Score" />
       <Button fx:id="QuestionNumber" accessibleText="~" layoutX="326.0" layoutY="39.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="222.0" style="-fx-background-color: #3b3f46ff;" text="Question No." textFill="WHITE" />
       <Button layoutX="67.0" layoutY="39.0" mnemonicParsing="false" onAction="#backButton" onMouseClicked="#backButton" style="-fx-background-color: #888888ff#888888ff;" text="Exit Game" />
    </children>

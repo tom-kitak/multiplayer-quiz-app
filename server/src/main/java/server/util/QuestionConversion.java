@@ -3,15 +3,19 @@ package server.util;
 import commons.CompareQuestion;
 import commons.Question;
 import commons.Activity;
+import commons.WattageQuestion;
+import java.util.Random;
 
 public class QuestionConversion {
 
+    private static Random random;
     /**
      * Method to convert activities to a Question.
      * @param activities The activities to be used.
      * @return A Question.
      */
     public static Question convertActivity(Activity[] activities) {
+        Question result = null;
         if (activities != null && activities.length == 4){
             String[] titles = new String[4];
             int[] wattages = new int[4];
@@ -28,8 +32,16 @@ public class QuestionConversion {
                     return null;
                 }
             }
-            return new CompareQuestion(titles, wattages);
+            // Here we try to randomize the question types.
+            random = new Random();
+            int idx = random.nextInt(2);
+            if(idx == 0) {
+                result = new CompareQuestion(titles, wattages);
+            } else if(idx == 1) {
+                result = new WattageQuestion(titles,wattages);
+            }
+
         }
-        return null;
+        return result;
     }
 }
