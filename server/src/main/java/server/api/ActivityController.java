@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 //CHECKSTYLE:OFF
 import org.springframework.web.bind.annotation.*;
 //CHECKSTYLE:ON
-import server.Activity;
+import commons.Activity;
 import server.database.ActivityRepository;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class ActivityController {
     /**
      * @return Returns all objects stored in the database.
      */
-    @GetMapping(path = {"", "/"})
+    @GetMapping(path = {"", "/", "/getAll"})
     public List<Activity> getAll() {
         return repo.findAll();
     }

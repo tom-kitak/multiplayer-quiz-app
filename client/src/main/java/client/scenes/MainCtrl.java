@@ -15,6 +15,7 @@
  */
 package client.scenes;
 
+import commons.Activity;
 import commons.SingleGame;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -34,8 +35,17 @@ public class MainCtrl {
     private EndScreenCtrl endScreenCtrl;
     private Scene endScreen;
 
-    private Scene howToPlayScreen;
     private HowToPlayCtrl howToPlayCtrl;
+    private Scene howToPlayScreen;
+
+    private AdministrativeInterfaceCtrl administrativeInterfaceCtrl;
+    private Scene administrativeInterfaceScene;
+
+    private AddActivityCtrl addActivityCtrl;
+    private Scene addActivityScreen;
+
+    private EditActivityCtrl editActivityCtrl;
+    private Scene editActivityScreen;
 
     /**
      * This method should be adjusted if you want to add new screens.
@@ -48,7 +58,10 @@ public class MainCtrl {
                            Pair<HomeScreenCtrl, Parent> homeScreenPair,
                            Pair<QuizScreenCtrl, Parent> quizScreenPair,
                            Pair<EndScreenCtrl, Parent> endScreenPair,
-                           Pair<HowToPlayCtrl, Parent> howToPlayPair) {
+                           Pair<HowToPlayCtrl, Parent> howToPlayPair,
+                           Pair<AdministrativeInterfaceCtrl, Parent> administrativeInterfacePair,
+                           Pair<AddActivityCtrl, Parent> addActivityPair,
+                           Pair<EditActivityCtrl, Parent> editActivityPair) {
 
         this.primaryStage = primaryStage;
 
@@ -63,6 +76,15 @@ public class MainCtrl {
 
         this.howToPlayCtrl = howToPlayPair.getKey();
         this.howToPlayScreen = new Scene(howToPlayPair.getValue());
+
+        this.administrativeInterfaceCtrl = administrativeInterfacePair.getKey();
+        this.administrativeInterfaceScene = new Scene(administrativeInterfacePair.getValue());
+
+        this.addActivityCtrl = addActivityPair.getKey();
+        this.addActivityScreen = new Scene(addActivityPair.getValue());
+
+        this.editActivityCtrl = editActivityPair.getKey();
+        this.editActivityScreen = new Scene(editActivityPair.getValue());
 
         showHomeScreen();
         primaryStage.show();
@@ -84,12 +106,27 @@ public class MainCtrl {
         primaryStage.setScene(endScreen);
     }
 
-    public void showAnswers(){
-
-    }
-
     public void showHowToPlay() {
         primaryStage.setTitle("How To Play");
         primaryStage.setScene(howToPlayScreen);
+    }
+
+    public void showAdministratorInterface(){
+        primaryStage.setTitle("Administrator Tools");
+        primaryStage.setScene(administrativeInterfaceScene);
+        administrativeInterfaceCtrl.refresh();
+    }
+
+    public void showAddActivity() {
+        primaryStage.setTitle("Add Activity");
+        primaryStage.setScene(addActivityScreen);
+        addActivityScreen.setOnKeyPressed(e -> addActivityCtrl.keyPressed(e));
+    }
+
+    public void showEditActivity(Activity activity) {
+        primaryStage.setTitle("Edit Activity");
+        primaryStage.setScene(editActivityScreen);
+        editActivityScreen.setOnKeyPressed(e -> editActivityCtrl.keyPressed(e));
+        editActivityCtrl.setActivity(activity);
     }
 }
