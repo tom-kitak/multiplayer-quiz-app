@@ -6,7 +6,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import java.net.URL;
-import java.sql.SQLOutput;
 import java.util.ResourceBundle;
 import com.google.inject.Inject;
 import javafx.collections.FXCollections;

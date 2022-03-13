@@ -13,8 +13,6 @@ import javafx.stage.Modality;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.control.Label;
 
-import java.sql.SQLOutput;
-
 public class AddActivityCtrl {
 
     private final ServerUtils server;
