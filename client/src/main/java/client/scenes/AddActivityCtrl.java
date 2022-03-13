@@ -13,6 +13,8 @@ import javafx.stage.Modality;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.control.Label;
 
+import java.sql.SQLOutput;
+
 public class AddActivityCtrl {
 
     private final ServerUtils server;
@@ -53,6 +55,7 @@ public class AddActivityCtrl {
      */
     public void submitActivity(){
         try {
+            Activity activity = extractActivity();
             server.addActivity(extractActivity());
             clearFields();
             mainCtrl.showAdministratorInterface();
@@ -62,8 +65,11 @@ public class AddActivityCtrl {
             alert.setContentText(e.getMessage());
             alert.showAndWait();
             return;
+        } catch (NullPointerException e) {
+            errorMessage.setText("Fill all the fields!");
+            errorMessage.setTextFill(Color.RED);
         } catch (NumberFormatException e) {
-            errorMessage.setText("Please enter integer value.");
+            errorMessage.setText("Please enter integer value!");
             errorMessage.setTextFill(Color.RED);
         }
 
@@ -75,6 +81,10 @@ public class AddActivityCtrl {
      * @return
      */
     private Activity extractActivity() {
+        if (titleField.getText().trim().isEmpty() || whField.getText().trim().isEmpty()){
+            throw new NullPointerException();
+        }
+        System.out.println(titleField.getText());
         return new Activity(titleField.getText(), Integer.valueOf(whField.getText()));
     }
 
