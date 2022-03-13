@@ -102,12 +102,9 @@ public class HomeScreenCtrl {
         mainCtrl.showHomeScreen();
     }
 
-<<<<<<< HEAD
     @FXML
     void adminToolsPressed(ActionEvent event) {
         mainCtrl.showAdministratorInterface();
     }
 
-=======
->>>>>>> Single_PlayerNickname
 }

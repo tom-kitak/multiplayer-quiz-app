@@ -15,19 +15,12 @@
  */
 package client.utils;
 
-<<<<<<< HEAD
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-
 import commons.Activity;
 import commons.Player;
 import commons.Question;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 
-=======
-import commons.Player;
-import commons.Question;
->>>>>>> Single_PlayerNickname
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -38,11 +31,8 @@ import server.Score;
 import java.util.List;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-<<<<<<< HEAD
 
 import java.util.List;
-=======
->>>>>>> Single_PlayerNickname
 
 public class ServerUtils {
 
@@ -70,7 +60,6 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .post(Entity.entity(score, APPLICATION_JSON), Score.class);
     }
-<<<<<<< HEAD
 
     public List<Activity> getAllActivities() {
         return ClientBuilder.newClient(new ClientConfig())
@@ -94,8 +83,7 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .delete();
     }
-=======
->>>>>>> Single_PlayerNickname
+
     public List<Score> getAllScores() {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("/api/score/get")
