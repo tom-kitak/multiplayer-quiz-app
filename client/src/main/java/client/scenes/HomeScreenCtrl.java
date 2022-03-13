@@ -4,7 +4,6 @@ import client.ConfirmBoxCtrl;
 import client.utils.ServerUtils;
 import commons.Player;
 import commons.SingleGame;
-import commons.WattageQuestion;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import com.google.inject.Inject;
@@ -44,9 +43,7 @@ public class HomeScreenCtrl {
         }
         Player player = new Player(name);
 
-        //Question question = server.getQuestion();
-        Question question = new WattageQuestion(new String[] {"a", "b", "c", "d"},
-                            new int[] {1, 2, 3, 4});
+        Question question = server.getQuestion();
         SingleGame game = new SingleGame(player, question);
 
         mainCtrl.showQuizScreen(game);
