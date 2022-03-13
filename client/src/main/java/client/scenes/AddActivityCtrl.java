@@ -8,8 +8,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.control.Label;
 
 public class AddActivityCtrl {
 
@@ -29,6 +31,9 @@ public class AddActivityCtrl {
     private TextField whField;
 
     @FXML
+    private Label errorMessage;
+
+    @FXML
     void cancelPressed(ActionEvent event) {
         cancel();
     }
@@ -38,23 +43,31 @@ public class AddActivityCtrl {
         submitActivity();
     }
 
+    @FXML
+    void clearPressed(ActionEvent event) {
+        clearFields();
+    }
+
     /**
      * Activity that was created with user input is send to the server.
      */
     public void submitActivity(){
         try {
             server.addActivity(extractActivity());
+            clearFields();
+            mainCtrl.showAdministratorInterface();
         } catch (WebApplicationException e) {
-
             var alert = new Alert(Alert.AlertType.ERROR);
             alert.initModality(Modality.APPLICATION_MODAL);
             alert.setContentText(e.getMessage());
             alert.showAndWait();
             return;
+        } catch (NumberFormatException e) {
+            errorMessage.setText("Please enter integer value.");
+            errorMessage.setTextFill(Color.RED);
         }
 
-        clearFields();
-        mainCtrl.showAdministratorInterface();
+
     }
 
     /**
@@ -90,6 +103,7 @@ public class AddActivityCtrl {
     private void clearFields() {
         titleField.clear();
         whField.clear();
+        errorMessage.setText("");
     }
 
     /**
