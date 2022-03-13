@@ -3,11 +3,12 @@ package client.scenes;
 import client.ConfirmBoxCtrl;
 import client.utils.ServerUtils;
 import commons.Player;
-import commons.Question;
 import commons.SingleGame;
+import commons.WattageQuestion;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import com.google.inject.Inject;
+import commons.Question;
 
 import javafx.scene.control.TextField;
 
@@ -44,7 +45,8 @@ public class HomeScreenCtrl {
         Player player = new Player(name);
 
         //Question question = server.getQuestion();
-        Question question = new Question("descr", 999);
+        Question question = new WattageQuestion(new String[] {"a", "b", "c", "d"},
+                            new int[] {1, 2, 3, 4});
         SingleGame game = new SingleGame(player, question);
 
         mainCtrl.showQuizScreen(game);
