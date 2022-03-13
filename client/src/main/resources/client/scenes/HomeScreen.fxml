@@ -14,7 +14,7 @@
          </font>
       </Text>
       <Button layoutX="374.0" layoutY="426.0" mnemonicParsing="false" onAction="#howToPlay" onMouseClicked="#howToPlay" style="-fx-background-color: #f2a443ff#f2a443ff;" text="How to play?" />
-      <TextField fx:id="nameField" alignment="CENTER" layoutX="268.0" layoutY="281.0" prefHeight="37.0" prefWidth="300.0" promptText="Enter your name" style="-fx-background-color: #888888ff;">
+      <TextField fx:id="nameField" alignment="CENTER" layoutX="268.0" layoutY="281.0" onKeyPressed="#keyPressed" prefHeight="37.0" prefWidth="300.0" promptText="Enter your name" style="-fx-background-color: #888888ff;">
          <font>
             <Font size="16.0" />
          </font>
