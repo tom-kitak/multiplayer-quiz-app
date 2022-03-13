@@ -1,4 +1,4 @@
-package server;
+package commons;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -18,14 +18,14 @@ public class Activity {
     public long id;
 
     public String title;
-    public int wh;
+    public long wh;
 
     @SuppressWarnings("unused")
     private Activity() {
         //for object mappers
     }
 
-    public Activity(String title, int wh) {
+    public Activity(String title, long wh) {
         this.title = title;
         this.wh = wh;
     }
@@ -52,7 +52,7 @@ public class Activity {
         return title;
     }
 
-    public int getWh() {
+    public long getWh() {
         return wh;
     }
 
@@ -64,7 +64,7 @@ public class Activity {
         this.title = title;
     }
 
-    public void setWh(int wh) {
+    public void setWh(long wh) {
         this.wh = wh;
     }
 }

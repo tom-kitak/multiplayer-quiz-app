@@ -3,13 +3,19 @@ package client.scenes;
 import client.ConfirmBoxCtrl;
 import client.utils.ServerUtils;
 import commons.Player;
-import commons.Question;
 import commons.SingleGame;
+import jakarta.ws.rs.WebApplicationException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import com.google.inject.Inject;
+import commons.Question;
 
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
+import server.Score;
+
+import javafx.scene.input.KeyEvent;
 
 
 public class HomeScreenCtrl {
@@ -43,8 +49,9 @@ public class HomeScreenCtrl {
         }
         Player player = new Player(name);
 
-        //Question question = server.getQuestion();
-        Question question = new Question("descr", 999);
+
+        Question question = server.getQuestion();
+
         SingleGame game = new SingleGame(player, question);
 
         mainCtrl.showQuizScreen(game);
@@ -59,6 +66,47 @@ public class HomeScreenCtrl {
     @FXML
     void howToPlay(){
         mainCtrl.showHowToPlay();
+    }
+
+    @FXML
+    public void keyPressed(KeyEvent e){
+        switch (e.getCode()){
+            case ENTER:
+                addNameAndScore();
+                break;
+            case ESCAPE:
+                cancelEvent();
+                break;
+            default: break;
+        }
+    }
+    Score getNewScore(){
+        Score score = new Score(0, nameField.getText());
+        return score;
+    }
+
+    void cancelEvent(){
+        nameField.clear();
+    }
+
+    void addNameAndScore(){
+        try{
+            server.addScore(getNewScore());
+        } catch (WebApplicationException e){
+
+            var alert = new Alert(Alert.AlertType.ERROR);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+            return;
+        }
+        cancelEvent();
+        mainCtrl.showHomeScreen();
+    }
+
+    @FXML
+    void adminToolsPressed(ActionEvent event) {
+        mainCtrl.showAdministratorInterface();
     }
 
 }

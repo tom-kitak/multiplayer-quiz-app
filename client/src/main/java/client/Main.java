@@ -22,9 +22,13 @@ import java.net.URISyntaxException;
 
 import client.scenes.EndScreenCtrl;
 import client.scenes.HomeScreenCtrl;
-import client.scenes.HowToPlayCtrl;
-import client.scenes.QuizScreenCtrl;
+import client.scenes.ImportActivityCtrl;
 import client.scenes.MainCtrl;
+import client.scenes.QuizScreenCtrl;
+import client.scenes.HowToPlayCtrl;
+import client.scenes.AdministrativeInterfaceCtrl;
+import client.scenes.AddActivityCtrl;
+import client.scenes.EditActivityCtrl;
 import com.google.inject.Injector;
 
 import javafx.application.Application;
@@ -50,13 +54,23 @@ public class Main extends Application {
                 "client", "scenes", "EndScreen.fxml");
         var HowToPlayPair = FXML.load(HowToPlayCtrl.class,
                 "client", "scenes", "HowToPlayScreen.fxml");
+        var AdministrativeInterfacePair = FXML.load(AdministrativeInterfaceCtrl.class,
+                "client", "scenes", "AdministrativeInterface.fxml");
+        var AddActivityPair = FXML.load(AddActivityCtrl.class,
+                "client", "scenes", "AddActivityInterface.fxml");
+        var EditActivityPair = FXML.load(EditActivityCtrl.class,
+                "client", "scenes", "EditActivityInterface.fxml");
+        var ImportActivityPair = FXML.load(ImportActivityCtrl.class,
+                "client", "scenes", "ImportActivityInterface.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         primaryStage.setOnCloseRequest(e -> {
             e.consume();
             closeProgram();
         });
-        mainCtrl.initialize(primaryStage, HomeScreenPair, QuizScreenPair, EndScreenPair, HowToPlayPair);
+        mainCtrl.initialize(primaryStage, HomeScreenPair, QuizScreenPair,
+                EndScreenPair, HowToPlayPair, AdministrativeInterfacePair,
+                AddActivityPair, EditActivityPair, ImportActivityPair);
     }
 
     private void closeProgram() {

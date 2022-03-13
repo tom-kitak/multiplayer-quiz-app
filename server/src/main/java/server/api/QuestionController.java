@@ -1,11 +1,11 @@
 package server.api;
 
-import commons.Question_Bryan;
+import commons.Question;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import server.Activity;
+import commons.Activity;
 import server.database.ActivityRepository;
 
 import java.util.ArrayList;
@@ -25,10 +25,17 @@ public class QuestionController {
     public QuestionController(Random random, ActivityRepository repo) {
         this.random = random;
         this.repo = repo;
+
+        if(repo.count() < 4) {
+            repo.save(new Activity("Using a laptop for 10 hours", 10));
+            repo.save(new Activity("Using a TV for 7 hours", 5));
+            repo.save(new Activity("Using a phone for 12 hours", 15));
+            repo.save(new Activity("Using a toaster for 20 picoseconds", 20));
+        }
     }
 
     @GetMapping(path = {"", "/"})
-    public ResponseEntity<Question_Bryan> getQuestion() {
+    public ResponseEntity<Question> getQuestion() {
         // Can't create a question if there aren't enough activities
         if (repo.count() < 4)
             return ResponseEntity.internalServerError().build();
@@ -54,7 +61,7 @@ public class QuestionController {
             }
         }
         // Returns the result.
-        Question_Bryan question = convertActivity(activities);
+        Question question = convertActivity(activities);
         if (question == null)
             return ResponseEntity.internalServerError().build();
         return ResponseEntity.ok(question);

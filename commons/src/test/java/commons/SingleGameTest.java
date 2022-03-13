@@ -12,12 +12,14 @@ class SingleGameTest {
     SingleGame game1;
     SingleGame game2;
     Player player;
-    Question question;
+    WattageQuestion question;
 
     @BeforeEach
     void setUp(){
         player = new Player("Jim");
-        question = new Question("desc", 55);
+        String[] answerTitles = {"a", "b", "c", "d"};
+        long[] wattages = {1, 2, 3, 4};
+        question = new WattageQuestion(answerTitles, wattages);
         game1 = new SingleGame(player, question);
         game2 = new SingleGame(player, question);
     }
@@ -51,7 +53,9 @@ class SingleGameTest {
 
     @Test
     void setCurrentQuestion() {
-        Question question1 = new Question("asc", 87);
+        String[] strings = {"e", "f", "g", "h"};
+        long[] wattages = {1, 55, 100, 77};
+        WattageQuestion question1 = new WattageQuestion(strings, wattages);
         game1.setCurrentQuestion(question1);
         assertEquals(question1, game1.getCurrentQuestion());
     }
@@ -76,8 +80,10 @@ class SingleGameTest {
 
     @Test
     void testInequality2(){
-        Question question2 = new Question("gogo", 123456);
-        game1.setCurrentQuestion(question2);
+        String[] strings = {"e", "f", "g", "h"};
+        long[] wattages = {1, 55, 100, 77};
+        WattageQuestion question1 = new WattageQuestion(strings, wattages);
+        game1.setCurrentQuestion(question1);
         assertNotEquals(game1, game2);
     }
 
@@ -88,7 +94,10 @@ class SingleGameTest {
 
     @Test
     void testHashCode2(){
-        game1.setCurrentQuestion(new Question("Ht", 98));
+        String[] strings = {"e", "f", "g", "h"};
+        long[] wattages = {1, 55, 100, 77};
+        WattageQuestion question1 = new WattageQuestion(strings, wattages);
+        game1.setCurrentQuestion(question1);
         assertNotEquals(game1.hashCode(), game2.hashCode());
     }
 
@@ -101,8 +110,10 @@ class SingleGameTest {
 
     @Test
     void testNextQuestion(){
-        Question question2 = new Question("new", 1200);
-        game1.nextQuestion(question2);
-        assertTrue(game1.getQuestionNumber() == 2 && game1.getCurrentQuestion().equals(question2));
+        String[] strings = {"e", "f", "g", "h"};
+        long[] wattages = {1, 55, 100, 77};
+        WattageQuestion question1 = new WattageQuestion(strings, wattages);
+        game1.nextQuestion(question1);
+        assertTrue(game1.getQuestionNumber() == 2 && game1.getCurrentQuestion().equals(question1));
     }
 }
