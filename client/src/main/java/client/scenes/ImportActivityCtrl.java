@@ -1,11 +1,20 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import com.google.gson.Gson;
 import com.google.inject.Inject;
+import commons.Activity;
+import commons.ActivityJson;
+import jakarta.ws.rs.WebApplicationException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class ImportActivityCtrl {
 
@@ -35,22 +44,33 @@ public class ImportActivityCtrl {
      * Activity that was created with user input is send to the server.
      */
     public void submitActivity(){
-        /*
         try {
-            server.addActivity(extractActivity());
-        } catch (WebApplicationException e) {
-
-            var alert = new Alert(Alert.AlertType.ERROR);
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
-            return;
+            Reader file = Files.newBufferedReader(Paths.get(pathField.getText()));
+            Gson gson = new Gson();
+            ActivityJson[] activityArray = gson.fromJson(file, ActivityJson[].class);
+            for(int i = 0; i < activityArray.length; i++) {
+                if (!addActivity(activityArray[i].convertToActivity())) {
+                    throw new Exception("Activity could not be added");
+                };
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
 
         clearFields();
         mainCtrl.showAdministratorInterface();
+    }
 
-         */
+    private boolean addActivity(Activity a) {
+        try {
+            server.addActivity(a);
+        } catch (WebApplicationException e) {
+            return false;
+        }
+        return true;
     }
 
 

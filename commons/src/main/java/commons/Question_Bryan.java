@@ -8,14 +8,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public abstract class Question_Bryan {
 
     private final String[] answerTitles;
-    private final int[] answerWattages;
+    private final long[] answerWattages;
 
     /**
      * The general constructor for questions.
      * @param answerTitles The answers for this question, index 0 is the correct one.
      * @param answerWattages The wattage's for this question, index 0 is the correct one.
      */
-    public Question_Bryan(String[] answerTitles, int[] answerWattages) {
+    public Question_Bryan(String[] answerTitles, long[] answerWattages) {
         if (answerTitles != null && answerWattages != null && answerTitles.length == 4 && answerWattages.length == 4) {
             this.answerTitles = answerTitles;
             this.answerWattages = answerWattages;
@@ -36,7 +36,7 @@ public abstract class Question_Bryan {
      * Getter for the answer wattage's.
      * @return this.answerWattages.
      */
-    public int[] getAnswerWattages() {
+    public long[] getAnswerWattages() {
         return answerWattages;
     }
 
@@ -52,7 +52,7 @@ public abstract class Question_Bryan {
      * Getter for the correct answer wattage.
      * @return index 0 of this.answerWattages.
      */
-    public int getCorrectWattage() {
+    public long getCorrectWattage() {
         return answerWattages[0];
     }
 

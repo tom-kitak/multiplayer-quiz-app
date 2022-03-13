@@ -14,7 +14,7 @@ public class QuestionConversion {
     public static Question_Bryan convertActivity(Activity[] activities) {
         if (activities != null && activities.length == 4){
             String[] titles = new String[4];
-            int[] wattages = new int[4];
+            long[] wattages = new long[4];
             for (int i = 0; i < 4; i++){
                 if (activities[i] != null) {
                     Activity current = activities[i];
