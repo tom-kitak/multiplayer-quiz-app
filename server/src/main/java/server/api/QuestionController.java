@@ -1,6 +1,6 @@
 package server.api;
 
-import commons.Question_Bryan;
+import commons.Question;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +28,7 @@ public class QuestionController {
     }
 
     @GetMapping(path = {"", "/"})
-    public ResponseEntity<Question_Bryan> getQuestion() {
+    public ResponseEntity<Question> getQuestion() {
         // Can't create a question if there aren't enough activities
         if (repo.count() < 4)
             return ResponseEntity.internalServerError().build();
@@ -54,7 +54,7 @@ public class QuestionController {
             }
         }
         // Returns the result.
-        Question_Bryan question = convertActivity(activities);
+        Question question = convertActivity(activities);
         if (question == null)
             return ResponseEntity.internalServerError().build();
         return ResponseEntity.ok(question);

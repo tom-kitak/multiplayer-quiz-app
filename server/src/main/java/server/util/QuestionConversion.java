@@ -1,8 +1,9 @@
 package server.util;
 
 import commons.CompareQuestion;
-import commons.Question_Bryan;
 import commons.Activity;
+import commons.Question;
+
 
 public class QuestionConversion {
 
@@ -11,7 +12,7 @@ public class QuestionConversion {
      * @param activities The activities to be used.
      * @return A Question.
      */
-    public static Question_Bryan convertActivity(Activity[] activities) {
+    public static Question convertActivity(Activity[] activities) {
         if (activities != null && activities.length == 4){
             String[] titles = new String[4];
             long[] wattages = new long[4];
