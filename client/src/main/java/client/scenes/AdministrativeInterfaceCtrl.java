@@ -13,6 +13,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 
 public class AdministrativeInterfaceCtrl implements Initializable {
 
@@ -32,6 +34,9 @@ public class AdministrativeInterfaceCtrl implements Initializable {
 
     @FXML
     private TableColumn<Activity, Long> colId;
+
+    @FXML
+    private Label errorMessage;
 
     @Inject
     public AdministrativeInterfaceCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -58,14 +63,24 @@ public class AdministrativeInterfaceCtrl implements Initializable {
 
     @FXML
     void deleteActivityPressed(ActionEvent event) {
-        server.deleteActivity(table.getSelectionModel().getSelectedItem());
-        refresh();
+        if (!table.getSelectionModel().isEmpty()) {
+            server.deleteActivity(table.getSelectionModel().getSelectedItem());
+            refresh();
+        } else {
+            errorMessage.setText("Select an activity!");
+            errorMessage.setTextFill(Color.RED);
+        }
     }
 
     @FXML
     void editActivityPressed(ActionEvent event) {
-        Activity activity = table.getSelectionModel().getSelectedItem();
-        mainCtrl.showEditActivity(activity);
+        if (!table.getSelectionModel().isEmpty()) {
+            Activity activity = table.getSelectionModel().getSelectedItem();
+            mainCtrl.showEditActivity(activity);
+        } else {
+            errorMessage.setText("Select an activity!");
+            errorMessage.setTextFill(Color.RED);
+        }
     }
 
     @FXML
@@ -82,6 +97,7 @@ public class AdministrativeInterfaceCtrl implements Initializable {
      * Helper method that makes a request to the server and updates the columns with new data.
      */
     public void refresh() {
+        errorMessage.setText("");
         var activities = server.getAllActivities();
         data = FXCollections.observableList(activities);
         table.setItems(data);

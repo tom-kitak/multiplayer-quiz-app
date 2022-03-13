@@ -2,6 +2,7 @@ package commons;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -20,8 +21,14 @@ public class WattageQuestion extends Question{
 
 
     /**
+     * Used for transferring questions.
+     */
+    public WattageQuestion() {}
+
+    /**
      * @return the rightAnswer attribute of this object
      */
+    @JsonIgnore
     public long getRightAnswer() {
         return this.getCorrectWattage();
     }
@@ -57,6 +64,7 @@ public class WattageQuestion extends Question{
      * @return the description of this Question.
      */
     @Override
+    @JsonIgnore
     public String getQuestionDescription() {
         return "How many watt hours does " + this.getAnswerTitles()[0] + " consume?";
     }

@@ -1,11 +1,22 @@
 package commons;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import java.util.Arrays;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = CompareQuestion.class, name = "CompareQuestion"),
+        @JsonSubTypes.Type(value = WattageQuestion.class, name = "WattageQuestion")
+})
+
+
+
 
 public abstract class Question {
 
@@ -28,6 +39,14 @@ public abstract class Question {
     }
 
     /**
+     * Used for transferring the questions.
+     */
+    public  Question() {
+        this.answerTitles = null;
+        this.answerWattages = null;
+    }
+
+    /**
      * Getter for the answer title's.
      * @return this.answerTitles.
      */
@@ -47,6 +66,7 @@ public abstract class Question {
      * Getter for the correct answer title.
      * @return index 0 of this.answerTitles.
      */
+    @JsonIgnore
     public String getCorrectAnswer() {
         return answerTitles[0];
     }
@@ -55,6 +75,7 @@ public abstract class Question {
      * Getter for the correct answer wattage.
      * @return index 0 of this.answerWattages.
      */
+    @JsonIgnore
     public long getCorrectWattage() {
         return answerWattages[0];
     }

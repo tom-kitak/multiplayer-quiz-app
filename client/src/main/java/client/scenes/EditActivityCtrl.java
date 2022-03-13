@@ -8,8 +8,10 @@ package client.scenes;
         import javafx.fxml.FXML;
         import javafx.scene.control.Alert;
         import javafx.scene.control.TextField;
+        import javafx.scene.paint.Color;
         import javafx.stage.Modality;
         import javafx.scene.input.KeyEvent;
+        import javafx.scene.control.Label;
 
 public class EditActivityCtrl {
 
@@ -31,6 +33,9 @@ public class EditActivityCtrl {
     private TextField whField;
 
     @FXML
+    private Label errorMessage;
+
+    @FXML
     void cancelPressed(ActionEvent event) {
         cancel();
     }
@@ -40,25 +45,35 @@ public class EditActivityCtrl {
         updateActivity();
     }
 
+    @FXML
+    void resetPressed(ActionEvent event) {
+        setActivity(activityToDelete);
+    }
+
     /**
      * The modified activity is sent to the server as a new activity and the old activity is deleted.
      * As a note, id gets changed.
      */
     public void updateActivity(){
         try {
+            Activity activity = extractActivity();
             server.addActivity(extractActivity());
             server.deleteActivity(activityToDelete);
+            clearFields();
+            mainCtrl.showAdministratorInterface();
         } catch (WebApplicationException e) {
-
             var alert = new Alert(Alert.AlertType.ERROR);
             alert.initModality(Modality.APPLICATION_MODAL);
             alert.setContentText(e.getMessage());
             alert.showAndWait();
             return;
+        } catch (NullPointerException e) {
+            errorMessage.setText("Fill all the fields!");
+            errorMessage.setTextFill(Color.RED);
+        } catch (NumberFormatException e) {
+            errorMessage.setText("Please enter integer value!");
+            errorMessage.setTextFill(Color.RED);
         }
-
-        clearFields();
-        mainCtrl.showAdministratorInterface();
     }
 
     /**
@@ -66,6 +81,10 @@ public class EditActivityCtrl {
      * @return
      */
     private Activity extractActivity() {
+        if (titleField.getText().trim().isEmpty() || whField.getText().trim().isEmpty()){
+            throw new NullPointerException();
+        }
+        System.out.println(titleField.getText());
         return new Activity(titleField.getText(), Integer.valueOf(whField.getText()));
     }
 
@@ -94,6 +113,7 @@ public class EditActivityCtrl {
     private void clearFields() {
         titleField.clear();
         whField.clear();
+        errorMessage.setText("");
     }
 
     /**
