@@ -109,4 +109,17 @@ public class HomeScreenCtrl {
         mainCtrl.showAdministratorInterface();
     }
 
+    @FXML
+    void playMultiPlayerButtonPressed(ActionEvent event) {
+        String name;
+        if (nameField.getText().length() == 0){
+            name = "anonymous user";
+        } else {
+            name = nameField.getText();
+        }
+        Player player = new Player(name);
+
+        mainCtrl.showWaitingRoom();
+    }
+
 }
