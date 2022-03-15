@@ -57,7 +57,7 @@ public class QuestionConversion {
         for (int i = 0; i < 4; i++){
             if (activities[i] != null) {
                 Activity current = activities[i];
-                if (current.getTitle() != null && current.getWh() != 0) {
+                if (current.getTitle() != null) {
                     titles[i] = current.getTitle();
                     wattages[i] = current.getWh();
                 } else {
