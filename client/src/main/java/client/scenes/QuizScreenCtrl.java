@@ -309,16 +309,16 @@ public class QuizScreenCtrl implements Initializable {
      * @param question
      */
     public void wattageShowRightAnswer(Button button, WattageQuestion question) {
-        if(Integer.parseInt(buttonR1C1.getText()) == question.getRightAnswer())
+        if(Long.parseLong(buttonR1C1.getText()) == question.getRightAnswer())
             rightColor(buttonR1C1);
-        if(Integer.parseInt(buttonR01C0.getText()) == question.getRightAnswer())
+        if(Long.parseLong(buttonR01C0.getText()) == question.getRightAnswer())
             rightColor(buttonR01C0);
-        if(Integer.parseInt(buttonR0C1.getText()) == question.getRightAnswer())
+        if(Long.parseLong(buttonR0C1.getText()) == question.getRightAnswer())
             rightColor(buttonR0C1);
-        if(Integer.parseInt(buttonR0C0.getText()) == question.getRightAnswer())
+        if(Long.parseLong(buttonR0C0.getText()) == question.getRightAnswer())
             rightColor(buttonR0C0);
         if(button !=null){
-            if (Integer.parseInt(button.getText()) == question.getRightAnswer()){
+            if (Long.parseLong(button.getText()) == question.getRightAnswer()){
                 rightColor(button);
                 this.answeredCorrectly = true;
             }
