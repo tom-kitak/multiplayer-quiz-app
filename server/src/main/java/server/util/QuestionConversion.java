@@ -38,16 +38,11 @@ public class QuestionConversion {
         //bound is amount of types of questions.
         int idx = random.nextInt(2);
         //for each type of question add a new case.
-        /*return switch (idx) {
+        return switch (idx) {
             case 0 -> new CompareQuestion(titles, wattages);
             case 1 -> new WattageQuestion(titles, wattages);
             default -> throw new IllegalStateException("Unexpected value: " + idx);
-        };*/
-        if (idx == 0) {
-            return new CompareQuestion(titles, wattages);
-        } else {
-            return new WattageQuestion(titles, wattages);
-        }
+        };
     }
 
     /**
