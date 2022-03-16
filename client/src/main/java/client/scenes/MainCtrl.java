@@ -50,6 +50,9 @@ public class MainCtrl {
     private ImportActivityCtrl importActivityCtrl;
     private Scene importActivityScene;
 
+    private WaitingRoomCtrl waitingRoomCtrl;
+    private Scene waitingRoomScene;
+
     /**
      * This method should be adjusted if you want to add new screens.
      * @param primaryStage
@@ -65,7 +68,8 @@ public class MainCtrl {
                            Pair<AdministrativeInterfaceCtrl, Parent> administrativeInterfacePair,
                            Pair<AddActivityCtrl, Parent> addActivityPair,
                            Pair<EditActivityCtrl, Parent> editActivityPair,
-                           Pair<ImportActivityCtrl, Parent> importActivityPair) {
+                           Pair<ImportActivityCtrl, Parent> importActivityPair,
+                           Pair<WaitingRoomCtrl, Parent> waitingRoomPair) {
 
         this.primaryStage = primaryStage;
 
@@ -92,6 +96,9 @@ public class MainCtrl {
 
         this.importActivityCtrl = importActivityPair.getKey();
         this.importActivityScene = new Scene(importActivityPair.getValue());
+
+        this.waitingRoomCtrl = waitingRoomPair.getKey();
+        this.waitingRoomScene = new Scene(waitingRoomPair.getValue());
 
         showHomeScreen();
         primaryStage.show();
@@ -142,4 +149,10 @@ public class MainCtrl {
         primaryStage.setScene(importActivityScene);
         importActivityScene.setOnKeyPressed(e -> importActivityCtrl.keyPressed(e));
     }
+
+    public void showWaitingRoom() {
+        primaryStage.setTitle("Waiting Room");
+        primaryStage.setScene(waitingRoomScene);
+    }
+
 }
