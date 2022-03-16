@@ -56,9 +56,7 @@ public class ImportActivityCtrl {
             Gson gson = new Gson();
             ActivityJson[] activityArray = gson.fromJson(file, ActivityJson[].class);
             for(int i = 0; i < activityArray.length; i++) {
-                if (!addActivity(activityArray[i].convertToActivity())) {
-                    throw new Exception("Activity " + activityArray[i].getId() + " could not be added");
-                }
+                addActivity(activityArray[i].convertToActivity());
             }
             file.close();
         } catch (IllegalArgumentException e) {
@@ -80,13 +78,25 @@ public class ImportActivityCtrl {
         mainCtrl.showAdministratorInterface();
     }
 
-    private boolean addActivity(Activity a) {
+    /**
+     * Method to act an Activity to the server and throw the correct Exception on fail.
+     * @param a The Activity to add.
+     * @throws Exception
+     */
+    //Wattage == 0 is not a valid fail option after bug fix in dev!
+    private void addActivity(Activity a) throws Exception {
         try {
             server.addActivity(a);
         } catch (WebApplicationException e) {
-            return false;
+            if (a == null) {
+                throw new Exception("Activity is null and could not be added!");
+            } else if (a.getTitle() == null) {
+                throw new Exception("Activity " + a.getId() + " could not be added as the title is null!");
+            } else {
+                System.out.println(e.getResponse());
+                throw new Exception("Activity " + a.getId() + " could not be added for unknown reason!");
+            }
         }
-        return true;
     }
 
 
