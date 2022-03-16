@@ -17,6 +17,10 @@ public class MultiGame extends Game{
         this.players = new ArrayList<>();
     }
 
+    public MultiGame() {
+        super();
+    }
+
     /**Adds a player to the list of players.
      * @param player the player we want to add
      */

@@ -16,6 +16,9 @@ public abstract class Game {
         this.currentQuestion = currentQuestion;
     }
 
+    public Game() {
+    }
+
     /**Updates the questionNumber and currentQuestion of this SingleGame.
      * @param question the new currentQuestion
      */

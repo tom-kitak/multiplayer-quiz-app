@@ -119,7 +119,7 @@ public class HomeScreenCtrl {
         }
         Player player = new Player(name);
 
-        server.send("/app/player", player);
+        server.send("/app/multi", player);
         mainCtrl.showWaitingRoom(player);
     }
 

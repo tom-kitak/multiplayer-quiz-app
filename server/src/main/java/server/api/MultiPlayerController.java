@@ -42,8 +42,10 @@ public class MultiPlayerController {
      * @return the game object that acts as the lobby
      */
     @MessageMapping("/multi")
-    @SendTo("topic/multi")
+    @SendTo("/topic/multi")
     public MultiGame connect( Player player){
+        System.out.println("-----------------");
+        System.out.println(player);
         ArrayList<Player> tempPlayers = currentLobbyGame.getPlayers();
         if(tempPlayers.contains(player)){
             tempPlayers.remove(player);
