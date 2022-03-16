@@ -16,6 +16,7 @@
 package client.scenes;
 
 import commons.Activity;
+import commons.Player;
 import commons.SingleGame;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -150,9 +151,11 @@ public class MainCtrl {
         importActivityScene.setOnKeyPressed(e -> importActivityCtrl.keyPressed(e));
     }
 
-    public void showWaitingRoom() {
+    public void showWaitingRoom(Player player) {
         primaryStage.setTitle("Waiting Room");
+        waitingRoomCtrl.setPlayer(player);
         primaryStage.setScene(waitingRoomScene);
+
     }
 
 }

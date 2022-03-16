@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.ConfirmBoxCtrl;
 import client.utils.ServerUtils;
+import commons.MultiGame;
 import commons.Player;
 import commons.SingleGame;
 import jakarta.ws.rs.WebApplicationException;
@@ -119,7 +120,8 @@ public class HomeScreenCtrl {
         }
         Player player = new Player(name);
 
-        mainCtrl.showWaitingRoom();
+        server.send("/app/player", player);
+        mainCtrl.showWaitingRoom(player);
     }
 
 }
