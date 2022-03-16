@@ -50,6 +50,9 @@ public class MainCtrl {
     private ImportActivityCtrl importActivityCtrl;
     private Scene importActivityScene;
 
+    private ServerAddressCtrl serverAddressCtrl;
+    private Scene serverAddress;
+
     /**
      * This method should be adjusted if you want to add new screens.
      * @param primaryStage
@@ -65,7 +68,8 @@ public class MainCtrl {
                            Pair<AdministrativeInterfaceCtrl, Parent> administrativeInterfacePair,
                            Pair<AddActivityCtrl, Parent> addActivityPair,
                            Pair<EditActivityCtrl, Parent> editActivityPair,
-                           Pair<ImportActivityCtrl, Parent> importActivityPair) {
+                           Pair<ImportActivityCtrl, Parent> importActivityPair,
+                           Pair<ServerAddressCtrl, Parent> addressCtrlPair) {
 
         this.primaryStage = primaryStage;
 
@@ -93,7 +97,10 @@ public class MainCtrl {
         this.importActivityCtrl = importActivityPair.getKey();
         this.importActivityScene = new Scene(importActivityPair.getValue());
 
-        showHomeScreen();
+        this.serverAddressCtrl = addressCtrlPair.getKey();
+        this.serverAddress = new Scene(addressCtrlPair.getValue());
+
+        showServerAddress();
         primaryStage.show();
     }
 
@@ -141,5 +148,10 @@ public class MainCtrl {
         primaryStage.setTitle("Import Activity");
         primaryStage.setScene(importActivityScene);
         importActivityScene.setOnKeyPressed(e -> importActivityCtrl.keyPressed(e));
+    }
+
+    public void showServerAddress() {
+        primaryStage.setTitle("Server Address");
+        primaryStage.setScene(serverAddress);
     }
 }

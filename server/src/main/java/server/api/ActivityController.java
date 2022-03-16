@@ -27,6 +27,11 @@ public class ActivityController {
         return repo.findAll();
     }
 
+    @GetMapping("/check")
+    public Boolean returnCheck() {
+        return true;
+    }
+
     /**
      * @param id The identifier of the object to be retrieved.
      * @return Returns only the specified object

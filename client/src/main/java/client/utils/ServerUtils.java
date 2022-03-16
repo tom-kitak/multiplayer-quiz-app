@@ -34,7 +34,20 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 public class ServerUtils {
 
-    private static final String SERVER = "http://localhost:8080/";
+    public static void setSERVER(String SERVER) {
+        ServerUtils.SERVER = SERVER;
+    }
+
+    private static String SERVER = "";
+
+
+    public Boolean checkConnection() {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/activity/check")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<Boolean>() {});
+    }
 
     public Question getQuestion() {
         return ClientBuilder.newClient(new ClientConfig())

@@ -1,6 +1,5 @@
 package client.scenes;
 
-import client.ConfirmBoxCtrl;
 import client.utils.ServerUtils;
 import commons.Player;
 import commons.SingleGame;
@@ -20,7 +19,7 @@ import javafx.scene.input.KeyEvent;
 
 public class HomeScreenCtrl {
 
-    private final ServerUtils server;
+    private ServerUtils server;
     private final MainCtrl mainCtrl;
 
     @FXML
@@ -59,8 +58,7 @@ public class HomeScreenCtrl {
 
     @FXML
     void exitButtonPressed(ActionEvent event){
-        boolean answer = ConfirmBoxCtrl.display("Alert", "Are you sure you want to exit?");
-        if(answer) System.exit(0);
+        mainCtrl.showServerAddress();
     }
 
     @FXML
