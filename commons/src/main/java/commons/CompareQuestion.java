@@ -2,6 +2,7 @@ package commons;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+
 public class CompareQuestion extends Question {
 
     /**
@@ -42,4 +43,16 @@ public class CompareQuestion extends Question {
         return super.hashCode();
     }
 
+    /**
+     * Equals method for this object.
+     *
+     * @param o Object to be compared against.
+     * @return True if the objects are equal, false otherwise.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        return super.equals(o);
+    }
 }

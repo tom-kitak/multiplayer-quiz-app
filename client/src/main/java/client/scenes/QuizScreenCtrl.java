@@ -404,6 +404,9 @@ public class QuizScreenCtrl implements Initializable {
         timer.scheduleAtFixedRate(task, 0, 1000);
     }
 
+    /**
+     * Will update the score of the player and it will update the field on the client.
+     */
     public void updateScore() {
         if(answeredCorrectly){
             this.game.upDateScore(timeLeft);
