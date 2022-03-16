@@ -24,6 +24,7 @@ import client.scenes.HowToPlayCtrl;
 import client.scenes.AdministrativeInterfaceCtrl;
 import client.scenes.AddActivityCtrl;
 import client.scenes.EditActivityCtrl;
+import client.scenes.WaitingRoomCtrl;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
@@ -41,6 +42,7 @@ public class MyModule implements Module {
         binder.bind(AdministrativeInterfaceCtrl.class).in(Scopes.SINGLETON);
         binder.bind(AddActivityCtrl.class).in(Scopes.SINGLETON);
         binder.bind(EditActivityCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(WaitingRoomCtrl.class).in(Scopes.SINGLETON);
 
     }
 }
