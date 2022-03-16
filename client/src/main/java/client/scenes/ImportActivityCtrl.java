@@ -8,10 +8,11 @@ import commons.ActivityJson;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -31,6 +32,9 @@ public class ImportActivityCtrl {
     private TextField pathField;
 
     @FXML
+    private Label errorMessage;
+
+    @FXML
     void cancelPressed(ActionEvent event) {
         cancel();
     }
@@ -45,20 +49,32 @@ public class ImportActivityCtrl {
      */
     public void submitActivity(){
         try {
+            if (!pathField.getText().endsWith(".json") && !pathField.getText().isEmpty()) {
+                throw new IllegalArgumentException("File needs to be a json file!");
+            }
             Reader file = Files.newBufferedReader(Paths.get(pathField.getText()));
             Gson gson = new Gson();
             ActivityJson[] activityArray = gson.fromJson(file, ActivityJson[].class);
             for(int i = 0; i < activityArray.length; i++) {
                 if (!addActivity(activityArray[i].convertToActivity())) {
-                    throw new Exception("Activity could not be added");
-                };
+                    throw new Exception("Activity " + activityArray[i].getId() + " could not be added");
+                }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+            file.close();
+        } catch (IllegalArgumentException e) {
+            errorMessage.setText("File needs to be a json file! (end with .json)");
+            errorMessage.setTextFill(Color.RED);
+            return;
         }
-
+        catch (Exception e) {
+            if (pathField.getText().isEmpty()) {
+                errorMessage.setText("You need to fill in a path!");
+            } else {
+                errorMessage.setText(e.getMessage());
+            }
+            errorMessage.setTextFill(Color.RED);
+            return;
+        }
 
         clearFields();
         mainCtrl.showAdministratorInterface();

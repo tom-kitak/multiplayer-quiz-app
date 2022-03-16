@@ -18,6 +18,7 @@ package client;
 
 import client.scenes.EndScreenCtrl;
 import client.scenes.HomeScreenCtrl;
+import client.scenes.ImportActivityCtrl;
 import client.scenes.MainCtrl;
 import client.scenes.QuizScreenCtrl;
 import client.scenes.HowToPlayCtrl;
@@ -41,6 +42,6 @@ public class MyModule implements Module {
         binder.bind(AdministrativeInterfaceCtrl.class).in(Scopes.SINGLETON);
         binder.bind(AddActivityCtrl.class).in(Scopes.SINGLETON);
         binder.bind(EditActivityCtrl.class).in(Scopes.SINGLETON);
-
+        binder.bind(ImportActivityCtrl.class).in(Scopes.SINGLETON);
     }
 }
