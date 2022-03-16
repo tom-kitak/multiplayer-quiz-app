@@ -25,7 +25,7 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 
-import org.springframework.messaging.simp.stomp.StompSession;
+
 import server.Score;
 
 import java.util.List;
