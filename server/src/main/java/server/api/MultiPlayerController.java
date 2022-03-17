@@ -5,6 +5,7 @@ import commons.MultiGame;
 import commons.Player;
 
 import commons.Question;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 
@@ -100,6 +101,12 @@ public class MultiPlayerController {
         // Returns the result.
         Question question = convertActivity(activities);
         return question;
+    }
+
+    @MessageMapping("/game/{gameId}")
+    @SendTo("/topic/game/{gameId}")
+    public MultiGame gameplayQuestionSender(@DestinationVariable String gameId) {
+        
     }
 
 
