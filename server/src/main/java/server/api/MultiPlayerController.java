@@ -137,6 +137,22 @@ public class MultiPlayerController {
         return game;
     }
 
+    @MessageMapping("/multi/leaveInGame/{gameId}")
+    public void disconnect(@DestinationVariable String gameId, Player player) {
+        MultiGame game= null;
+        for (MultiGame g : games) {
+            if (g.getId() == Integer.valueOf(gameId)) {
+                game = g;
+                break;
+            }
+        }
+        if(game != null){
+            ArrayList<Player> players = game.getPlayers();
+            players.remove(player);
+            game.setPlayers(players);
+        }
+    }
+
 
 
 
