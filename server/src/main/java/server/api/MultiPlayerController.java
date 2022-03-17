@@ -24,6 +24,7 @@ public class MultiPlayerController {
     private MultiGame currentLobbyGame;
     private final Random random;
     private final ActivityRepository repo;
+    private int id;
 
     /**
      * Creates a new MultiplayerController object.
@@ -32,9 +33,11 @@ public class MultiPlayerController {
      */
     public MultiPlayerController(Random random, ActivityRepository repo) {
         this.random = random;
+        this.id = 0;
         this.repo = repo;
         this.games = new ArrayList<>();
         this.currentLobbyGame = new MultiGame(null);
+        currentLobbyGame.setId(id);
     }
 
     /**Called when the player connects or disconnect from the lobby.
@@ -65,7 +68,9 @@ public class MultiPlayerController {
     public MultiGame startGame() {
         Question question = getQuestion();
         MultiGame started = currentLobbyGame;
+        this.id++;
         currentLobbyGame = new MultiGame(question);
+        currentLobbyGame.setId(id);
         return started;
     }
 
