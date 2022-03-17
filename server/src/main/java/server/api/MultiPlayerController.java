@@ -12,7 +12,11 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.RestController;
 import server.database.ActivityRepository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.HashMap;
+import java.util.Collections;
+import java.util.List;
 
 import static server.util.QuestionConversion.convertActivity;
 
@@ -23,7 +27,7 @@ public class MultiPlayerController {
     private final Random random;
     private final ActivityRepository repo;
     private int id;
-    private HashMap<MultiGame, List<Boolean>> allPlayersResponded;
+    private HashMap<MultiGame, Integer> allPlayersResponded;
 
     /**
      * Creates a new MultiplayerController object.
@@ -45,7 +49,7 @@ public class MultiPlayerController {
      */
     @MessageMapping("/multi")
     @SendTo("/topic/multi")
-    public MultiGame connect( Player player){
+    public MultiGame connect(Player player){
         System.out.println("-----------------");
         System.out.println(player);
         ArrayList<Player> tempPlayers = currentLobbyGame.getPlayers();
@@ -107,8 +111,7 @@ public class MultiPlayerController {
     }
 
     @MessageMapping("/multi/gameplay/{gameId}")
-    @SendTo("/topic/multi/gameplay/{gameId}")
-    public MultiGame gameplayQuestionSender(@DestinationVariable String gameId) {
+    public void gameplayQuestionSender(@DestinationVariable String gameId, MultiGame gameFromPlayer) {
         MultiGame game = null;
         for (MultiGame g : games){
             if (g.getId() == Integer.valueOf(gameId)){
@@ -116,7 +119,18 @@ public class MultiPlayerController {
                 break;
             }
         }
+        if (allPlayersResponded.containsKey(game)){
+            allPlayersResponded.put(game, (allPlayersResponded.get(game) + 1));
+        }
+        if (game.getPlayers().size() == allPlayersResponded.get(game)){
+            sendQuestion(gameId, game);
+        }
+    }
 
+    @SendTo("/topic/multi/gameplay/{gameId}")
+    public MultiGame sendQuestion(@DestinationVariable String gameId,MultiGame game) {
+        game.setCurrentQuestion(getQuestion());
+        return game;
     }
 
 
