@@ -51,6 +51,9 @@ public class MainCtrl {
     private ImportActivityCtrl importActivityCtrl;
     private Scene importActivityScene;
 
+    private ServerAddressCtrl serverAddressCtrl;
+    private Scene serverAddress;
+
     private WaitingRoomCtrl waitingRoomCtrl;
     private Scene waitingRoomScene;
 
@@ -69,7 +72,7 @@ public class MainCtrl {
                            Pair<AdministrativeInterfaceCtrl, Parent> administrativeInterfacePair,
                            Pair<AddActivityCtrl, Parent> addActivityPair,
                            Pair<EditActivityCtrl, Parent> editActivityPair,
-                           Pair<ImportActivityCtrl, Parent> importActivityPair,
+                           Pair<ServerAddressCtrl, Parent> addressCtrlPair) {
                            Pair<WaitingRoomCtrl, Parent> waitingRoomPair) {
 
         this.primaryStage = primaryStage;
@@ -98,6 +101,10 @@ public class MainCtrl {
         this.importActivityCtrl = importActivityPair.getKey();
         this.importActivityScene = new Scene(importActivityPair.getValue());
 
+        this.serverAddressCtrl = addressCtrlPair.getKey();
+        this.serverAddress = new Scene(addressCtrlPair.getValue());
+
+        showServerAddress();
         this.waitingRoomCtrl = waitingRoomPair.getKey();
         this.waitingRoomScene = new Scene(waitingRoomPair.getValue());
 
@@ -149,6 +156,11 @@ public class MainCtrl {
         primaryStage.setTitle("Import Activity");
         primaryStage.setScene(importActivityScene);
         importActivityScene.setOnKeyPressed(e -> importActivityCtrl.keyPressed(e));
+    }
+
+    public void showServerAddress() {
+        primaryStage.setTitle("Server Address");
+        primaryStage.setScene(serverAddress);
     }
 
     public void showWaitingRoom(Player player) {
