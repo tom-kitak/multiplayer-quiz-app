@@ -40,6 +40,11 @@ public class WaitingRoomCtrl implements Initializable {
             numOfPlayersInTheRoom.setText(String.valueOf(game.getPlayers().size()));
             this.game = game;
         });
+        server.registerForMessages("/topic/started", MultiGame.class, game -> {
+            System.out.println("----------------------");
+            System.out.println(game);
+//            mainCtrl.setMultiplayerGameScreen(game);
+        });
     }
 
     @FXML
