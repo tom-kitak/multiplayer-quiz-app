@@ -12,10 +12,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.RestController;
 import server.database.ActivityRepository;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static server.util.QuestionConversion.convertActivity;
 
@@ -26,6 +23,7 @@ public class MultiPlayerController {
     private final Random random;
     private final ActivityRepository repo;
     private int id;
+    private HashMap<MultiGame, List<Boolean>> allPlayersResponded;
 
     /**
      * Creates a new MultiplayerController object.
@@ -108,10 +106,17 @@ public class MultiPlayerController {
         return question;
     }
 
-    @MessageMapping("/game/{gameId}")
-    @SendTo("/topic/game/{gameId}")
+    @MessageMapping("/multi/gameplay/{gameId}")
+    @SendTo("/topic/multi/gameplay/{gameId}")
     public MultiGame gameplayQuestionSender(@DestinationVariable String gameId) {
-        
+        MultiGame game = null;
+        for (MultiGame g : games){
+            if (g.getId() == Integer.valueOf(gameId)){
+                game = g;
+                break;
+            }
+        }
+
     }
 
 
