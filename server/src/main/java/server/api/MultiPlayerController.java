@@ -126,7 +126,7 @@ public class MultiPlayerController {
         if (allPlayersResponded.containsKey(game)){
             allPlayersResponded.put(game, (allPlayersResponded.get(game) + 1));
         }
-        if (game.getPlayers().size() == allPlayersResponded.get(game)){
+        if (game.getPlayers().size() <= allPlayersResponded.get(game)){
             sendQuestion(gameId, game);
         }
     }
