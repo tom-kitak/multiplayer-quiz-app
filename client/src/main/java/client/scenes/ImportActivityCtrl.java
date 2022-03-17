@@ -2,10 +2,14 @@ package client.scenes;
 
 import client.utils.ImportCallable;
 import client.utils.ServerUtils;
+import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -33,6 +37,15 @@ public class ImportActivityCtrl {
     private Label errorMessage;
 
     @FXML
+    private Button submitButton;
+
+    @FXML
+    private Button cancelButton;
+
+    @FXML
+    private ProgressIndicator progressIndicator;
+
+    @FXML
     void cancelPressed(ActionEvent event) {
         cancel();
     }
@@ -46,43 +59,58 @@ public class ImportActivityCtrl {
      * Activity that was created with user input is send to the server.
      */
     public void submitActivity(){
-        ImportCallable importCallable = new ImportCallable(server, pathField.getText());
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        Future<Boolean> future = executorService.submit(importCallable);
-        while (!future.isDone()) {
-            //loading screen
-        }
+        errorMessage.setText("");
+        ImportActivityCtrl ctrl = this;
+        new Thread(() -> {
+            progressIndicator.setProgress(0);
+            ImportCallable importCallable = new ImportCallable(server, pathField.getText(), ctrl);
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            Future<String> importFuture = executorService.submit(importCallable);
+            submitButton.setDisable(true);
+            cancelButton.setDisable(true);
+            pathField.setEditable(false);
+            while (!importFuture.isDone()){}
+            handleResult(importFuture);
+        }).start();
+    }
+
+    public void setProgress(double progress) {
+        Platform.runLater(() -> progressIndicator.setProgress(progress));
+    }
+
+    private void handleResult(Future<String> future) {
         try {
-            future.get();
-        } catch (ExecutionException executionException) {
-            handleExecutionException(executionException.getCause());
-            return;
+            submitButton.setDisable(false);
+            cancelButton.setDisable(false);
+            pathField.setEditable(true);
+            String output = future.get();
+            if (!output.isEmpty()) {
+                Platform.runLater(() -> {
+                    errorMessage.setTextFill(Color.RED);
+                    errorMessage.setText(output);
+                });
+                return;
+            }
         } catch (InterruptedException e) {
-            errorMessage.setText("Import got interrupted and could not be finished!");
-            errorMessage.setTextFill(Color.RED);
+            Platform.runLater(() -> {
+                errorMessage.setText("Import got interrupted and could not be finished!");
+                errorMessage.setTextFill(Color.RED);
+            });
+            System.err.println(e.getMessage());
+            e.printStackTrace();
+            return;
+        } catch (ExecutionException e) {
+            if (e.getCause().getClass().equals(JsonSyntaxException.class)) {
+                Platform.runLater(() -> {
+                    errorMessage.setText("The json file specified is not in the correct format!");
+                    errorMessage.setTextFill(Color.RED);
+                });
+            }
             return;
         }
         clearFields();
         mainCtrl.showAdministratorInterface();
     }
-
-    private void handleExecutionException(Throwable throwable) {
-
-        if (throwable.getClass().equals(IllegalArgumentException.class)) {
-            errorMessage.setText("File needs to be a json file! (end with .json)");
-            errorMessage.setTextFill(Color.RED);
-        } else {
-            if (pathField.getText().isEmpty()) {
-                errorMessage.setText("You need to fill in a path!");
-            } else {
-                errorMessage.setText(throwable.getMessage());
-            }
-            errorMessage.setTextFill(Color.RED);
-        }
-    }
-
-
-
 
     /**
      * Non-essential method whose purpose is to make usage of the app more convenient.
@@ -92,14 +120,10 @@ public class ImportActivityCtrl {
      */
     public void keyPressed(KeyEvent e) {
         switch (e.getCode()) {
-            case ENTER:
-                submitActivity();
-                break;
-            case ESCAPE:
-                cancel();
-                break;
-            default:
-                break;
+            case ENTER -> submitActivity();
+            case ESCAPE -> cancel();
+            default -> {
+            }
         }
     }
 
@@ -114,7 +138,6 @@ public class ImportActivityCtrl {
      * The activity and user input is discarded and user is returned to Administrative Interface.
      */
     private void cancel(){
-        clearFields();
         mainCtrl.showAdministratorInterface();
     }
 }

@@ -1,37 +1,55 @@
 package client.utils;
 
+import client.scenes.ImportActivityCtrl;
 import com.google.gson.Gson;
 import commons.Activity;
 import commons.ActivityJson;
 import jakarta.ws.rs.WebApplicationException;
+
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.Callable;
 
-public class ImportCallable implements Callable<Boolean> {
+public class ImportCallable implements Callable<String> {
 
     private final ServerUtils server;
     private final String pathFieldText;
+    private final ImportActivityCtrl ctrl;
 
-    public ImportCallable(ServerUtils server, String pathFieldText) {
+
+    public ImportCallable(ServerUtils server, String pathFieldText, ImportActivityCtrl ctrl) {
         this.server = server;
         this.pathFieldText = pathFieldText;
+        this.ctrl = ctrl;
     }
 
     @Override
-    public Boolean call() throws Exception {
+    public String call() throws Exception {
+        StringBuilder exceptions = new StringBuilder();
         if (!pathFieldText.endsWith(".json") && !pathFieldText.isEmpty()) {
-            throw new IllegalArgumentException("File needs to be a json file!");
+            ctrl.setProgress(1);
+            return "File needs to be a json file! (end with .json)";
+        } else if (pathFieldText.isEmpty()) {
+            ctrl.setProgress(1);
+            return "Path cannot be empty!";
         }
         Reader file = Files.newBufferedReader(Paths.get(pathFieldText));
         Gson gson = new Gson();
         ActivityJson[] activityArray = gson.fromJson(file, ActivityJson[].class);
-        for (ActivityJson activityJson : activityArray) {
-            addActivity(activityJson);
+        int length = activityArray.length;
+        for (int i = 0; i < length; i++) {
+            try {
+                addActivity(activityArray[i]);
+            } catch (Exception e) {
+                exceptions.append(e.getMessage()).append(System.lineSeparator());
+            }
+            ctrl.setProgress((i + 1d) / length);
         }
+        System.out.println("DONE!");
+        ctrl.setProgress(1);
         file.close();
-        return true;
+        return exceptions.toString();
     }
 
     /**
