@@ -4,15 +4,12 @@ package client.scenes;
         import com.google.inject.Inject;
         import commons.MultiGame;
         import commons.Player;
+        import javafx.application.Platform;
         import javafx.event.ActionEvent;
         import javafx.fxml.FXML;
         import javafx.scene.text.Text;
-        import javafx.fxml.Initializable;
 
-        import java.net.URL;
-        import java.util.ResourceBundle;
-
-public class WaitingRoomCtrl implements Initializable {
+public class WaitingRoomCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
@@ -26,26 +23,6 @@ public class WaitingRoomCtrl implements Initializable {
         this.mainCtrl = mainCtrl;
     }
 
-    /**
-     * Every time the message is received form the server (it is always a game),
-     * the number of players in the room is updated.
-     * @param location
-     * @param resources
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-//        server.registerForMessages("/topic/multi", MultiGame.class, game -> {
-//            System.out.println("----------------------");
-//            System.out.println(game);
-//            numOfPlayersInTheRoom.setText(String.valueOf(game.getPlayers().size()));
-//            this.game = game;
-//        });
-//        server.registerForMessages("/topic/started", MultiGame.class, game -> {
-//            System.out.println("----------------------");
-//            System.out.println(game);
-////            mainCtrl.setMultiplayerGameScreen(game);
-//        });
-    }
 
     @FXML
     private Text numOfPlayersInTheRoom;
@@ -62,6 +39,23 @@ public class WaitingRoomCtrl implements Initializable {
         mainCtrl.showHomeScreen();
     }
 
+    public void initConnection() {
+        this.player = player;
+        ServerUtils.registerForMessages("/topic/multi", MultiGame.class, game -> {
+            System.out.println("----------------------");
+            System.out.println(game);
+            numOfPlayersInTheRoom.setText(String.valueOf(game.getPlayers().size()));
+            this.game = game;
+        });
+        ServerUtils.registerForMessages("/topic/started", MultiGame.class, game -> {
+            System.out.println("----------------------");
+            System.out.println(game);
+            Platform.runLater(() -> {
+                mainCtrl.showQuizScreen(game);
+            });
+        });
+    }
+
     /**
      * Game instance (that is collecting players currently in the room)
      * is send to the server to indicate that the game should be started for everyone.
@@ -71,7 +65,6 @@ public class WaitingRoomCtrl implements Initializable {
     @FXML
     void startGamePressed(ActionEvent event) {
         server.send("/app/start", game);
-//        mainCtrl.showMultiplayerScene();
     }
 
     /**

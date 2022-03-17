@@ -15,9 +15,10 @@
  */
 package client.scenes;
 
+import client.utils.ServerUtils;
 import commons.Activity;
+import commons.Game;
 import commons.Player;
-import commons.SingleGame;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -26,6 +27,8 @@ import javafx.util.Pair;
 public class MainCtrl {
 
     private Stage primaryStage;
+
+    private Player curPlayer;
 
     private HomeScreenCtrl homeScreenCtrl;
     private Scene homeScreen;
@@ -118,8 +121,9 @@ public class MainCtrl {
         primaryStage.setScene(homeScreen);
     }
 
-    public void showQuizScreen(SingleGame game) {
+    public void showQuizScreen(Game game) {
         primaryStage.setTitle("Quiz Screen");
+        quizScreenCtrl.setPlayer(curPlayer);
         quizScreenCtrl.startGame(game);
         primaryStage.setScene(quizScreen);
     }
@@ -166,9 +170,11 @@ public class MainCtrl {
 
     public void showWaitingRoom(Player player) {
         primaryStage.setTitle("Waiting Room");
+        curPlayer = player;
+        waitingRoomCtrl.initConnection();
         waitingRoomCtrl.setPlayer(player);
+        ServerUtils.send("/app/multi", player);
         primaryStage.setScene(waitingRoomScene);
-
     }
 
 }
