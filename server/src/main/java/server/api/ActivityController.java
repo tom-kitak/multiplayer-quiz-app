@@ -48,6 +48,7 @@ public class ActivityController {
 
         // Activities with id 0 can't get deleted for some reason.
         if(activity == null || activity.getTitle() == null || activity.getWh() == 0) {
+            System.err.println(activity);
             return ResponseEntity.badRequest().build();
         }
 
