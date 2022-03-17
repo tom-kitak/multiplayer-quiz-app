@@ -23,7 +23,7 @@ public class MultiPlayerController {
     private final Random random;
     private final ActivityRepository repo;
     private int id;
-    private HashMap<MultiGame, List<Boolean>> allPlayersResponded;
+    private HashMap<MultiGame, Integer> allPlayersResponded;
 
     /**
      * Creates a new MultiplayerController object.
@@ -37,6 +37,8 @@ public class MultiPlayerController {
         this.games = new ArrayList<>();
         this.currentLobbyGame = new MultiGame(null);
         currentLobbyGame.setId(id);
+        this.allPlayersResponded = new HashMap<>();
+        allPlayersResponded.put(currentLobbyGame, 0);
     }
 
     /**Called when the player connects or disconnect from the lobby.
@@ -67,9 +69,11 @@ public class MultiPlayerController {
     public MultiGame startGame() {
         Question question = getQuestion();
         MultiGame started = currentLobbyGame;
+        started.setCurrentQuestion(question);
         this.id++;
-        currentLobbyGame = new MultiGame(question);
+        currentLobbyGame = new MultiGame(null);
         currentLobbyGame.setId(id);
+        allPlayersResponded.put(currentLobbyGame, 0);
         return started;
     }
 
