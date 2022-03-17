@@ -117,11 +117,13 @@ public class ServerUtils {
     }
 
 
+    public static void setSession(String wsAddress) {
+        session = session = connect("ws://" + wsAddress + "/websocket");
+    }
+    private static StompSession session = null;
+//    private StompSession session = connect("ws://localhost:8080/websocket");
 
-
-    private StompSession session = connect("ws://localhost:8080/websocket");
-
-    private StompSession connect (String url) {
+    private static StompSession connect (String url) {
         var client = new StandardWebSocketClient();
         var stomp = new WebSocketStompClient(client);
         stomp.setMessageConverter(new MappingJackson2MessageConverter());
@@ -135,7 +137,7 @@ public class ServerUtils {
         throw new IllegalStateException();
     }
 
-    public <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer) {
+    public static <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer) {
         session.subscribe(dest, new StompFrameHandler() {
             @Override
             public Type getPayloadType(StompHeaders headers) {
@@ -150,7 +152,7 @@ public class ServerUtils {
         });
     }
 
-    public void send(String dest, Object o) {
+    public static void send(String dest, Object o) {
         session.send(dest, o);
     }
 

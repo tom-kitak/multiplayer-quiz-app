@@ -68,8 +68,8 @@ public class Main extends Application {
         });
         mainCtrl.initialize(primaryStage, HomeScreenPair, QuizScreenPair,
                 EndScreenPair, HowToPlayPair, AdministrativeInterfacePair,
-                AddActivityPair, EditActivityPair, ImportActivityPair, ServerAddressPair, 
-                WaitingRoomPair);
+                AddActivityPair, EditActivityPair, ServerAddressPair,
+                WaitingRoomPair,  ImportActivityPair);
     }
 
     private void closeProgram() {

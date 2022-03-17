@@ -29,9 +29,9 @@ public class ServerAddressCtrl {
         String address = addressField.getText();
         // If no address entered, try localhost.
         if(addressField.getCharacters().length() == 0) {
-            address = "http://localhost:8080/";
+            address = "localhost:8080";
         }
-        ServerUtils.setSERVER(address);
+        ServerUtils.setSERVER("http://" + address + "/");
         boolean check = false;
         // Try to connect, show error if not possible.
         try {
@@ -40,6 +40,7 @@ public class ServerAddressCtrl {
             check = false;
         }
         if(check) {
+            ServerUtils.setSession(address);
             mainCtrl.showHomeScreen();
         } else {
             Alert a = new Alert(Alert.AlertType.ERROR);

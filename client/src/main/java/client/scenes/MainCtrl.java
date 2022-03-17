@@ -72,8 +72,9 @@ public class MainCtrl {
                            Pair<AdministrativeInterfaceCtrl, Parent> administrativeInterfacePair,
                            Pair<AddActivityCtrl, Parent> addActivityPair,
                            Pair<EditActivityCtrl, Parent> editActivityPair,
-                           Pair<ServerAddressCtrl, Parent> addressCtrlPair) {
-                           Pair<WaitingRoomCtrl, Parent> waitingRoomPair) {
+                           Pair<ServerAddressCtrl, Parent> addressCtrlPair,
+                           Pair<WaitingRoomCtrl, Parent> waitingRoomPair,
+                           Pair<ImportActivityCtrl, Parent> importActivityPair) {
 
         this.primaryStage = primaryStage;
 
@@ -108,7 +109,7 @@ public class MainCtrl {
         this.waitingRoomCtrl = waitingRoomPair.getKey();
         this.waitingRoomScene = new Scene(waitingRoomPair.getValue());
 
-        showHomeScreen();
+        showServerAddress();
         primaryStage.show();
     }
 

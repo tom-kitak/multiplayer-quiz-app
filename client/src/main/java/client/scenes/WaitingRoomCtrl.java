@@ -34,17 +34,17 @@ public class WaitingRoomCtrl implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        server.registerForMessages("/topic/multi", MultiGame.class, game -> {
-            System.out.println("----------------------");
-            System.out.println(game);
-            numOfPlayersInTheRoom.setText(String.valueOf(game.getPlayers().size()));
-            this.game = game;
-        });
-        server.registerForMessages("/topic/started", MultiGame.class, game -> {
-            System.out.println("----------------------");
-            System.out.println(game);
-//            mainCtrl.setMultiplayerGameScreen(game);
-        });
+//        server.registerForMessages("/topic/multi", MultiGame.class, game -> {
+//            System.out.println("----------------------");
+//            System.out.println(game);
+//            numOfPlayersInTheRoom.setText(String.valueOf(game.getPlayers().size()));
+//            this.game = game;
+//        });
+//        server.registerForMessages("/topic/started", MultiGame.class, game -> {
+//            System.out.println("----------------------");
+//            System.out.println(game);
+////            mainCtrl.setMultiplayerGameScreen(game);
+//        });
     }
 
     @FXML
