@@ -11,4 +11,7 @@ public class ActivityJson {
         return new Activity(title, consumption_in_wh);
     }
 
+    public String getId() {
+        return id;
+    }
 }
