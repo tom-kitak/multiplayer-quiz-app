@@ -5,6 +5,7 @@ import java.util.Objects;
 
 public class MultiGame extends Game{
     private ArrayList<Player> players;
+    private int id;
 
 
     /**
@@ -15,6 +16,13 @@ public class MultiGame extends Game{
     public MultiGame(Question currentQuestion) {
         super(currentQuestion);
         this.players = new ArrayList<>();
+        this.id = 0;
+    }
+
+
+
+    public MultiGame() {
+        super();
     }
 
     /**Adds a player to the list of players.
@@ -43,6 +51,20 @@ public class MultiGame extends Game{
      */
     public void setPlayers(ArrayList<Player> players) {
         this.players = players;
+    }
+
+    /**
+     * @return the id of this MultiGame.
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**Sets the id of this MultiGame.
+     * @param id the new value for the id field
+     */
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**Checks this MultiGame and o for equality.

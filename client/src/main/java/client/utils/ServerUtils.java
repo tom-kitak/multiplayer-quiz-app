@@ -25,6 +25,7 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 
+
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
@@ -32,6 +33,7 @@ import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
+
 import server.Score;
 
 import java.lang.reflect.Type;
@@ -101,6 +103,9 @@ public class ServerUtils {
                 .get(new GenericType<List<Score>>() {});
     }
 
+
+
+
     private StompSession session = connect("ws://localhost:8080/websocket");
 
     private StompSession connect (String url) {
@@ -135,4 +140,5 @@ public class ServerUtils {
     public void send(String dest, Object o) {
         session.send(dest, o);
     }
+
 }
