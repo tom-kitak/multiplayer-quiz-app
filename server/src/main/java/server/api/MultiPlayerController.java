@@ -53,6 +53,7 @@ public class MultiPlayerController {
             tempPlayers.add(player);
         }
         currentLobbyGame.setPlayers(tempPlayers);
+
         return currentLobbyGame;
     }
 

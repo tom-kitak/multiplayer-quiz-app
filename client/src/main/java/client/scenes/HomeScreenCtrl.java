@@ -113,7 +113,7 @@ public class HomeScreenCtrl {
     void playMultiPlayerButtonPressed(ActionEvent event) {
         String name;
         if (nameField.getText().length() == 0){
-            name = "anonymous user";
+            name = generateRandomString();
         } else {
             name = nameField.getText();
         }
@@ -122,5 +122,29 @@ public class HomeScreenCtrl {
         server.send("/app/multi", player);
         mainCtrl.showWaitingRoom(player);
     }
+
+    public String generateRandomString(){
+        String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        String s = "";
+        for(int i = 0; i<=12; i++){
+            int index = generateIndex(51);
+            char a = letters.charAt(index);
+            s = s +a;
+        }
+        return s;
+
+    }
+
+    /**
+     * @param max the max value of index we want to obtain.
+     * @return a randomly generated Index
+     */
+    public int generateIndex(int max){
+        double factor = Math.random();
+        int result = (int) (Math.round(factor * max));
+        return result;
+    }
+    
+
 
 }
