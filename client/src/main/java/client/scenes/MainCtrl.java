@@ -111,6 +111,7 @@ public class MainCtrl {
     public void showEndScreen() {
         primaryStage.setTitle("End Screen");
         primaryStage.setScene(endScreen);
+
     }
 
     public void showHowToPlay() {
