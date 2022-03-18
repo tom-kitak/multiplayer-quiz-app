@@ -17,19 +17,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.hamcrest.Matchers.*;
 //CHECKSTYLE:ON
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @WebMvcTest(ActivityController.class)
 public class ActivityControllerTest {
+    //Temporary string to byte[] here for testing as pipeline will other-ways fail
+    String imageString = "18763671972912763726319376237108";
+    byte[] tempImage = imageString.getBytes(StandardCharsets.UTF_8);
+
     @Autowired
     MockMvc mockMvc;
     @MockBean
     ActivityRepository activityRepository;
 
-    Activity record_1 = new Activity("title", 2);
-    Activity record_2 = new Activity("title2", 3);
+    Activity record_1 = new Activity("title", 2, tempImage);
+    Activity record_2 = new Activity("title2", 3, tempImage);
 
 
     @Test
