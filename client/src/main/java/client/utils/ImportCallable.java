@@ -3,7 +3,6 @@ package client.utils;
 import client.scenes.ImportActivityCtrl;
 import com.google.gson.Gson;
 import commons.Activity;
-import commons.ActivityJson;
 import jakarta.ws.rs.WebApplicationException;
 
 import java.io.Reader;
@@ -77,7 +76,7 @@ public class ImportCallable implements Callable<String> {
      */
     private void addActivity(ActivityJson activityJson) throws Exception {
         // Convert activityJson to Activity class.
-        Activity activity = activityJson.convertToActivity();
+        Activity activity = activityJson.convertToActivity(pathFieldText);
         // Try to add activity to server, on fail handle and throw exception with correct message.
         try {
             server.addActivity(activity);

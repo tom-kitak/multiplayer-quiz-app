@@ -13,6 +13,9 @@ package client.scenes;
         import javafx.scene.input.KeyEvent;
         import javafx.scene.control.Label;
 
+        import java.io.FileInputStream;
+        import java.io.IOException;
+
 public class EditActivityCtrl {
 
     private final ServerUtils server;
@@ -66,7 +69,6 @@ public class EditActivityCtrl {
             alert.initModality(Modality.APPLICATION_MODAL);
             alert.setContentText(e.getMessage());
             alert.showAndWait();
-            return;
         } catch (NullPointerException e) {
             errorMessage.setText("Fill all the fields!");
             errorMessage.setTextFill(Color.RED);
@@ -85,7 +87,13 @@ public class EditActivityCtrl {
             throw new NullPointerException();
         }
         System.out.println(titleField.getText());
-        return new Activity(titleField.getText(), Integer.valueOf(whField.getText()));
+        byte[] image = null;
+        try {
+            image = new FileInputStream("a_path.png").readAllBytes();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new Activity(titleField.getText(), Integer.parseInt(whField.getText()), image);
     }
 
     /**
@@ -96,14 +104,10 @@ public class EditActivityCtrl {
      */
     public void keyPressed(KeyEvent e) {
         switch (e.getCode()) {
-            case ENTER:
-                updateActivity();
-                break;
-            case ESCAPE:
-                cancel();
-                break;
-            default:
-                break;
+            case ENTER -> updateActivity();
+            case ESCAPE -> cancel();
+            default -> {
+            }
         }
     }
 

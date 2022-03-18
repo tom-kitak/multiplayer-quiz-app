@@ -13,6 +13,9 @@ import javafx.stage.Modality;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.control.Label;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+
 public class AddActivityCtrl {
 
     private final ServerUtils server;
@@ -62,7 +65,6 @@ public class AddActivityCtrl {
             alert.initModality(Modality.APPLICATION_MODAL);
             alert.setContentText(e.getMessage());
             alert.showAndWait();
-            return;
         } catch (NullPointerException e) {
             errorMessage.setText("Fill all the fields!");
             errorMessage.setTextFill(Color.RED);
@@ -78,12 +80,19 @@ public class AddActivityCtrl {
      * New activity is created and returned with the user input.
      * @return
      */
+    //ToDo Add field for image path!
     private Activity extractActivity() {
         if (titleField.getText().trim().isEmpty() || whField.getText().trim().isEmpty()){
             throw new NullPointerException();
         }
         System.out.println(titleField.getText());
-        return new Activity(titleField.getText(), Integer.valueOf(whField.getText()));
+        byte[] image = null;
+        try {
+            image = new FileInputStream("a_path.png").readAllBytes();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new Activity(titleField.getText(), Integer.parseInt(whField.getText()), image);
     }
 
     /**
@@ -94,14 +103,10 @@ public class AddActivityCtrl {
      */
     public void keyPressed(KeyEvent e) {
         switch (e.getCode()) {
-            case ENTER:
-                submitActivity();
-                break;
-            case ESCAPE:
-                cancel();
-                break;
-            default:
-                break;
+            case ENTER -> submitActivity();
+            case ESCAPE -> cancel();
+            default -> {
+            }
         }
     }
 
