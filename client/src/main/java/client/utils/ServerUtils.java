@@ -25,6 +25,7 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 
+
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
@@ -32,6 +33,7 @@ import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
+
 import server.Score;
 
 import java.lang.reflect.Type;
@@ -44,7 +46,20 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 public class ServerUtils {
 
-    private static final String SERVER = "http://localhost:8080/";
+    public static void setSERVER(String SERVER) {
+        ServerUtils.SERVER = SERVER;
+    }
+
+    private static String SERVER = "";
+
+
+    public Boolean checkConnection() {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/activity/check")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<Boolean>() {});
+    }
 
     public Question getQuestion() {
         return ClientBuilder.newClient(new ClientConfig())
@@ -101,9 +116,14 @@ public class ServerUtils {
                 .get(new GenericType<List<Score>>() {});
     }
 
-    private StompSession session = connect("ws://localhost:8080/websocket");
 
-    private StompSession connect (String url) {
+    public static void setSession(String wsAddress) {
+        session = session = connect("ws://" + wsAddress + "/websocket");
+    }
+    private static StompSession session = null;
+//    private StompSession session = connect("ws://localhost:8080/websocket");
+
+    private static StompSession connect (String url) {
         var client = new StandardWebSocketClient();
         var stomp = new WebSocketStompClient(client);
         stomp.setMessageConverter(new MappingJackson2MessageConverter());
@@ -117,7 +137,7 @@ public class ServerUtils {
         throw new IllegalStateException();
     }
 
-    public <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer) {
+    public static <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer) {
         session.subscribe(dest, new StompFrameHandler() {
             @Override
             public Type getPayloadType(StompHeaders headers) {
@@ -132,7 +152,8 @@ public class ServerUtils {
         });
     }
 
-    public void send(String dest, Object o) {
+    public static void send(String dest, Object o) {
         session.send(dest, o);
     }
+
 }

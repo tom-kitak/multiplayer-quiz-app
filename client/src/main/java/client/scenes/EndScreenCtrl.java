@@ -33,7 +33,6 @@ public class EndScreenCtrl {
         this.usernames = new TableColumn<>("Usernames");
         this.score = new TableColumn<>("Scores");
         tableView.getColumns().addAll(usernames, score);
-        showLeaderboard();
     }
 
     @FXML

@@ -27,6 +27,11 @@ public class ActivityController {
         return repo.findAll();
     }
 
+    @GetMapping("/check")
+    public Boolean returnCheck() {
+        return true;
+    }
+
     /**
      * @param id The identifier of the object to be retrieved.
      * @return Returns only the specified object
@@ -47,7 +52,7 @@ public class ActivityController {
     public ResponseEntity<Activity> add(@RequestBody Activity activity) {
 
         // Activities with id 0 can't get deleted for some reason.
-        if(activity == null || activity.getTitle() == null || activity.getWh() == 0) {
+        if(activity == null || activity.getTitle() == null) {
             System.err.println(activity);
             return ResponseEntity.badRequest().build();
         }
