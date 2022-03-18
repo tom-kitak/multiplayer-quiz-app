@@ -18,7 +18,7 @@ public class ActivityJson {
      * @param path The path of the Json file were this object was read from.
      * @return This object as Activity.
      */
-    public Activity convertToActivity(String path) {
+    public Activity convertToActivity(String path) throws Exception {
         return new Activity(title, consumption_in_wh, readImage(path));
     }
 
@@ -28,16 +28,15 @@ public class ActivityJson {
      * @return The byte[] of the image that was read
      */
     //ToDo Handle Exceptions
-    private byte[] readImage(String pathString) {
+    private byte[] readImage(String pathString) throws Exception {
         String path = Paths.get(pathString).getParent().toString() + '\\' + image_path;
         try {
             return new FileInputStream(path).readAllBytes();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            throw new Exception("The image for " + getId() + " could not be found!");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new Exception("The activity " + getId() + " could not be added, due to a error with the image!");
         }
-        return null;
     }
 
     /**
