@@ -14,6 +14,7 @@ package client.scenes;
         import javafx.scene.control.Label;
 
         import java.io.FileInputStream;
+        import java.io.FileNotFoundException;
         import java.io.IOException;
 
 public class EditActivityCtrl {
@@ -37,6 +38,9 @@ public class EditActivityCtrl {
 
     @FXML
     private Label errorMessage;
+
+    @FXML
+    private TextField imagePathField;
 
     @FXML
     void cancelPressed(ActionEvent event) {
@@ -75,26 +79,36 @@ public class EditActivityCtrl {
         } catch (NumberFormatException e) {
             errorMessage.setText("Please enter integer value!");
             errorMessage.setTextFill(Color.RED);
+        } catch (Exception e) {
+            errorMessage.setText(e.getMessage());
+            errorMessage.setTextFill(Color.RED);
         }
     }
 
     /**
      * New activity is created and returned with the user input.
-     * @return
+     * @return The activity that was extracted from the ui.
      */
-    //ToDo Add field for image path!
-    private Activity extractActivity() {
+    private Activity extractActivity() throws Exception {
         if (titleField.getText().trim().isEmpty() || whField.getText().trim().isEmpty()){
             throw new NullPointerException();
         }
         System.out.println(titleField.getText());
-        byte[] image = null;
-        try {
-            image = new FileInputStream("a_path.png").readAllBytes();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (imagePathField.getText().trim().isEmpty()) {
+            return new Activity(titleField.getText(), Integer.parseInt(whField.getText()),
+                    activityToDelete.getImage());
+        } else {
+            try {
+                byte[] image = new FileInputStream(imagePathField.getText().trim()).readAllBytes();
+                return new Activity(titleField.getText(), Integer.parseInt(whField.getText()), image);
+            } catch (FileNotFoundException e) {
+                throw new Exception("The image for could not be found!");
+            } catch (IOException e) {
+                throw new Exception("The activity could not be added, due to a error with the image!");
+            }
         }
-        return new Activity(titleField.getText(), Integer.parseInt(whField.getText()), image);
+
+
     }
 
     /**
@@ -118,6 +132,7 @@ public class EditActivityCtrl {
     private void clearFields() {
         titleField.clear();
         whField.clear();
+        imagePathField.clear();
         errorMessage.setText("");
     }
 
