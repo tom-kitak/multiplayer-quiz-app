@@ -56,33 +56,49 @@ public class ImportActivityCtrl {
     }
 
     /**
-     * Activity that was created with user input is send to the server.
+     * Start a thread to start importing the json file.
      */
     public void submitActivity(){
+        // Clear the error label on new import.
         errorMessage.setText("");
         ImportActivityCtrl ctrl = this;
+        // Start a Thread to control the import.
         new Thread(() -> {
             progressIndicator.setProgress(0);
+            // Create the Callable used for the import.
             ImportCallable importCallable = new ImportCallable(server, pathField.getText(), ctrl);
             ExecutorService executorService = Executors.newSingleThreadExecutor();
             Future<String> importFuture = executorService.submit(importCallable);
+            // Disable buttons and textfield during import.
             submitButton.setDisable(true);
             cancelButton.setDisable(true);
             pathField.setEditable(false);
+            // Wait for import to finish.
             while (!importFuture.isDone()){}
             handleResult(importFuture);
         }).start();
     }
 
+    /**
+     * Method to call for import thread to update the progressIndicator.
+     * @param progress The amount of progress the import thread has made.
+     */
     public void setProgress(double progress) {
         Platform.runLater(() -> progressIndicator.setProgress(progress));
     }
 
+    /**
+     * Method to handle the result of the import.
+     * @param future The returned exceptions from the import are stored in a Future<String>
+     */
     private void handleResult(Future<String> future) {
         try {
+            // Enable Buttons as import is done.
             submitButton.setDisable(false);
             cancelButton.setDisable(false);
             pathField.setEditable(true);
+            // Get the resulting errors caused by the import and handle them,
+            // resulting in an error on the import screen.
             String output = future.get();
             if (!output.isEmpty()) {
                 Platform.runLater(() -> {
@@ -108,9 +124,9 @@ public class ImportActivityCtrl {
             }
             return;
         }
+        // Clear import field and return to admin screen.
         clearFields();
         Platform.runLater(mainCtrl::showAdministratorInterface);
-
     }
 
     /**
