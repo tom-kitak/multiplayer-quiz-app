@@ -82,6 +82,7 @@ public class EditActivityCtrl {
      * New activity is created and returned with the user input.
      * @return
      */
+    //ToDo Add field for image path!
     private Activity extractActivity() {
         if (titleField.getText().trim().isEmpty() || whField.getText().trim().isEmpty()){
             throw new NullPointerException();
