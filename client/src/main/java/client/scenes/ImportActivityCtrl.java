@@ -109,7 +109,8 @@ public class ImportActivityCtrl {
             return;
         }
         clearFields();
-        mainCtrl.showAdministratorInterface();
+        Platform.runLater(mainCtrl::showAdministratorInterface);
+
     }
 
     /**
