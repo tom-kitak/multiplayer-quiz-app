@@ -29,6 +29,7 @@ public class MainCtrl {
     private Stage primaryStage;
 
     private Player curPlayer;
+    public boolean started = false;
 
     private HomeScreenCtrl homeScreenCtrl;
     private Scene homeScreen;
@@ -173,6 +174,7 @@ public class MainCtrl {
         curPlayer = player;
         waitingRoomCtrl.initConnection();
         waitingRoomCtrl.setPlayer(player);
+        started = false;
         ServerUtils.send("/app/multi", player);
         primaryStage.setScene(waitingRoomScene);
     }

@@ -77,8 +77,9 @@ public class MultiPlayerController {
         this.id++;
         currentLobbyGame = new MultiGame(null);
         currentLobbyGame.setId(id);
+        // We put 0 responses, in a spot associated with game id, since they start at 0
+        // We increment it for every response, and reset it when needed.
         allPlayersResponded.add(0);
-        System.out.println(currentLobbyGame.hashCode());
         games.add(started);
         return started;
     }
@@ -126,13 +127,20 @@ public class MultiPlayerController {
                 break;
             }
         }
-        if (allPlayersResponded.contains(game.getId())){
-            allPlayersResponded.set(game.getId(), allPlayersResponded.get(game.getId()) + 1);
+        for(int i = 0; i < gameFromPlayer.getPlayers().size(); i++) {
+            if(game.getPlayers().get(i) != gameFromPlayer.getPlayers().get(i)) {
+                game.getPlayers().set(i, gameFromPlayer.getPlayers().get(i));
+            }
         }
+        // Controls the responses, that players made.
+        allPlayersResponded.set(game.getId(), allPlayersResponded.get(game.getId()) + 1);
+
         if (game.getPlayers().size() <= allPlayersResponded.get(game.getId())){
             game.setCurrentQuestion(getQuestion());
+            game.setQuestionNumber(game.getQuestionNumber() + 1);
             System.out.println(game.getCurrentQuestion());
             allPlayersResponded.set(game.getId(), 0);
+            System.out.println("Response for game " + gameId + " send!");
             return game;
         }
         return null;

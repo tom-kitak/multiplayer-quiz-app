@@ -128,6 +128,8 @@ public class QuizScreenCtrl implements Initializable {
     @FXML
     void backButton(){
         boolean answer = ConfirmBoxCtrl.display("Alert", "Are you sure you want to exit the game session?");
+        roundTask.cancel();
+        timer.cancel();
         if(answer) mainCtrl.showHomeScreen();
     }
 
@@ -227,8 +229,16 @@ public class QuizScreenCtrl implements Initializable {
                     System.out.println(game.getQuestionNumber());
                     Platform.runLater(() -> {
                         timer.cancel();
-                        setQuestionFields(retGame);
-                        startRoundTimer();
+                        roundTask.cancel();
+                        // If this is the 21st question, end game. We need the 21st question to receive the latest
+                        // game state for the correct leaderboard.
+                        if(retGame.getQuestionNumber() > 20) {
+                            mainCtrl.started = true;
+                            mainCtrl.showEndScreen();
+                        } else {
+                            setQuestionFields(retGame);
+                            startRoundTimer();
+                        }
                     });
                 }
             });
@@ -416,7 +426,9 @@ public class QuizScreenCtrl implements Initializable {
                             startRoundTimer();
                             setNextQuestion();
                         } else {
+                            // When the answer has been shown, send the response.
                             ServerUtils.send("/app/multi/gameplay/" + ((MultiGame) game).getId(), (MultiGame) game);
+                            System.out.println("Response send");
                         }
                     });
                 }
@@ -435,13 +447,9 @@ public class QuizScreenCtrl implements Initializable {
                 ((SingleGame) game).upDateScore(timeLeft);
                 this.score.setText("Score: " + ((SingleGame) game).getPlayer().getScore());
             } else {
-                ArrayList<Player> localScore = ((MultiGame) game).getPlayers();
-                for(Player x : localScore) {
-                    if(x.getUsername().equals(player.getUsername())) {
-                        x.upDateScore(timeLeft);
-                        this.score.setText("Score: " + x.getScore());
-                    }
-                }
+                // Score kept locally
+                player.upDateScore(timeLeft);
+                this.score.setText("Score: " + player.getScore());
             }
         }
         this.answeredCorrectly = false;

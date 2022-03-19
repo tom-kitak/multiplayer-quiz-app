@@ -13,6 +13,7 @@ public class WaitingRoomCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private boolean responsesMade = false;
 
     private Player player;
     private MultiGame game;
@@ -36,24 +37,36 @@ public class WaitingRoomCtrl {
     @FXML
     void leaveRoomPressed(ActionEvent event) {
         server.send("/app/multi", player);
+        mainCtrl.started = true;
         mainCtrl.showHomeScreen();
     }
 
     public void initConnection() {
+
         this.player = player;
-        ServerUtils.registerForMessages("/topic/multi", MultiGame.class, game -> {
-            System.out.println("----------------------");
-            System.out.println(game);
-            numOfPlayersInTheRoom.setText(String.valueOf(game.getPlayers().size()));
-            this.game = game;
-        });
-        ServerUtils.registerForMessages("/topic/started", MultiGame.class, game -> {
-            System.out.println("----------------------");
-            System.out.println(game);
-            Platform.runLater(() -> {
-                mainCtrl.showQuizScreen(game);
+        // Response for waiting room updates.
+        if(!responsesMade) {
+            ServerUtils.registerForMessages("/topic/multi", MultiGame.class, game -> {
+                System.out.println("----------------------");
+                System.out.println(game);
+                numOfPlayersInTheRoom.setText(String.valueOf(game.getPlayers().size()));
+                this.game = game;
             });
-        });
+            // Response for game start.
+            ServerUtils.registerForMessages("/topic/started", MultiGame.class, game -> {
+                System.out.println("----------------------");
+                System.out.println(game);
+                Platform.runLater(() -> {
+                    // Because we can't "unregister" for messages
+                    // we have to use a boolean that lets us control
+                    // the app's behaviour.
+                    if (!mainCtrl.started) {
+                        mainCtrl.showQuizScreen(game);
+                        mainCtrl.started = true;
+                    }
+                });
+            });
+        }
     }
 
     /**
