@@ -24,7 +24,7 @@
             <Font size="23.0" />
          </font>
       </Button>
-      <Button layoutX="462.0" layoutY="358.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="229.0" style="-fx-background-color: #f2a443ff;" text="Play Multiplayer">
+      <Button layoutX="462.0" layoutY="358.0" mnemonicParsing="false" onAction="#playMultiPlayerButtonPressed" prefHeight="43.0" prefWidth="229.0" style="-fx-background-color: #f2a443ff;" text="Play Multiplayer">
          <font>
             <Font size="23.0" />
          </font>

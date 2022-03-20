@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="222.0" prefWidth="482.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ImportActivityCtrl">
    <children>
@@ -27,15 +21,17 @@
             <Font size="15.0" />
          </font>
       </TextField>
-      <Button layoutX="107.0" layoutY="124.0" mnemonicParsing="false" onAction="#cancelPressed" text="Cancel">
+      <Button fx:id="cancelButton" layoutX="107.0" layoutY="171.0" mnemonicParsing="false" onAction="#cancelPressed" text="Cancel">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
-      <Button layoutX="310.0" layoutY="124.0" mnemonicParsing="false" onAction="#submitPressed" text="Submit">
+      <Button fx:id="submitButton" layoutX="310.0" layoutY="171.0" mnemonicParsing="false" onAction="#submitPressed" text="Submit">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
+      <Label fx:id="errorMessage" layoutX="24.0" layoutY="123.0" prefHeight="31.0" prefWidth="434.0" textAlignment="CENTER" />
+      <ProgressIndicator fx:id="progressIndicator" layoutX="384.0" layoutY="171.0" prefHeight="43.0" prefWidth="46.0" progress="0.0" />
    </children>
 </AnchorPane>

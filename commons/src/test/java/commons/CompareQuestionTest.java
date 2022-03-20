@@ -98,6 +98,7 @@ class CompareQuestionTest {
         assertFalse(a.equals(q));
     }
 
+
     @Test
     void testHashCode(){
         CompareQuestion q = new CompareQuestion(new String[]{"x", "x", "x", "x"}, new long[]{2, 2, 2, 2});

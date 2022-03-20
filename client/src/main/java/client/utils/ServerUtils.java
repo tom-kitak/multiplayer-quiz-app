@@ -25,16 +25,41 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 
+
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.simp.stomp.StompSession;
+import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
+import org.springframework.messaging.simp.stomp.StompFrameHandler;
+import org.springframework.messaging.simp.stomp.StompHeaders;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
+
 import server.Score;
 
+import java.lang.reflect.Type;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 
 public class ServerUtils {
 
-    private static final String SERVER = "http://localhost:8080/";
+    public static void setSERVER(String SERVER) {
+        ServerUtils.SERVER = SERVER;
+    }
+
+    private static String SERVER = "";
+
+
+    public Boolean checkConnection() {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/activity/check")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<Boolean>() {});
+    }
 
     public Question getQuestion() {
         return ClientBuilder.newClient(new ClientConfig())
@@ -74,6 +99,7 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .post(Entity.entity(activity, APPLICATION_JSON), Activity.class);
     }
+
     public Response deleteActivity(Activity activity) {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/activity/" + String.valueOf(activity.getId()))
@@ -89,4 +115,45 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<Score>>() {});
     }
+
+
+    public static void setSession(String wsAddress) {
+        session = connect("ws://" + wsAddress + "/websocket");
+    }
+
+    private static StompSession session = null;
+
+    private static StompSession connect (String url) {
+        var client = new StandardWebSocketClient();
+        var stomp = new WebSocketStompClient(client);
+        stomp.setMessageConverter(new MappingJackson2MessageConverter());
+        try {
+            return stomp.connect(url, new StompSessionHandlerAdapter() {}).get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new RuntimeException();
+        }
+        throw new IllegalStateException();
+    }
+
+    public static <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer) {
+        session.subscribe(dest, new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders headers) {
+                return type;
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public void handleFrame(StompHeaders headers, Object payload) {
+                consumer.accept((T) payload);
+            }
+        });
+    }
+
+    public static void send(String dest, Object o) {
+        session.send(dest, o);
+    }
+
 }

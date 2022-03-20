@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Player {
 
-    private final String username;
+    private String username;
     private int score;
 
     /**constructs a new Player object.
@@ -13,6 +13,10 @@ public class Player {
     public Player(String username) {
         this.username = username;
         this.score = 0;
+    }
+
+    public Player() {
+        //for object mappers
     }
 
     /**
