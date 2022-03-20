@@ -118,10 +118,10 @@ public class ServerUtils {
 
 
     public static void setSession(String wsAddress) {
-        session = session = connect("ws://" + wsAddress + "/websocket");
+        session = connect("ws://" + wsAddress + "/websocket");
     }
+
     private static StompSession session = null;
-//    private StompSession session = connect("ws://localhost:8080/websocket");
 
     private static StompSession connect (String url) {
         var client = new StandardWebSocketClient();

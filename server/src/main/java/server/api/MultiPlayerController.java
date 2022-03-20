@@ -5,18 +5,16 @@ import commons.MultiGame;
 import commons.Player;
 
 import commons.Question;
+
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 
 import org.springframework.web.bind.annotation.RestController;
 import server.database.ActivityRepository;
-
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.HashMap;
-import java.util.Collections;
-import java.util.List;
+//CHECKSTYLE:OFF
+import javax.persistence.criteria.CriteriaBuilder;
+import java.util.*;
 
 import static server.util.QuestionConversion.convertActivity;
 
@@ -27,7 +25,7 @@ public class MultiPlayerController {
     private final Random random;
     private final ActivityRepository repo;
     private int id;
-    private HashMap<MultiGame, Integer> allPlayersResponded;
+    private ArrayList<Integer> allPlayersResponded;
 
     /**
      * Creates a new MultiplayerController object.
@@ -41,8 +39,8 @@ public class MultiPlayerController {
         this.games = new ArrayList<>();
         this.currentLobbyGame = new MultiGame(null);
         currentLobbyGame.setId(id);
-        this.allPlayersResponded = new HashMap<>();
-        allPlayersResponded.put(currentLobbyGame, 0);
+        this.allPlayersResponded = new ArrayList<>();
+        allPlayersResponded.add(0);
     }
 
     /**Called when the player connects or disconnect from the lobby.
@@ -57,8 +55,10 @@ public class MultiPlayerController {
         ArrayList<Player> tempPlayers = currentLobbyGame.getPlayers();
         if(tempPlayers.contains(player)){
             tempPlayers.remove(player);
+            System.out.println("Disconnected\n");
         } else {
             tempPlayers.add(player);
+            System.out.println("Connected\n");
         }
         currentLobbyGame.setPlayers(tempPlayers);
 
@@ -77,7 +77,10 @@ public class MultiPlayerController {
         this.id++;
         currentLobbyGame = new MultiGame(null);
         currentLobbyGame.setId(id);
-        allPlayersResponded.put(currentLobbyGame, 0);
+        // We put 0 responses, in a spot associated with game id, since they start at 0
+        // We increment it for every response, and reset it when needed.
+        allPlayersResponded.add(0);
+        games.add(started);
         return started;
     }
 
@@ -115,7 +118,8 @@ public class MultiPlayerController {
     }
 
     @MessageMapping("/multi/gameplay/{gameId}")
-    public void gameplayQuestionSender(@DestinationVariable String gameId, MultiGame gameFromPlayer) {
+    @SendTo("/topic/multi/gameplay/{gameId}")
+    public MultiGame gameplayQuestionSender(@DestinationVariable String gameId, MultiGame gameFromPlayer) {
         MultiGame game = null;
         for (MultiGame g : games){
             if (g.getId() == Integer.valueOf(gameId)){
@@ -123,16 +127,28 @@ public class MultiPlayerController {
                 break;
             }
         }
-        if (allPlayersResponded.containsKey(game)){
-            allPlayersResponded.put(game, (allPlayersResponded.get(game) + 1));
+        for(int i = 0; i < gameFromPlayer.getPlayers().size(); i++) {
+            if(game.getPlayers().get(i) != gameFromPlayer.getPlayers().get(i)) {
+                game.getPlayers().set(i, gameFromPlayer.getPlayers().get(i));
+            }
         }
-        if (game.getPlayers().size() <= allPlayersResponded.get(game)){
-            sendQuestion(gameId, game);
+        // Controls the responses, that players made.
+        allPlayersResponded.set(game.getId(), allPlayersResponded.get(game.getId()) + 1);
+
+        if (game.getPlayers().size() <= allPlayersResponded.get(game.getId())){
+            game.setCurrentQuestion(getQuestion());
+            game.setQuestionNumber(game.getQuestionNumber() + 1);
+            System.out.println(game.getCurrentQuestion());
+            allPlayersResponded.set(game.getId(), 0);
+            System.out.println("Response for game " + gameId + " send!");
+            return game;
         }
+        return null;
     }
 
     @SendTo("/topic/multi/gameplay/{gameId}")
     public MultiGame sendQuestion(@DestinationVariable String gameId,MultiGame game) {
+        System.out.println(gameId);
         game.setCurrentQuestion(getQuestion());
         return game;
     }
