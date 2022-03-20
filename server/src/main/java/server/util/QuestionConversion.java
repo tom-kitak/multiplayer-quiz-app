@@ -1,6 +1,10 @@
 package server.util;
 
-import commons.*;
+import commons.Activity;
+import commons.OpenQuestion;
+import commons.Question;
+import commons.WattageQuestion;
+import commons.CompareQuestion;
 
 import java.util.Random;
 

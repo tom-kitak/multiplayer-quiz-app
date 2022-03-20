@@ -10,7 +10,11 @@ import client.ConfirmBoxCtrl;
 import com.google.inject.Inject;
 import client.utils.ServerUtils;
 
-import commons.*;
+import commons.CompareQuestion;
+import commons.Question;
+import commons.SingleGame;
+import commons.WattageQuestion;
+import commons.OpenQuestion;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -153,7 +157,7 @@ public class QuizScreenCtrl implements Initializable {
     }
 
     /**
-     * When the open question is up, all the buttons have to disappear
+     * When the open question is up, all the buttons have to disappear.
      */
     private void invisibleButtons() {
         disableAll();
@@ -166,9 +170,9 @@ public class QuizScreenCtrl implements Initializable {
     }
 
     /**
-     * when the player presses enter their answer is stored
-     * when the player presses escape their answer is deleted from the text field
-     * @param e consumes the event and identifies which key was pressed
+     * when the player presses enter their answer is stored.
+     * when the player presses escape their answer is deleted from the text field.
+     * @param e consumes the event and identifies which key was pressed.
      */
     @FXML
     void keyPressed(KeyEvent e){
@@ -425,16 +429,7 @@ public class QuizScreenCtrl implements Initializable {
                 } else if(Integer.parseInt(buttonR1C1.getText()) == correct) {
                     rightColor(buttonR1C1);
                 }
-            } else {
-                long correct = game.getCurrentQuestion().getCorrectWattage();
-                long answer = Integer.parseInt(answerField.getText());
-                if(correct == answer) {
-                    answerField.setStyle("-fx-background-color: #f2a443ff; ");
-                    this.answeredCorrectly = true;
-                }
-                else answerField.setStyle("-fx-background-color: #916868ff ");
-                answerField.setText("" + game.getCurrentQuestion().getCorrectWattage());
-            }
+            } else openQuestionColloring();
         }
         TimerTask task = new TimerTask() {
             @Override
@@ -455,6 +450,20 @@ public class QuizScreenCtrl implements Initializable {
             }
         };
         timer.scheduleAtFixedRate(task, 0, 1000);
+    }
+
+    /**
+     * The addition of waitingToSeeAnswers for open questions.
+     */
+    public void openQuestionColloring(){
+        long correct = game.getCurrentQuestion().getCorrectWattage();
+        long answer = Integer.parseInt(answerField.getText());
+        if(correct == answer) {
+            answerField.setStyle("-fx-background-color: #f2a443ff; ");
+            this.answeredCorrectly = true;
+        }
+        else answerField.setStyle("-fx-background-color: #916868ff ");
+        answerField.setText("" + game.getCurrentQuestion().getCorrectWattage());
     }
 
     /**
