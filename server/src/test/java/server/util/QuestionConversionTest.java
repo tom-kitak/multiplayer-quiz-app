@@ -8,12 +8,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuestionConversionTest {
+
+    //Temporary string to byte[] here for testing as pipeline will other-ways fail
+    String imageString = "18763671972912763726319376237108";
+    byte[] tempImage = imageString.getBytes(StandardCharsets.UTF_8);
 
     /**
      * Only convertActivity will be tested because the other methods are only used
@@ -27,11 +32,11 @@ class QuestionConversionTest {
     @BeforeEach
     void setUp() {
         activities = new Activity[]{
-                new Activity("activity_1", 1002),
-                new Activity("activity_2", 0),
-                new Activity("activity_3", 102302),
-                new Activity("activity_4", 10237399483L),
-                new Activity(null, 0)
+                new Activity("activity_1", 1002, tempImage),
+                new Activity("activity_2", 0, tempImage),
+                new Activity("activity_3", 102302, tempImage),
+                new Activity("activity_4", 10237399483L, tempImage),
+                new Activity(null, 0, tempImage)
         };
         titles = new String[]{
                 "activity_1",

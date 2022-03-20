@@ -1,21 +1,23 @@
 package client.scenes;
 
+import client.utils.ImportCallable;
 import client.utils.ServerUtils;
-import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
-import commons.Activity;
-import commons.ActivityJson;
-import jakarta.ws.rs.WebApplicationException;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class ImportActivityCtrl {
 
@@ -35,6 +37,15 @@ public class ImportActivityCtrl {
     private Label errorMessage;
 
     @FXML
+    private Button submitButton;
+
+    @FXML
+    private Button cancelButton;
+
+    @FXML
+    private ProgressIndicator progressIndicator;
+
+    @FXML
     void cancelPressed(ActionEvent event) {
         cancel();
     }
@@ -45,77 +56,91 @@ public class ImportActivityCtrl {
     }
 
     /**
-     * Activity that was created with user input is send to the server.
+     * Start a thread to start importing the json file.
      */
     public void submitActivity(){
-        try {
-            if (!pathField.getText().endsWith(".json") && !pathField.getText().isEmpty()) {
-                throw new IllegalArgumentException("File needs to be a json file!");
-            }
-            Reader file = Files.newBufferedReader(Paths.get(pathField.getText()));
-            Gson gson = new Gson();
-            ActivityJson[] activityArray = gson.fromJson(file, ActivityJson[].class);
-            for(int i = 0; i < activityArray.length; i++) {
-                addActivity(activityArray[i].convertToActivity());
-            }
-            file.close();
-        } catch (IllegalArgumentException e) {
-            errorMessage.setText("File needs to be a json file! (end with .json)");
-            errorMessage.setTextFill(Color.RED);
-            return;
-        }
-        catch (Exception e) {
-            if (pathField.getText().isEmpty()) {
-                errorMessage.setText("You need to fill in a path!");
-            } else {
-                errorMessage.setText(e.getMessage());
-            }
-            errorMessage.setTextFill(Color.RED);
-            return;
-        }
-
-        clearFields();
-        mainCtrl.showAdministratorInterface();
+        // Clear the error label on new import.
+        errorMessage.setText("");
+        ImportActivityCtrl ctrl = this;
+        // Start a Thread to control the import.
+        new Thread(() -> {
+            progressIndicator.setProgress(0);
+            // Create the Callable used for the import.
+            ImportCallable importCallable = new ImportCallable(server, pathField.getText(), ctrl);
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            Future<String> importFuture = executorService.submit(importCallable);
+            // Disable buttons and textfield during import.
+            submitButton.setDisable(true);
+            cancelButton.setDisable(true);
+            pathField.setEditable(false);
+            // Wait for import to finish.
+            while (!importFuture.isDone()){}
+            handleResult(importFuture);
+        }).start();
     }
 
     /**
-     * Method to act an Activity to the server and throw the correct Exception on fail.
-     * @param a The Activity to add.
-     * @throws Exception
+     * Method to call for import thread to update the progressIndicator.
+     * @param progress The amount of progress the import thread has made.
      */
-    //Wattage == 0 is not a valid fail option after bug fix in dev!
-    private void addActivity(Activity a) throws Exception {
-        try {
-            server.addActivity(a);
-        } catch (WebApplicationException e) {
-            if (a == null) {
-                throw new Exception("Activity is null and could not be added!");
-            } else if (a.getTitle() == null) {
-                throw new Exception("Activity " + a.getId() + " could not be added as the title is null!");
-            } else {
-                System.out.println(e.getResponse());
-                throw new Exception("Activity " + a.getId() + " could not be added for unknown reason!");
-            }
-        }
+    public void setProgress(double progress) {
+        Platform.runLater(() -> progressIndicator.setProgress(progress));
     }
 
+    /**
+     * Method to handle the result of the import.
+     * @param future The returned exceptions from the import are stored in a Future<String>
+     */
+    private void handleResult(Future<String> future) {
+        try {
+            // Enable Buttons as import is done.
+            submitButton.setDisable(false);
+            cancelButton.setDisable(false);
+            pathField.setEditable(true);
+            // Get the resulting errors caused by the import and handle them,
+            // resulting in an error on the import screen.
+            String output = future.get();
+            if (!output.isEmpty()) {
+                Platform.runLater(() -> {
+                    errorMessage.setTextFill(Color.RED);
+                    errorMessage.setText(output);
+                });
+                return;
+            }
+        } catch (InterruptedException e) {
+            Platform.runLater(() -> {
+                errorMessage.setText("Import got interrupted and could not be finished!");
+                errorMessage.setTextFill(Color.RED);
+            });
+            System.err.println(e.getMessage());
+            e.printStackTrace();
+            return;
+        } catch (ExecutionException e) {
+            if (e.getCause().getClass().equals(JsonSyntaxException.class)) {
+                Platform.runLater(() -> {
+                    errorMessage.setText("The json file specified is not in the correct format!");
+                    errorMessage.setTextFill(Color.RED);
+                });
+            }
+            return;
+        }
+        // Clear import field and return to admin screen.
+        clearFields();
+        Platform.runLater(mainCtrl::showAdministratorInterface);
+    }
 
     /**
      * Non-essential method whose purpose is to make usage of the app more convenient.
      * If ENTER is pressed, activity is submitted.
      * If ESCAPE is pressed, activity is discarded, and you are returned to Administrative Interface.
-     * @param e
+     * @param e Event that caused the method to be called
      */
     public void keyPressed(KeyEvent e) {
         switch (e.getCode()) {
-            case ENTER:
-                submitActivity();
-                break;
-            case ESCAPE:
-                cancel();
-                break;
-            default:
-                break;
+            case ENTER -> submitActivity();
+            case ESCAPE -> cancel();
+            default -> {
+            }
         }
     }
 
@@ -130,7 +155,6 @@ public class ImportActivityCtrl {
      * The activity and user input is discarded and user is returned to Administrative Interface.
      */
     private void cancel(){
-        clearFields();
         mainCtrl.showAdministratorInterface();
     }
 }

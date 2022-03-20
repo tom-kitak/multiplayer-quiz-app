@@ -1,10 +1,14 @@
 package server.api;
 
 import org.springframework.http.ResponseEntity;
-//CHECKSTYLE:OFF
-import org.springframework.web.bind.annotation.*;
-//CHECKSTYLE:ON
 import commons.Activity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import server.database.ActivityRepository;
 
 import java.util.List;
@@ -51,8 +55,9 @@ public class ActivityController {
     @PostMapping(path = {"", "/"})
     public ResponseEntity<Activity> add(@RequestBody Activity activity) {
 
-        // Activities with id 0 can't get deleted for some reason.
+        // Activities with id 0 can't get deleted for some reason (Also id 0 does not get assigned).
         if(activity == null || activity.getTitle() == null) {
+            System.err.println(activity);
             return ResponseEntity.badRequest().build();
         }
 
