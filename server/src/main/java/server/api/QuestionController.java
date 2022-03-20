@@ -25,13 +25,6 @@ public class QuestionController {
     public QuestionController(Random random, ActivityRepository repo) {
         this.random = random;
         this.repo = repo;
-
-        if(repo.count() < 4) {
-            repo.save(new Activity("Using a laptop for 10 hours", 10));
-            repo.save(new Activity("Using a TV for 7 hours", 5));
-            repo.save(new Activity("Using a phone for 12 hours", 15));
-            repo.save(new Activity("Using a toaster for 20 picoseconds", 20));
-        }
     }
 
     @GetMapping(path = {"", "/"})

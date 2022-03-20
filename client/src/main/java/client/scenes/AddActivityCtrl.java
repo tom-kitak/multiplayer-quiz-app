@@ -13,6 +13,10 @@ import javafx.stage.Modality;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.control.Label;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 public class AddActivityCtrl {
 
     private final ServerUtils server;
@@ -29,6 +33,9 @@ public class AddActivityCtrl {
 
     @FXML
     private TextField whField;
+
+    @FXML
+    private TextField imagePathField;
 
     @FXML
     private Label errorMessage;
@@ -62,12 +69,14 @@ public class AddActivityCtrl {
             alert.initModality(Modality.APPLICATION_MODAL);
             alert.setContentText(e.getMessage());
             alert.showAndWait();
-            return;
         } catch (NullPointerException e) {
             errorMessage.setText("Fill all the fields!");
             errorMessage.setTextFill(Color.RED);
         } catch (NumberFormatException e) {
             errorMessage.setText("Please enter integer value!");
+            errorMessage.setTextFill(Color.RED);
+        } catch (Exception e) {
+            errorMessage.setText(e.getMessage());
             errorMessage.setTextFill(Color.RED);
         }
 
@@ -76,14 +85,23 @@ public class AddActivityCtrl {
 
     /**
      * New activity is created and returned with the user input.
-     * @return
+     * @return the Activity that was extracted from the ui.
      */
-    private Activity extractActivity() {
-        if (titleField.getText().trim().isEmpty() || whField.getText().trim().isEmpty()){
+    private Activity extractActivity() throws Exception {
+        if (titleField.getText().trim().isEmpty() || whField.getText().trim().isEmpty()
+                || imagePathField.getText().trim().isEmpty()){
             throw new NullPointerException();
         }
         System.out.println(titleField.getText());
-        return new Activity(titleField.getText(), Integer.valueOf(whField.getText()));
+        try {
+            byte[] image = new FileInputStream(imagePathField.getText().trim()).readAllBytes();
+            return new Activity(titleField.getText(), Integer.parseInt(whField.getText()), image);
+        } catch (FileNotFoundException e) {
+            throw new Exception("The image for could not be found!");
+        } catch (IOException e) {
+            throw new Exception("The activity could not be added, due to a error with the image!");
+        }
+
     }
 
     /**
@@ -94,14 +112,10 @@ public class AddActivityCtrl {
      */
     public void keyPressed(KeyEvent e) {
         switch (e.getCode()) {
-            case ENTER:
-                submitActivity();
-                break;
-            case ESCAPE:
-                cancel();
-                break;
-            default:
-                break;
+            case ENTER -> submitActivity();
+            case ESCAPE -> cancel();
+            default -> {
+            }
         }
     }
 
@@ -111,6 +125,7 @@ public class AddActivityCtrl {
     private void clearFields() {
         titleField.clear();
         whField.clear();
+        imagePathField.clear();
         errorMessage.setText("");
     }
 
