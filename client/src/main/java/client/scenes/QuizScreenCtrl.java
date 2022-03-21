@@ -155,15 +155,14 @@ public class QuizScreenCtrl implements Initializable {
             answerField.setVisible(false);
             answerField.setDisable(true);
         } else {
-            invisibleButtons();
+            OpenQuestion openQuestion = (OpenQuestion) question;
+            setOpenQuestionFields(openQuestion);
         }
 
     }
 
-    /**
-     * When the open question is up, all the buttons have to disappear.
-     */
-    private void invisibleButtons() {
+    private void setOpenQuestionFields(OpenQuestion openQuestion) {
+        questionField.setText(openQuestion.getQuestionDescription());
         disableAll();
         answerField.setVisible(true);
         answerField.setDisable(false);
@@ -171,7 +170,10 @@ public class QuizScreenCtrl implements Initializable {
         buttonR0C1.setVisible(false);
         buttonR1C1.setVisible(false);
         buttonR01C0.setVisible(false);
+
+
     }
+
 
     /**
      * when the player presses enter their answer is stored.
@@ -182,6 +184,7 @@ public class QuizScreenCtrl implements Initializable {
     void keyPressed(KeyEvent e){
         switch (e.getCode()){
             case ENTER:
+                showRightAnswer(new Button());
                 waitingToSeeAnswers();
                 break;
             case ESCAPE:
@@ -344,10 +347,24 @@ public class QuizScreenCtrl implements Initializable {
         if(game.getCurrentQuestion() instanceof WattageQuestion){
             WattageQuestion question = (WattageQuestion) game.getCurrentQuestion();
             wattageShowRightAnswer(button, question);
-        } else {
+        } else if(game.getCurrentQuestion() instanceof CompareQuestion){
             CompareQuestion question = (CompareQuestion) game.getCurrentQuestion();
             compareShowRightAnswer(button, question);
+        } else {
+            OpenQuestion question = (OpenQuestion) game.getCurrentQuestion();
+            openShowRightAnswer(question);
         }
+    }
+
+    private void openShowRightAnswer(OpenQuestion question) {
+        long correct = game.getCurrentQuestion().getCorrectWattage();
+        long answer = Integer.parseInt(answerField.getText());
+        if(correct == answer) {
+            answerField.setStyle("-fx-background-color: #f2a443ff; ");
+            this.answeredCorrectly = true;
+        }
+        else answerField.setStyle("-fx-background-color: #916868ff ");
+        answerField.setText("" + game.getCurrentQuestion().getCorrectWattage());
     }
 
     /**shows the right answers for the compareQuestion type.
@@ -491,11 +508,11 @@ public class QuizScreenCtrl implements Initializable {
         long correct = game.getCurrentQuestion().getCorrectWattage();
         long answer = Integer.parseInt(answerField.getText());
         if(correct == answer) {
-            answerField.setStyle("-fx-background-color: #f2a443ff; ");
+            answerField.setStyle("-fx-text-fill: #f2a443ff; ");
             this.answeredCorrectly = true;
         }
-        else answerField.setStyle("-fx-background-color: #916868ff ");
-        answerField.setText("" + game.getCurrentQuestion().getCorrectWattage());
+        else answerField.setStyle("-fx-text-fill: #916868ff ");
+        answerField.setText("Correct answer : " + game.getCurrentQuestion().getCorrectWattage());
     }
 
     /**

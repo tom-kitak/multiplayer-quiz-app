@@ -48,7 +48,7 @@ public class OpenQuestion extends Question{
     @Override
     @JsonIgnore
     public String getQuestionDescription() {
-        return "How MANY watt hours does " + this.getAnswerTitles()[0] + " consume?";
+        return "How many watt hour does " + this.getAnswerTitles()[0] + " consume?";
     }
 
     /**
