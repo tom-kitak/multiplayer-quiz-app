@@ -358,13 +358,25 @@ public class QuizScreenCtrl implements Initializable {
 
     private void openShowRightAnswer(OpenQuestion question) {
         long correct = game.getCurrentQuestion().getCorrectWattage();
-        long answer = Integer.parseInt(answerField.getText());
-        if(correct == answer) {
-            answerField.setStyle("-fx-background-color: #f2a443ff; ");
-            this.answeredCorrectly = true;
+        if(answerField.getText() == null)
+            answerField.setStyle("-fx-background-color: #916868ff ");
+        else {
+            try{
+                long answer = Integer.parseInt(answerField.getText());
+                if (correct == answer) {
+                    answerField.setStyle("-fx-background-color: #f2a443ff; ");
+                    this.answeredCorrectly = true;
+                } else answerField.setStyle("-fx-background-color: #916868ff ");
+            }catch (NumberFormatException e){
+                answerField.setStyle("-fx-background-color: #916868ff ");
+            }
+//            long answer = Integer.parseInt(answerField.getText());
+//            if (correct == answer) {
+//                answerField.setStyle("-fx-background-color: #f2a443ff; ");
+//                this.answeredCorrectly = true;
+//            } else answerField.setStyle("-fx-background-color: #916868ff ");
         }
-        else answerField.setStyle("-fx-background-color: #916868ff ");
-        answerField.setText("" + game.getCurrentQuestion().getCorrectWattage());
+        answerField.setText("Correct answer: " + game.getCurrentQuestion().getCorrectWattage());
     }
 
     /**shows the right answers for the compareQuestion type.
@@ -505,13 +517,7 @@ public class QuizScreenCtrl implements Initializable {
      * The addition of waitingToSeeAnswers for open questions.
      */
     public void openQuestionColloring(){
-        long correct = game.getCurrentQuestion().getCorrectWattage();
-        long answer = Integer.parseInt(answerField.getText());
-        if(correct == answer) {
-            answerField.setStyle("-fx-text-fill: #f2a443ff; ");
-            this.answeredCorrectly = true;
-        }
-        else answerField.setStyle("-fx-text-fill: #916868ff ");
+        answerField.setStyle("-fx-background-color: #916868ff ");
         answerField.setText("Correct answer : " + game.getCurrentQuestion().getCorrectWattage());
     }
 
@@ -562,12 +568,18 @@ public class QuizScreenCtrl implements Initializable {
         buttonR0C1.setDisable(false);
         buttonR01C0.setDisable(false);
         buttonR1C1.setDisable(false);
+        buttonR1C1.setVisible(true);
+        buttonR01C0.setVisible(true);
+        buttonR0C0.setVisible(true);
+        buttonR0C1.setVisible(true);
         normalColor(buttonR0C0);
         normalColor(buttonR01C0);
         normalColor(buttonR0C1);
         normalColor(buttonR1C1);
-        answerField.setStyle("-fx-background-color: #888888ff; ");
         answerField.clear();
+        answerField.setDisable(false);
+        answerField.setVisible(true);
+        answerField.setStyle("-fx-background-color: #888888ff; ");
     }
 
     /**
