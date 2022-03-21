@@ -10,10 +10,9 @@ import client.ConfirmBoxCtrl;
 import com.google.inject.Inject;
 import client.utils.ServerUtils;
 
-import commons.CompareQuestion;
-import commons.Question;
-import commons.WattageQuestion;
-import commons.SingleGame;
+//CHECKSTYLE:OFF
+import commons.*;
+//CHECKSTYLE:ON
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -27,13 +26,14 @@ public class QuizScreenCtrl implements Initializable {
     private final MainCtrl mainCtrl;
     private Timer timer;
     private int[] seconds;
-    private SingleGame game;
+    private Game game;
     private boolean answeredCorrectly;
     // Default value can be changed later
     private final int roundTime = 15;
     private Timeline timeline;
     private int timeLeft = roundTime;
     private TimerTask roundTask;
+    private Player player;
 
     @FXML
     private Button buttonR01C0;
@@ -81,6 +81,9 @@ public class QuizScreenCtrl implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         score.setText("Score: 0");
     }
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
 
     /**
      * Handles the actions when button R0C0 is pressed.
@@ -125,13 +128,15 @@ public class QuizScreenCtrl implements Initializable {
     @FXML
     void backButton(){
         boolean answer = ConfirmBoxCtrl.display("Alert", "Are you sure you want to exit the game session?");
+        roundTask.cancel();
+        timer.cancel();
         if(answer) mainCtrl.showHomeScreen();
     }
 
     /**Sets the fields of the QuizScreen with the given question and answers.
      * @param game the game from which we retrieve our info
      */
-    public void setQuestionFields(SingleGame game){
+    public void setQuestionFields(Game game){
         QuestionNumber.setText("QuestionNumber: " + this.game.getQuestionNumber());
         var question = game.getCurrentQuestion();
         if(question instanceof WattageQuestion){
@@ -213,10 +218,31 @@ public class QuizScreenCtrl implements Initializable {
     /**Starts the Single Player game mode by starting a timer.
      * @param game \
      */
-    public void startGame(SingleGame game){
+    public void startGame(Game game){
         this.game = game;
         setQuestionFields(game);
         startRoundTimer();
+        if(game instanceof MultiGame) {
+            ServerUtils.registerForMessages("/topic/multi/gameplay/" + ((MultiGame) game).getId(), MultiGame.class, retGame -> {
+                if(retGame != null) {
+                    this.game = retGame;
+                    System.out.println(game.getQuestionNumber());
+                    Platform.runLater(() -> {
+                        timer.cancel();
+                        roundTask.cancel();
+                        // If this is the 21st question, end game. We need the 21st question to receive the latest
+                        // game state for the correct leaderboard.
+                        if(retGame.getQuestionNumber() > 20) {
+                            mainCtrl.started = true;
+                            mainCtrl.showEndScreen();
+                        } else {
+                            setQuestionFields(retGame);
+                            startRoundTimer();
+                        }
+                    });
+                }
+            });
+        }
     }
 
     /**
@@ -309,16 +335,16 @@ public class QuizScreenCtrl implements Initializable {
      * @param question
      */
     public void wattageShowRightAnswer(Button button, WattageQuestion question) {
-        if(Integer.parseInt(buttonR1C1.getText()) == question.getRightAnswer())
+        if(Long.parseLong(buttonR1C1.getText()) == question.getRightAnswer())
             rightColor(buttonR1C1);
-        if(Integer.parseInt(buttonR01C0.getText()) == question.getRightAnswer())
+        if(Long.parseLong(buttonR01C0.getText()) == question.getRightAnswer())
             rightColor(buttonR01C0);
-        if(Integer.parseInt(buttonR0C1.getText()) == question.getRightAnswer())
+        if(Long.parseLong(buttonR0C1.getText()) == question.getRightAnswer())
             rightColor(buttonR0C1);
-        if(Integer.parseInt(buttonR0C0.getText()) == question.getRightAnswer())
+        if(Long.parseLong(buttonR0C0.getText()) == question.getRightAnswer())
             rightColor(buttonR0C0);
         if(button !=null){
-            if (Integer.parseInt(button.getText()) == question.getRightAnswer()){
+            if (Long.parseLong(button.getText()) == question.getRightAnswer()){
                 rightColor(button);
                 this.answeredCorrectly = true;
             }
@@ -354,6 +380,7 @@ public class QuizScreenCtrl implements Initializable {
      * The function makes the leaves 3 seconds for the user to see the right answer.
      * It also disables the buttons meanwhile.
      */
+    //CHECKSTYLE:OFF
     public void waitingToSeeAnswers(){
         Timer timer = new Timer();
         seconds[0] = 0;
@@ -391,12 +418,18 @@ public class QuizScreenCtrl implements Initializable {
                     disableAll();
                 }
                 else {
-                    initializeButtons();
                     timer.cancel();
                     Platform.runLater( () -> {
                         updateScore();
-                        startRoundTimer();
-                        setNextQuestion();
+                        initializeButtons();
+                        if(game instanceof SingleGame) {
+                            startRoundTimer();
+                            setNextQuestion();
+                        } else {
+                            // When the answer has been shown, send the response.
+                            ServerUtils.send("/app/multi/gameplay/" + ((MultiGame) game).getId(), (MultiGame) game);
+                            System.out.println("Response send");
+                        }
                     });
                 }
             }
@@ -404,10 +437,20 @@ public class QuizScreenCtrl implements Initializable {
         timer.scheduleAtFixedRate(task, 0, 1000);
     }
 
+    /**
+     * Will update the score of the player and it will update the field on the client.
+     */
     public void updateScore() {
+
         if(answeredCorrectly){
-            this.game.upDateScore(timeLeft);
-            this.score.setText("Score: " + this.game.getPlayer().getScore());
+            if(game instanceof SingleGame) {
+                ((SingleGame) game).upDateScore(timeLeft);
+                this.score.setText("Score: " + ((SingleGame) game).getPlayer().getScore());
+            } else {
+                // Score kept locally
+                player.upDateScore(timeLeft);
+                this.score.setText("Score: " + player.getScore());
+            }
         }
         this.answeredCorrectly = false;
     }
@@ -459,7 +502,7 @@ public class QuizScreenCtrl implements Initializable {
 //            }
 
             this.game.nextQuestion(nextQuestion);
-            setQuestionFields(this.game);
+            setQuestionFields(game);
         }
     }
 

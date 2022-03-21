@@ -1,6 +1,5 @@
 package client.scenes;
 
-import client.ConfirmBoxCtrl;
 import client.utils.ServerUtils;
 import commons.Player;
 import commons.SingleGame;
@@ -20,7 +19,7 @@ import javafx.scene.input.KeyEvent;
 
 public class HomeScreenCtrl {
 
-    private final ServerUtils server;
+    private ServerUtils server;
     private final MainCtrl mainCtrl;
 
     @FXML
@@ -59,8 +58,7 @@ public class HomeScreenCtrl {
 
     @FXML
     void exitButtonPressed(ActionEvent event){
-        boolean answer = ConfirmBoxCtrl.display("Alert", "Are you sure you want to exit?");
-        if(answer) System.exit(0);
+        mainCtrl.showServerAddress();
     }
 
     @FXML
@@ -80,8 +78,8 @@ public class HomeScreenCtrl {
             default: break;
         }
     }
-    Score getNewScore(){
-        Score score = new Score(0, nameField.getText());
+    Score getNewScore(int points){
+        Score score = new Score(nameField.getText(), points);
         return score;
     }
 
@@ -91,7 +89,7 @@ public class HomeScreenCtrl {
 
     void addNameAndScore(){
         try{
-            server.addScore(getNewScore());
+            server.addScore(getNewScore(0));
         } catch (WebApplicationException e){
 
             var alert = new Alert(Alert.AlertType.ERROR);
@@ -108,5 +106,42 @@ public class HomeScreenCtrl {
     void adminToolsPressed(ActionEvent event) {
         mainCtrl.showAdministratorInterface();
     }
+
+    @FXML
+    void playMultiPlayerButtonPressed(ActionEvent event) {
+        String name;
+        if (nameField.getText().length() == 0){
+            name = generateRandomString();
+        } else {
+            name = nameField.getText();
+        }
+        Player player = new Player(name);
+
+        mainCtrl.showWaitingRoom(player);
+    }
+
+    public String generateRandomString(){
+        String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        String s = "";
+        for(int i = 0; i<=12; i++){
+            int index = generateIndex(51);
+            char a = letters.charAt(index);
+            s = s +a;
+        }
+        return s;
+
+    }
+
+    /**
+     * @param max the max value of index we want to obtain.
+     * @return a randomly generated Index
+     */
+    public int generateIndex(int max){
+        double factor = Math.random();
+        int result = (int) (Math.round(factor * max));
+        return result;
+    }
+    
+
 
 }

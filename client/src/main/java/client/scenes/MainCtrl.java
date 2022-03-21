@@ -15,8 +15,10 @@
  */
 package client.scenes;
 
+import client.utils.ServerUtils;
 import commons.Activity;
-import commons.SingleGame;
+import commons.Game;
+import commons.Player;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -25,6 +27,9 @@ import javafx.util.Pair;
 public class MainCtrl {
 
     private Stage primaryStage;
+
+    private Player curPlayer;
+    public boolean started = false;
 
     private HomeScreenCtrl homeScreenCtrl;
     private Scene homeScreen;
@@ -50,6 +55,12 @@ public class MainCtrl {
     private ImportActivityCtrl importActivityCtrl;
     private Scene importActivityScene;
 
+    private ServerAddressCtrl serverAddressCtrl;
+    private Scene serverAddress;
+
+    private WaitingRoomCtrl waitingRoomCtrl;
+    private Scene waitingRoomScene;
+
     /**
      * This method should be adjusted if you want to add new screens.
      * @param primaryStage
@@ -65,6 +76,8 @@ public class MainCtrl {
                            Pair<AdministrativeInterfaceCtrl, Parent> administrativeInterfacePair,
                            Pair<AddActivityCtrl, Parent> addActivityPair,
                            Pair<EditActivityCtrl, Parent> editActivityPair,
+                           Pair<ServerAddressCtrl, Parent> addressCtrlPair,
+                           Pair<WaitingRoomCtrl, Parent> waitingRoomPair,
                            Pair<ImportActivityCtrl, Parent> importActivityPair) {
 
         this.primaryStage = primaryStage;
@@ -93,7 +106,14 @@ public class MainCtrl {
         this.importActivityCtrl = importActivityPair.getKey();
         this.importActivityScene = new Scene(importActivityPair.getValue());
 
-        showHomeScreen();
+        this.serverAddressCtrl = addressCtrlPair.getKey();
+        this.serverAddress = new Scene(addressCtrlPair.getValue());
+
+        showServerAddress();
+        this.waitingRoomCtrl = waitingRoomPair.getKey();
+        this.waitingRoomScene = new Scene(waitingRoomPair.getValue());
+
+        showServerAddress();
         primaryStage.show();
     }
 
@@ -102,8 +122,9 @@ public class MainCtrl {
         primaryStage.setScene(homeScreen);
     }
 
-    public void showQuizScreen(SingleGame game) {
+    public void showQuizScreen(Game game) {
         primaryStage.setTitle("Quiz Screen");
+        quizScreenCtrl.setPlayer(curPlayer);
         quizScreenCtrl.startGame(game);
         primaryStage.setScene(quizScreen);
     }
@@ -111,6 +132,7 @@ public class MainCtrl {
     public void showEndScreen() {
         primaryStage.setTitle("End Screen");
         primaryStage.setScene(endScreen);
+        endScreenCtrl.showLeaderboard();
     }
 
     public void showHowToPlay() {
@@ -142,4 +164,20 @@ public class MainCtrl {
         primaryStage.setScene(importActivityScene);
         importActivityScene.setOnKeyPressed(e -> importActivityCtrl.keyPressed(e));
     }
+
+    public void showServerAddress() {
+        primaryStage.setTitle("Server Address");
+        primaryStage.setScene(serverAddress);
+    }
+
+    public void showWaitingRoom(Player player) {
+        primaryStage.setTitle("Waiting Room");
+        curPlayer = player;
+        waitingRoomCtrl.initConnection();
+        waitingRoomCtrl.setPlayer(player);
+        started = false;
+        ServerUtils.send("/app/multi", player);
+        primaryStage.setScene(waitingRoomScene);
+    }
+
 }
