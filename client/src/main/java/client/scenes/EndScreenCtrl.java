@@ -6,6 +6,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import com.google.inject.Inject;
 import client.utils.ServerUtils;
+import com.google.inject.Inject;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -20,10 +24,10 @@ public class EndScreenCtrl {
     private final MainCtrl mainCtrl;
 
     @FXML
-    private final TableView<Score> tableView;
+    private TableColumn<Score, String> usernames;
 
     @FXML
-    private final TableColumn<Score, String> usernames;
+    private TableColumn<Score, Integer> score;
 
     @FXML
     private final TableColumn<Score, Long> id;
@@ -47,7 +51,7 @@ public class EndScreenCtrl {
     }
 
     @FXML
-    void returnToHomePagePressed(ActionEvent event) {
+    void returnToHomePagePressed() {
         mainCtrl.showHomeScreen();
     }
 
