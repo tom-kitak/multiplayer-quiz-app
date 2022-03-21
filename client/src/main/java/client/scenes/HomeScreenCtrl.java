@@ -12,7 +12,7 @@ import commons.Question;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
-import server.Score;
+import commons.Score;
 
 import javafx.scene.input.KeyEvent;
 
@@ -78,8 +78,8 @@ public class HomeScreenCtrl {
             default: break;
         }
     }
-    Score getNewScore(){
-        Score score = new Score(0, nameField.getText());
+    Score getNewScore(int points){
+        Score score = new Score(points, nameField.getText());
         return score;
     }
 
@@ -89,7 +89,7 @@ public class HomeScreenCtrl {
 
     void addNameAndScore(){
         try{
-            server.addScore(getNewScore());
+            server.addScore(getNewScore(0));
         } catch (WebApplicationException e){
 
             var alert = new Alert(Alert.AlertType.ERROR);
