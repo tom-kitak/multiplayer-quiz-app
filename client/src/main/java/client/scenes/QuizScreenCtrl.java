@@ -81,6 +81,11 @@ public class QuizScreenCtrl implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         score.setText("Score: 0");
     }
+
+
+    /**Sets the player that is playing.
+     * @param player the Player that is playing
+     */
     public void setPlayer(Player player) {
         this.player = player;
     }
@@ -149,6 +154,50 @@ public class QuizScreenCtrl implements Initializable {
 
     }
 
+    /**Will adjust the screen for a new OpenQuestionField.
+     * @param openQuestion the openQuestion we get our information from
+     */
+    private void setOpenQuestionFields(OpenQuestion openQuestion) {
+        questionField.setText(openQuestion.getQuestionDescription());
+        disableAll();
+        answerField.setVisible(true);
+        answerField.setDisable(false);
+        buttonR0C0.setVisible(false);
+        buttonR0C1.setVisible(false);
+        buttonR1C1.setVisible(false);
+        buttonR01C0.setVisible(false);
+
+
+    }
+
+
+    /**
+     * when the player presses enter their answer is stored.
+     * when the player presses escape their answer is deleted from the text field.
+     * @param e consumes the event and identifies which key was pressed.
+     */
+    @FXML
+    void keyPressed(KeyEvent e){
+        switch (e.getCode()){
+            case ENTER:
+                showRightAnswer(new Button());
+                waitingToSeeAnswers();
+                break;
+            case ESCAPE:
+                cancelEvent();
+                break;
+            default: break;
+        }
+    }
+
+    /**
+     * clears the input field for the open question type.
+     */
+    void cancelEvent(){
+        answerField.clear();
+    }
+
+
     /**Sets the question field and answers for the CompareQuestion.
      * @param question The Question from which we get information
      */
@@ -216,7 +265,7 @@ public class QuizScreenCtrl implements Initializable {
     }
 
     /**Starts the Single Player game mode by starting a timer.
-     * @param game \
+     * @param game The Game we get our info from
      */
     public void startGame(Game game){
         this.game = game;
@@ -274,7 +323,7 @@ public class QuizScreenCtrl implements Initializable {
      * @return a string in the minutes:seconds format with
      *  leading zeroes if required
      */
-    public static String convertTimer(int time) {
+    public String convertTimer(int time) {
         StringBuilder resultingTime = new StringBuilder();
         if(time < 600) {
             resultingTime.append(0);
@@ -290,7 +339,7 @@ public class QuizScreenCtrl implements Initializable {
 
 
     /**
-     * Compares all the buttons to see which one is the correct one to indicate the player.
+     * Redirects us to the right ShowAnswer method.
      * @param button is the button the player has chosen
      */
     public void showRightAnswer(Button button){
@@ -301,6 +350,32 @@ public class QuizScreenCtrl implements Initializable {
             CompareQuestion question = (CompareQuestion) game.getCurrentQuestion();
             compareShowRightAnswer(button, question);
         }
+    }
+
+    /**Shows the rightAnswer for the openQuestion type.
+     * @param question the question where we got our info from
+     */
+    private void openShowRightAnswer(OpenQuestion question) {
+        long correct = game.getCurrentQuestion().getCorrectWattage();
+        if(answerField.getText() == null)
+            answerField.setStyle("-fx-background-color: #916868ff ");
+        else {
+            try{
+                long answer = Integer.parseInt(answerField.getText());
+                if (correct == answer) {
+                    answerField.setStyle("-fx-background-color: #f2a443ff; ");
+                    this.answeredCorrectly = true;
+                } else answerField.setStyle("-fx-background-color: #916868ff ");
+            }catch (NumberFormatException e){
+                answerField.setStyle("-fx-background-color: #916868ff ");
+            }
+//            long answer = Integer.parseInt(answerField.getText());
+//            if (correct == answer) {
+//                answerField.setStyle("-fx-background-color: #f2a443ff; ");
+//                this.answeredCorrectly = true;
+//            } else answerField.setStyle("-fx-background-color: #916868ff ");
+        }
+        answerField.setText("Correct answer: " + game.getCurrentQuestion().getCorrectWattage());
     }
 
     /**shows the right answers for the compareQuestion type.
@@ -408,7 +483,7 @@ public class QuizScreenCtrl implements Initializable {
                 } else if(Integer.parseInt(buttonR1C1.getText()) == correct) {
                     rightColor(buttonR1C1);
                 }
-            }
+            } else openQuestionColoring();
         }
         TimerTask task = new TimerTask() {
             @Override
@@ -435,6 +510,14 @@ public class QuizScreenCtrl implements Initializable {
             }
         };
         timer.scheduleAtFixedRate(task, 0, 1000);
+    }
+
+    /**
+     * The addition of waitingToSeeAnswers for open questions.
+     */
+    public void openQuestionColoring(){
+        answerField.setStyle("-fx-background-color: #916868ff ");
+        answerField.setText("Correct answer : " + game.getCurrentQuestion().getCorrectWattage());
     }
 
     /**
@@ -492,14 +575,6 @@ public class QuizScreenCtrl implements Initializable {
         } else {
 
             Question nextQuestion = server.getQuestion();
-//            Question nextQuestion;
-//            if(this.game.getQuestionNumber()%2==0){
-//                nextQuestion = new WattageQuestion(new String[] {"a", "b", "c", "d"},
-//                        new int[] {555, 777, 888, 999});
-//            } else {
-//                nextQuestion = new CompareQuestion(new String[] {"a", "b", "c", "d"},
-//                        new int[] {555, 777, 888, 999});
-//            }
 
             this.game.nextQuestion(nextQuestion);
             setQuestionFields(game);
