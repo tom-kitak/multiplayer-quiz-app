@@ -39,16 +39,20 @@ public class EndScreenCtrl {
         this.usernames = new TableColumn<>("Usernames");
         this.score = new TableColumn<>("Scores");
         this.id = new TableColumn<>("Id");
-        usernames.setCellValueFactory(new PropertyValueFactory<>("name"));
-        score.setCellValueFactory(new PropertyValueFactory<>("score"));
-        id.setCellValueFactory(new PropertyValueFactory<>("id"));
-        tableView.getColumns().addAll(usernames, score, id);
-        tableView.setItems(showLeaderboard());
     }
 
     @FXML
     void returnToHomePagePressed(ActionEvent event) {
         mainCtrl.showHomeScreen();
+    }
+
+    void initialize(){
+        usernames.setCellValueFactory(new PropertyValueFactory<>("name"));
+        score.setCellValueFactory(new PropertyValueFactory<>("score"));
+        id.setCellValueFactory(new PropertyValueFactory<>("id"));
+        tableView.getColumns().addAll(usernames, score, id);
+        tableView.setItems(showLeaderboard());
+        ///System.out.println(tableView.getColumns().get(0).getCellData(0));
     }
 
     /**
