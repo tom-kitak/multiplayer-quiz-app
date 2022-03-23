@@ -41,13 +41,16 @@ public class ServerAddressCtrl {
         }
         if(check) {
             ServerUtils.setSession(address);
+
             mainCtrl.showHomeScreen();
+
         } else {
             Alert a = new Alert(Alert.AlertType.ERROR);
             a.setContentText("Server not responding");
             a.show();
         }
     }
+
 
     @FXML
     void exitButtonPressed(ActionEvent event){

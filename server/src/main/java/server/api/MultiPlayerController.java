@@ -6,10 +6,12 @@ import commons.Player;
 
 import commons.Question;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import server.database.ActivityRepository;
 //CHECKSTYLE:OFF
@@ -168,6 +170,13 @@ public class MultiPlayerController {
             game.setPlayers(players);
         }
     }
+
+    @GetMapping("topic/lobby")
+    public ResponseEntity<MultiGame> getLobby(){
+        return ResponseEntity.ok(currentLobbyGame);
+    }
+
+
 
 
 
