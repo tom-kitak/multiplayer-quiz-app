@@ -16,6 +16,7 @@
 package client.utils;
 
 import commons.Activity;
+import commons.MultiGame;
 import commons.Player;
 import commons.Question;
 import jakarta.ws.rs.core.Response;
@@ -106,6 +107,14 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .delete();
+    }
+
+    public MultiGame getLobby(){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("topic/lobby")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<MultiGame>() {});
     }
 
     public List<Score> getAllScores() {

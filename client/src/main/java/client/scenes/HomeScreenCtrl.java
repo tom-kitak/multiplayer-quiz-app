@@ -2,19 +2,24 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Player;
+import commons.MultiGame;
 import commons.SingleGame;
+import commons.Question;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import com.google.inject.Inject;
-import commons.Question;
+
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import server.Score;
 
 import javafx.scene.input.KeyEvent;
+
+import java.util.ArrayList;
 
 
 public class HomeScreenCtrl {
@@ -22,8 +27,12 @@ public class HomeScreenCtrl {
     private ServerUtils server;
     private final MainCtrl mainCtrl;
 
+
     @FXML
     private TextField nameField;
+
+    @FXML
+    private Label labelForUniqueUsername;
 
     /**Creates a new HomeScreenCtrl Object.
      * @param server the server we want to use
@@ -116,9 +125,27 @@ public class HomeScreenCtrl {
             name = nameField.getText();
         }
         Player player = new Player(name);
-
-        mainCtrl.showWaitingRoom(player);
+        MultiGame multiGame = server.getLobby();
+        boolean unique = checkForUnique(name, multiGame.getPlayers());
+        if(unique){
+            mainCtrl.showWaitingRoom(player);
+        }
+        else {
+            labelForUniqueUsername.setText("Choose a different username and" +
+                    " click again");
+        }
     }
+
+    public boolean checkForUnique(String name, ArrayList<Player> players2) {
+        for(Player player: players2){
+            if(player.getUsername().equals(name)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+
 
     public String generateRandomString(){
         String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -141,7 +168,5 @@ public class HomeScreenCtrl {
         int result = (int) (Math.round(factor * max));
         return result;
     }
-    
-
 
 }
