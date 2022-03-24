@@ -2,9 +2,9 @@ package server.api;
 
 import java.util.Random;
 
-public class RandomTry extends Random {
+public class MockRandom extends Random {
     private int counter;
-    public RandomTry(){
+    public MockRandom(){
         counter = 0;
     }
 

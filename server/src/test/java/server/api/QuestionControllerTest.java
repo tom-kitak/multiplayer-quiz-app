@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import server.database.ActivityRepository;
 
+
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +32,7 @@ class QuestionControllerTest {
     @MockBean
     ActivityRepository repository;
     @MockBean
-    RandomTry random;
+    MockRandom random;
 
 
     String imageString = "18763671972912763726319376237108";
@@ -40,7 +41,7 @@ class QuestionControllerTest {
     Activity act2 = new Activity("b", 2, tempImage);
     Activity act3 = new Activity("c", 3, tempImage);
     Activity act4 = new Activity("d", 4, tempImage);
-    Long num = Long.valueOf(4);
+    long num = 4;
 
 
     @Test
@@ -60,4 +61,15 @@ class QuestionControllerTest {
 
 
     }
+
+    @Test
+    void getQuestion2() throws Exception {
+        long num2 = 2;
+        Mockito.when(repository.count()).thenReturn(num2);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/question/")
+                        .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().is5xxServerError());
+    }
+
 }
