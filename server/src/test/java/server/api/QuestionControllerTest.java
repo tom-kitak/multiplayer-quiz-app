@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.hamcrest.Matchers.*;
 //CHECKSTYLE:ON
 
-import static org.junit.jupiter.api.Assertions.*;
+
 @WebMvcTest(QuestionController.class)
 class QuestionControllerTest {
     @Autowired
@@ -30,6 +30,7 @@ class QuestionControllerTest {
     ActivityRepository repository;
     @MockBean
     Random random;
+
 
     String imageString = "18763671972912763726319376237108";
     byte[] tempImage = imageString.getBytes(StandardCharsets.UTF_8);
@@ -44,14 +45,14 @@ class QuestionControllerTest {
     void getQuestion() throws Exception {
         List<Activity> activityList = new ArrayList<>(Arrays.asList(act1, act2, act3, act4));
         Mockito.when(repository.count()).thenReturn(num);
+        Mockito.when(random.nextInt(activityList.size())).thenReturn(0, 1, 2, 3);
         Mockito.when(repository.findAll()).thenReturn(activityList);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/question/")
                         .contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
-                        .andExpect(jsonPath("$", hasSize(1)))
-                        .andExpect(jsonPath("$[0].answerTitles", is("{a, b, c, d} ")));
+                        .andExpect(jsonPath("answerTitles[0]", is("a")));
 
 
 
