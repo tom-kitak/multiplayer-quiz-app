@@ -488,6 +488,8 @@ public class QuizScreenCtrl implements Initializable {
      */
     public void setNextQuestion() {
         if(this.game.getQuestionNumber()>=20){
+            timer.cancel();
+            roundTask.cancel();
             mainCtrl.showEndScreen();
         } else {
 
