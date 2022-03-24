@@ -1,10 +1,6 @@
 package server.api;
 
-import commons.Activity;
-import commons.MultiGame;
-import commons.Player;
-
-import commons.Question;
+import commons.*;
 
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -174,6 +170,12 @@ public class MultiPlayerController {
     @SendTo("/topic/multi/jokers/{gameId}")
     public MultiGame shortenTime(@DestinationVariable String gameId, MultiGame game) {
         return game;
+    }
+
+    @MessageMapping("/multi/emoji/{type}")
+    @SendTo("/topic/multi/emoji/{type}")
+    public Emoji emojiHandler(@DestinationVariable String type, Emoji emoji){
+        return emoji;
     }
 
 
