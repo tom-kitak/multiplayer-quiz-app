@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import server.database.ActivityRepository;
 
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +30,7 @@ class QuestionControllerTest {
     @MockBean
     ActivityRepository repository;
     @MockBean
-    Random random;
+    SecureRandom random;
 
 
     String imageString = "18763671972912763726319376237108";
