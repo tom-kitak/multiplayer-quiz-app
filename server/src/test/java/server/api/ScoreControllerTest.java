@@ -1,5 +1,7 @@
 package server.api;
 
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import commons.Score;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -14,6 +16,7 @@ import server.database.ScoreRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 
 import static org.hamcrest.Matchers.is;
@@ -28,6 +31,8 @@ class ScoreControllerTest {
     ScoreRepository repo;
     @MockBean
     MockRandom mockRandom;
+    @Autowired
+    transient ObjectMapper objectMapper = new ObjectMapper();
 
     Score score1 = new Score(55, "a");
     Score score2 = new Score(88, "b");
@@ -92,18 +97,72 @@ class ScoreControllerTest {
     }
 
     @Test
-    void add() {
+    void add() throws Exception {
 
+        mockMvc.perform(MockMvcRequestBuilders
+                .post("/api/score/post")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(score1)))
+                .andExpect(status().isOk());
+    }
 
+    @Test
+    void add2() throws Exception {
+        Score score = new Score(55, null);
 
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/score/post")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(score)))
+                        .andExpect(status().is4xxClientError());
 
     }
 
     @Test
-    void updateById() {
+    void add3() throws Exception {
+        Score score = new Score(55, "");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/score/post")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(score)))
+                .andExpect(status().is4xxClientError());
+
     }
 
     @Test
-    void deleteById() {
+    void updateById() throws Exception {
+        long id = 55;
+        score2.setId(id);
+        Mockito.when(repo.findById(id)).thenReturn(java.util.Optional.ofNullable(score2));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .put("/api/score/put/55")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(score2)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void updateById2() throws Exception {
+        long id = 55;
+        score2.setId(id);
+        Mockito.when(repo.findById(id)).thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/score/put/55")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(score2)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteById() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .delete("/api/score/delete/55")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(score3)))
+                .andExpect(status().isOk());
     }
 }
