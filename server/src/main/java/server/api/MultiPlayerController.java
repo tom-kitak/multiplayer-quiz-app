@@ -1,6 +1,11 @@
 package server.api;
 
-import commons.*;
+import commons.Emoji;
+import commons.MultiGame;
+import commons.Player;
+import commons.Activity;
+import commons.Question;
+
 
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -177,8 +182,5 @@ public class MultiPlayerController {
     public Emoji emojiHandler(@DestinationVariable String type, Emoji emoji){
         return emoji;
     }
-
-
-
-
+    
 }
