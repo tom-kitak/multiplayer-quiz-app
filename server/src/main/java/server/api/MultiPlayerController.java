@@ -169,6 +169,13 @@ public class MultiPlayerController {
         }
     }
 
+    // Passes the "shorten time message".
+    @MessageMapping("/multi/jokers/{gameId}")
+    @SendTo("/topic/multi/jokers/{gameId}")
+    public MultiGame shortenTime(@DestinationVariable String gameId, MultiGame game) {
+        return game;
+    }
+
 
 
 

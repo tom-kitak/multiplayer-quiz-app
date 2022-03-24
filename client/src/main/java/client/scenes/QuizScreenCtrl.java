@@ -34,6 +34,7 @@ public class QuizScreenCtrl implements Initializable {
     private int timeLeft = roundTime;
     private TimerTask roundTask;
     private Player player;
+    private boolean doublePoints = false;
 
     @FXML
     private Button buttonR01C0;
@@ -58,6 +59,15 @@ public class QuizScreenCtrl implements Initializable {
 
     @FXML
     private Button score;
+
+    @FXML
+    private Button eliminateJoker;
+
+    @FXML
+    private Button doubleJoker;
+
+    @FXML
+    private Button timeJoker;
 
     @Inject
     public QuizScreenCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -130,6 +140,7 @@ public class QuizScreenCtrl implements Initializable {
         boolean answer = ConfirmBoxCtrl.display("Alert", "Are you sure you want to exit the game session?");
         roundTask.cancel();
         timer.cancel();
+        initializeButtons();
         if(answer) mainCtrl.showHomeScreen();
     }
 
@@ -222,7 +233,16 @@ public class QuizScreenCtrl implements Initializable {
         this.game = game;
         setQuestionFields(game);
         startRoundTimer();
+        timeLeft = roundTime;
+        timeJoker.setVisible(false);
+        timeJoker.setDisable(true);
+        doubleJoker.setVisible(true);
+        doubleJoker.setDisable(false);
+        eliminateJoker.setVisible(true);
+        eliminateJoker.setDisable(false);
         if(game instanceof MultiGame) {
+            timeJoker.setVisible(true);
+            timeJoker.setDisable(false);
             ServerUtils.registerForMessages("/topic/multi/gameplay/" + ((MultiGame) game).getId(), MultiGame.class, retGame -> {
                 if(retGame != null) {
                     this.game = retGame;
@@ -241,6 +261,12 @@ public class QuizScreenCtrl implements Initializable {
                         }
                     });
                 }
+            });
+            ServerUtils.registerForMessages("/topic/multi/jokers/" + ((MultiGame) game).getId(), MultiGame.class, retGame -> {
+                System.out.println("receive shorten");
+                Platform.runLater(() -> {
+                    timeLeft = (int) (timeLeft * 0.6);
+                });
             });
         }
     }
@@ -382,7 +408,7 @@ public class QuizScreenCtrl implements Initializable {
      */
     //CHECKSTYLE:OFF
     public void waitingToSeeAnswers(){
-        Timer timer = new Timer();
+        timer = new Timer();
         seconds[0] = 0;
         roundTask.cancel();
         if(timeLeft <= 0) {
@@ -443,12 +469,17 @@ public class QuizScreenCtrl implements Initializable {
     public void updateScore() {
 
         if(answeredCorrectly){
+            int score = timeLeft;
+            if(doublePoints) {
+                score += score;
+                doublePoints = false;
+            }
             if(game instanceof SingleGame) {
-                ((SingleGame) game).upDateScore(timeLeft);
+                ((SingleGame) game).upDateScore(score);
                 this.score.setText("Score: " + ((SingleGame) game).getPlayer().getScore());
             } else {
                 // Score kept locally
-                player.upDateScore(timeLeft);
+                player.upDateScore(score);
                 this.score.setText("Score: " + player.getScore());
             }
         }
@@ -506,6 +537,60 @@ public class QuizScreenCtrl implements Initializable {
             this.game.nextQuestion(nextQuestion);
             setQuestionFields(game);
         }
+    }
+
+
+    // Searches for an incorrect answer and then deletes it.
+    // It also disables the button.
+    public void eliminateIncorrect() {
+        eliminateJoker.setVisible(false);
+        eliminateJoker.setDisable(true);
+        if(game.getCurrentQuestion() instanceof CompareQuestion) {
+            String correct = game.getCurrentQuestion().getCorrectAnswer();
+            if(!buttonR0C0.getText().equals(correct)) {
+                wrongColor(buttonR0C0);
+                return;
+            } else if(!buttonR0C1.getText().equals(correct)) {
+                wrongColor(buttonR0C1);
+                return;
+            } else if(!buttonR01C0.getText().equals(correct)) {
+                wrongColor(buttonR01C0);
+                return;
+            } else if(!buttonR1C1.getText().equals(correct)) {
+                wrongColor(buttonR1C1);
+                return;
+            }
+        } else {
+            long correct = game.getCurrentQuestion().getCorrectWattage();
+            if(Integer.parseInt(buttonR0C0.getText()) != correct) {
+                wrongColor(buttonR0C0);
+                return;
+            } else if(Integer.parseInt(buttonR0C1.getText()) != correct) {
+                wrongColor(buttonR0C1);
+                return;
+            } else if(Integer.parseInt(buttonR01C0.getText()) != correct) {
+                wrongColor(buttonR01C0);
+                return;
+            } else if(Integer.parseInt(buttonR1C1.getText()) != correct) {
+                wrongColor(buttonR1C1);
+                return;
+            }
+        }
+
+    }
+
+    // Sets the doublePoints flag true and disables the button
+    public void activateDoublePoints(){
+        doublePoints = true;
+        doubleJoker.setDisable(true);
+        doubleJoker.setVisible(false);
+    }
+
+    // Sends the time shorten message and disables the button.
+    public void activateShorterTime(){
+        ServerUtils.send("/app/multi/jokers/" + ((MultiGame) game).getId(), (MultiGame) game);
+        timeJoker.setVisible(false);
+        timeJoker.setDisable(true);
     }
 
 
