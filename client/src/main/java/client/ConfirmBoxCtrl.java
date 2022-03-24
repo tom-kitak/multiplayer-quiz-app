@@ -1,4 +1,4 @@
-package client.scenes;
+package client;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
