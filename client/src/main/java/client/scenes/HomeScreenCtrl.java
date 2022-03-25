@@ -149,7 +149,11 @@ public class HomeScreenCtrl {
      */
     @FXML
     void playMultiPlayerButtonPressed(ActionEvent event) {
-        if (server.checkConnection()) {
+
+        if (!server.checkConnection()) {
+            throwError("There are not enough activities on this server to start a game!");
+        } else {
+
             String name;
             if (nameField.getText().length() == 0) {
                 name = generateRandomString();
@@ -157,20 +161,14 @@ public class HomeScreenCtrl {
                 name = nameField.getText();
             }
             Player player = new Player(name);
-
-            mainCtrl.showWaitingRoom(player);
-        } else {
-            throwError("There are not enough activities on this server to start a game!");
-        }
-        Player player = new Player(name);
-        MultiGame multiGame = server.getLobby();
-        boolean unique = checkForUnique(name, multiGame.getPlayers());
-        if(unique){
-            mainCtrl.showWaitingRoom(player);
-        }
-        else {
-            labelForUniqueUsername.setText("Choose a different username and" +
-                    " click again");
+            MultiGame multiGame = server.getLobby();
+            boolean unique = checkForUnique(name, multiGame.getPlayers());
+            if (unique) {
+                mainCtrl.showWaitingRoom(player);
+            } else {
+                labelForUniqueUsername.setText("Choose a different username and" +
+                        " click again");
+            }
         }
     }
 
@@ -183,10 +181,6 @@ public class HomeScreenCtrl {
         return true;
     }
 
-
-
-
-    }
 
     /**
      * Method to generate a random string.
