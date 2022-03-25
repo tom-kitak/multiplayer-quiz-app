@@ -118,21 +118,26 @@ public class HomeScreenCtrl {
 
     @FXML
     void playMultiPlayerButtonPressed(ActionEvent event) {
-        String name;
-        if (nameField.getText().length() == 0){
-            name = generateRandomString();
+
+        if (!server.checkConnection()) {
+            throwError("There are not enough activities on this server to start a game!");
         } else {
-            name = nameField.getText();
-        }
-        Player player = new Player(name);
-        MultiGame multiGame = server.getLobby();
-        boolean unique = checkForUnique(name, multiGame.getPlayers());
-        if(unique){
-            mainCtrl.showWaitingRoom(player);
-        }
-        else {
-            labelForUniqueUsername.setText("Choose a different username and" +
-                    " click again");
+
+            String name;
+            if (nameField.getText().length() == 0) {
+                name = generateRandomString();
+            } else {
+                name = nameField.getText();
+            }
+            Player player = new Player(name);
+            MultiGame multiGame = server.getLobby();
+            boolean unique = checkForUnique(name, multiGame.getPlayers());
+            if (unique) {
+                mainCtrl.showWaitingRoom(player);
+            } else {
+                labelForUniqueUsername.setText("Choose a different username and" +
+                        " click again");
+            }
         }
     }
 
@@ -146,6 +151,10 @@ public class HomeScreenCtrl {
     }
 
 
+    /**
+     * Method to generate a random string.
+     * @return The randomly generated string
+     */
 
     public String generateRandomString(){
         String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
