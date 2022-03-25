@@ -65,6 +65,7 @@ public class QuizScreenCtrl implements Initializable {
     @FXML
     private TextField answerField;
 
+    @FXML
     private Button eliminateJoker;
 
     @FXML
@@ -637,9 +638,6 @@ public class QuizScreenCtrl implements Initializable {
         }
     }
 
-<<<<<<< client/src/main/java/client/scenes/QuizScreenCtrl.java
-=======
-
     // Searches for an incorrect answer and then deletes it.
     // It also disables the button.
     public void eliminateIncorrect() {
@@ -693,6 +691,4 @@ public class QuizScreenCtrl implements Initializable {
         timeJoker.setDisable(true);
     }
 
-
->>>>>>> client/src/main/java/client/scenes/QuizScreenCtrl.java
 }
