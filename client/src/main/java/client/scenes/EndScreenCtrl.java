@@ -78,7 +78,7 @@ public class EndScreenCtrl {
         }
         ObservableList<Score> list = FXCollections.observableArrayList();
         scores.sort((x, y) -> Integer.compare(y.getScore(), x.getScore()));
-        for (int i = 0; i < Math.min(10, scores.size()); ++i) {
+        for (int i = 0; i < scores.size(); ++i) {
             list.add(scores.get(i));
         }
         return list;
