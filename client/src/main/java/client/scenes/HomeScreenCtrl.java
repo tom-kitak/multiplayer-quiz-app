@@ -96,8 +96,8 @@ public class HomeScreenCtrl {
      * @param points The points to assign to the score object
      * @return A new score object with the specified points
      */
-    Score getNewScore(int points){
-        Score score = new Score(points, nameField.getText());
+    Score getNewScore(int points, String name){
+        Score score = new Score(points,name);
         return score;
     }
 
@@ -113,7 +113,7 @@ public class HomeScreenCtrl {
      */
     void addNameAndScore(){
         try{
-            server.addScore(getNewScore(0));
+            server.addScore(getNewScore(0, nameField.getText()));
         } catch (WebApplicationException e){
 
             var alert = new Alert(Alert.AlertType.ERROR);

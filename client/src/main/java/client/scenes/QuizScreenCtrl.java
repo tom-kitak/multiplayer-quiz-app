@@ -96,6 +96,11 @@ public class QuizScreenCtrl implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         score.setText("Score: 0");
     }
+
+
+    /**Sets the player that is playing.
+     * @param player the Player that is playing
+     */
     public void setPlayer(Player player) {
         this.player = player;
     }
@@ -172,6 +177,9 @@ public class QuizScreenCtrl implements Initializable {
 
     }
 
+    /**Will adjust the screen for a new OpenQuestionField.
+     * @param openQuestion the openQuestion we get our information from
+     */
     private void setOpenQuestionFields(OpenQuestion openQuestion) {
         questionField.setText(openQuestion.getQuestionDescription());
         disableAll();
@@ -205,6 +213,9 @@ public class QuizScreenCtrl implements Initializable {
         }
     }
 
+    /**
+     * clears the input field for the open question type.
+     */
     void cancelEvent(){
         answerField.clear();
     }
@@ -277,7 +288,7 @@ public class QuizScreenCtrl implements Initializable {
     }
 
     /**Starts the Single Player game mode by starting a timer.
-     * @param game \
+     * @param game The Game we get our info from
      */
     public void startGame(Game game){
         this.game = game;
@@ -350,7 +361,7 @@ public class QuizScreenCtrl implements Initializable {
      * @return a string in the minutes:seconds format with
      *  leading zeroes if required
      */
-    public static String convertTimer(int time) {
+    public String convertTimer(int time) {
         StringBuilder resultingTime = new StringBuilder();
         if(time < 600) {
             resultingTime.append(0);
@@ -366,7 +377,7 @@ public class QuizScreenCtrl implements Initializable {
 
 
     /**
-     * Compares all the buttons to see which one is the correct one to indicate the player.
+     * Redirects us to the right ShowAnswer method.
      * @param button is the button the player has chosen
      */
     public void showRightAnswer(Button button){
@@ -382,6 +393,9 @@ public class QuizScreenCtrl implements Initializable {
         }
     }
 
+    /**Shows the rightAnswer for the openQuestion type.
+     * @param question the question where we got our info from
+     */
     private void openShowRightAnswer(OpenQuestion question) {
         long correct = game.getCurrentQuestion().getCorrectWattage();
         if(answerField.getText() == null)
@@ -510,7 +524,7 @@ public class QuizScreenCtrl implements Initializable {
                 } else if(Integer.parseInt(buttonR1C1.getText()) == correct) {
                     rightColor(buttonR1C1);
                 }
-            } else openQuestionColloring();
+            } else openQuestionColoring();
         }
         TimerTask task = new TimerTask() {
             @Override
@@ -542,7 +556,7 @@ public class QuizScreenCtrl implements Initializable {
     /**
      * The addition of waitingToSeeAnswers for open questions.
      */
-    public void openQuestionColloring(){
+    public void openQuestionColoring(){
         answerField.setStyle("-fx-background-color: #916868ff ");
         answerField.setText("Correct answer : " + game.getCurrentQuestion().getCorrectWattage());
     }
@@ -624,14 +638,6 @@ public class QuizScreenCtrl implements Initializable {
         } else {
 
             Question nextQuestion = server.getQuestion();
-//            Question nextQuestion;
-//            if(this.game.getQuestionNumber()%2==0){
-//                nextQuestion = new WattageQuestion(new String[] {"a", "b", "c", "d"},
-//                        new int[] {555, 777, 888, 999});
-//            } else {
-//                nextQuestion = new CompareQuestion(new String[] {"a", "b", "c", "d"},
-//                        new int[] {555, 777, 888, 999});
-//            }
 
             this.game.nextQuestion(nextQuestion);
             setQuestionFields(game);
