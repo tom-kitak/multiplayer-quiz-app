@@ -34,6 +34,8 @@ public class QuizScreenCtrl implements Initializable {
     private int timeLeft = roundTime;
     private TimerTask roundTask;
     private Player player;
+    private boolean doublePoints = false;
+    private boolean eliminateUsed = false;
 
     @FXML
     private Button buttonR01C0;
@@ -135,6 +137,9 @@ public class QuizScreenCtrl implements Initializable {
         boolean answer = ConfirmBoxCtrl.display("Alert", "Are you sure you want to exit the game session?");
         roundTask.cancel();
         timer.cancel();
+        initializeButtons();
+        eliminateJoker.setVisible(true);
+        eliminateJoker.setDisable(false);
         if(answer) mainCtrl.showHomeScreen();
     }
 
@@ -146,10 +151,17 @@ public class QuizScreenCtrl implements Initializable {
         var question = game.getCurrentQuestion();
         if(question instanceof WattageQuestion){
             WattageQuestion wattageQuestion = (WattageQuestion) question;
+            answerField.setVisible(false);
+            answerField.setDisable(true);
             setWattageQuestionFields(wattageQuestion);
-        } else {
+        } else if(question instanceof  CompareQuestion){
             CompareQuestion compareQuestion = (CompareQuestion) question;
+            answerField.setVisible(false);
+            answerField.setDisable(true);
             setCompareQuestionFields(compareQuestion);
+        } else {
+            OpenQuestion openQuestion = (OpenQuestion) question;
+            setOpenQuestionFields(openQuestion);
         }
 
     }
@@ -166,8 +178,9 @@ public class QuizScreenCtrl implements Initializable {
         buttonR0C1.setVisible(false);
         buttonR1C1.setVisible(false);
         buttonR01C0.setVisible(false);
-
-
+        System.out.println("set the buttons");
+        eliminateJoker.setDisable(true);
+        eliminateJoker.setVisible(false);
     }
 
 
@@ -271,6 +284,15 @@ public class QuizScreenCtrl implements Initializable {
         this.game = game;
         setQuestionFields(game);
         startRoundTimer();
+        timeLeft = roundTime;
+        timeJoker.setVisible(false);
+        timeJoker.setDisable(true);
+        doubleJoker.setVisible(true);
+        doubleJoker.setDisable(false);
+        if((game.getCurrentQuestion() instanceof OpenQuestion)) {
+            eliminateJoker.setVisible(false);
+            eliminateJoker.setDisable(true);
+        }
         if(game instanceof MultiGame) {
             ServerUtils.registerForMessages("/topic/multi/gameplay/" + ((MultiGame) game).getId(), MultiGame.class, retGame -> {
                 if(retGame != null) {
@@ -357,6 +379,10 @@ public class QuizScreenCtrl implements Initializable {
      */
     private void openShowRightAnswer(OpenQuestion question) {
         long correct = game.getCurrentQuestion().getCorrectWattage();
+        if(!eliminateUsed) {
+            eliminateJoker.setVisible(true);
+            eliminateJoker.setDisable(false);
+        }
         if(answerField.getText() == null)
             answerField.setStyle("-fx-background-color: #916868ff ");
         else {
@@ -495,11 +521,13 @@ public class QuizScreenCtrl implements Initializable {
                 else {
                     timer.cancel();
                     Platform.runLater( () -> {
+                        answerField.setVisible(false);
+                        answerField.setDisable(true);
                         updateScore();
                         initializeButtons();
                         if(game instanceof SingleGame) {
-                            startRoundTimer();
                             setNextQuestion();
+                            startRoundTimer();
                         } else {
                             // When the answer has been shown, send the response.
                             ServerUtils.send("/app/multi/gameplay/" + ((MultiGame) game).getId(), (MultiGame) game);
@@ -518,6 +546,10 @@ public class QuizScreenCtrl implements Initializable {
     public void openQuestionColoring(){
         answerField.setStyle("-fx-background-color: #916868ff ");
         answerField.setText("Correct answer : " + game.getCurrentQuestion().getCorrectWattage());
+        if(!eliminateUsed) {
+            eliminateJoker.setVisible(true);
+            eliminateJoker.setDisable(false);
+        }
     }
 
     /**
@@ -553,7 +585,7 @@ public class QuizScreenCtrl implements Initializable {
     }
 
     /**
-     * Gives the buttons their initial color and makes them functinable again.
+     * Gives the buttons their initial color and makes them functional again.
      */
     public void initializeButtons(){
         buttonR0C0.setDisable(false);
@@ -564,6 +596,8 @@ public class QuizScreenCtrl implements Initializable {
         normalColor(buttonR01C0);
         normalColor(buttonR0C1);
         normalColor(buttonR1C1);
+        answerField.clear();
+        answerField.setStyle("-fx-background-color: #888888ff; ");
     }
 
     /**
@@ -581,5 +615,42 @@ public class QuizScreenCtrl implements Initializable {
         }
     }
 
+    // Searches for an incorrect answer and then deletes it.
+    // It also disables the button.
+    public void eliminateIncorrect() {
+        eliminateUsed = true;
+        eliminateJoker.setVisible(false);
+        eliminateJoker.setDisable(true);
+        if(game.getCurrentQuestion() instanceof CompareQuestion) {
+            String correct = game.getCurrentQuestion().getCorrectAnswer();
+            if(!buttonR0C0.getText().equals(correct)) {
+                wrongColor(buttonR0C0);
+                return;
+            } else if(!buttonR0C1.getText().equals(correct)) {
+                wrongColor(buttonR0C1);
+                return;
+            } else if(!buttonR01C0.getText().equals(correct)) {
+                wrongColor(buttonR01C0);
+                return;
+            } else if(!buttonR1C1.getText().equals(correct)) {
+                wrongColor(buttonR1C1);
+                return;
+            }
+        } else {
+            long correct = game.getCurrentQuestion().getCorrectWattage();
+            if(Integer.parseInt(buttonR0C0.getText()) != correct) {
+                wrongColor(buttonR0C0);
+                return;
+            } else if(Integer.parseInt(buttonR0C1.getText()) != correct) {
+                wrongColor(buttonR0C1);
+                return;
+            } else if(Integer.parseInt(buttonR01C0.getText()) != correct) {
+                wrongColor(buttonR01C0);
+                return;
+            } else if(Integer.parseInt(buttonR1C1.getText()) != correct) {
+                wrongColor(buttonR1C1);
+                return;
+            }
+        }
 
 }
