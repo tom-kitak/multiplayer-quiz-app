@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
@@ -33,5 +34,10 @@
       <Button fx:id="score" layoutX="558.0" layoutY="39.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="222.0" style="-fx-background-color: WHITE;" text="LeaderBoard + Score" />
       <Button fx:id="QuestionNumber" accessibleText="~" layoutX="326.0" layoutY="39.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="222.0" style="-fx-background-color: #3b3f46ff;" text="Question No." textFill="WHITE" />
       <Button layoutX="67.0" layoutY="39.0" mnemonicParsing="false" onAction="#backButton" onMouseClicked="#backButton" style="-fx-background-color: #888888ff#888888ff;" text="Exit Game" />
+      <TextField fx:id="answerField" alignment="CENTER" layoutX="177.0" layoutY="342.0" onKeyPressed="#keyPressed" prefHeight="61.0" prefWidth="521.0" promptText="Enter your answer" style="-fx-background-color: #888888ff;">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </TextField>
    </children>
 </AnchorPane>

@@ -19,6 +19,8 @@ import javafx.fxml.FXML;
 
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 
 public class QuizScreenCtrl implements Initializable {
@@ -59,6 +61,9 @@ public class QuizScreenCtrl implements Initializable {
 
     @FXML
     private Button score;
+
+    @FXML
+    private TextField answerField;
 
     @FXML
     private Button eliminateJoker;
@@ -153,12 +158,57 @@ public class QuizScreenCtrl implements Initializable {
         if(question instanceof WattageQuestion){
             WattageQuestion wattageQuestion = (WattageQuestion) question;
             setWattageQuestionFields(wattageQuestion);
-        } else {
+            answerField.setVisible(false);
+            answerField.setDisable(true);
+        } else if(question instanceof  CompareQuestion){
             CompareQuestion compareQuestion = (CompareQuestion) question;
             setCompareQuestionFields(compareQuestion);
+            answerField.setVisible(false);
+            answerField.setDisable(true);
+        } else {
+            OpenQuestion openQuestion = (OpenQuestion) question;
+            setOpenQuestionFields(openQuestion);
         }
 
     }
+
+    private void setOpenQuestionFields(OpenQuestion openQuestion) {
+        questionField.setText(openQuestion.getQuestionDescription());
+        disableAll();
+        answerField.setVisible(true);
+        answerField.setDisable(false);
+        buttonR0C0.setVisible(false);
+        buttonR0C1.setVisible(false);
+        buttonR1C1.setVisible(false);
+        buttonR01C0.setVisible(false);
+
+
+    }
+
+
+    /**
+     * when the player presses enter their answer is stored.
+     * when the player presses escape their answer is deleted from the text field.
+     * @param e consumes the event and identifies which key was pressed.
+     */
+    @FXML
+    void keyPressed(KeyEvent e){
+        switch (e.getCode()){
+            case ENTER:
+                showRightAnswer(new Button());
+                waitingToSeeAnswers();
+                break;
+            case ESCAPE:
+                cancelEvent();
+                break;
+            default: break;
+        }
+    }
+
+    void cancelEvent(){
+        answerField.clear();
+    }
+
 
     /**Sets the question field and answers for the CompareQuestion.
      * @param question The Question from which we get information
@@ -323,10 +373,36 @@ public class QuizScreenCtrl implements Initializable {
         if(game.getCurrentQuestion() instanceof WattageQuestion){
             WattageQuestion question = (WattageQuestion) game.getCurrentQuestion();
             wattageShowRightAnswer(button, question);
-        } else {
+        } else if(game.getCurrentQuestion() instanceof CompareQuestion){
             CompareQuestion question = (CompareQuestion) game.getCurrentQuestion();
             compareShowRightAnswer(button, question);
+        } else {
+            OpenQuestion question = (OpenQuestion) game.getCurrentQuestion();
+            openShowRightAnswer(question);
         }
+    }
+
+    private void openShowRightAnswer(OpenQuestion question) {
+        long correct = game.getCurrentQuestion().getCorrectWattage();
+        if(answerField.getText() == null)
+            answerField.setStyle("-fx-background-color: #916868ff ");
+        else {
+            try{
+                long answer = Integer.parseInt(answerField.getText());
+                if (correct == answer) {
+                    answerField.setStyle("-fx-background-color: #f2a443ff; ");
+                    this.answeredCorrectly = true;
+                } else answerField.setStyle("-fx-background-color: #916868ff ");
+            }catch (NumberFormatException e){
+                answerField.setStyle("-fx-background-color: #916868ff ");
+            }
+//            long answer = Integer.parseInt(answerField.getText());
+//            if (correct == answer) {
+//                answerField.setStyle("-fx-background-color: #f2a443ff; ");
+//                this.answeredCorrectly = true;
+//            } else answerField.setStyle("-fx-background-color: #916868ff ");
+        }
+        answerField.setText("Correct answer: " + game.getCurrentQuestion().getCorrectWattage());
     }
 
     /**shows the right answers for the compareQuestion type.
@@ -423,7 +499,7 @@ public class QuizScreenCtrl implements Initializable {
                 } else if(buttonR1C1.getText().equals(correct)) {
                     rightColor(buttonR1C1);
                 }
-            } else {
+            } else if(game.getCurrentQuestion() instanceof  WattageQuestion){
                 long correct = game.getCurrentQuestion().getCorrectWattage();
                 if(Integer.parseInt(buttonR0C0.getText()) == correct) {
                     rightColor(buttonR0C0);
@@ -434,7 +510,7 @@ public class QuizScreenCtrl implements Initializable {
                 } else if(Integer.parseInt(buttonR1C1.getText()) == correct) {
                     rightColor(buttonR1C1);
                 }
-            }
+            } else openQuestionColloring();
         }
         TimerTask task = new TimerTask() {
             @Override
@@ -464,6 +540,14 @@ public class QuizScreenCtrl implements Initializable {
     }
 
     /**
+     * The addition of waitingToSeeAnswers for open questions.
+     */
+    public void openQuestionColloring(){
+        answerField.setStyle("-fx-background-color: #916868ff ");
+        answerField.setText("Correct answer : " + game.getCurrentQuestion().getCorrectWattage());
+    }
+
+    /**
      * Will update the score of the player and it will update the field on the client.
      */
     public void updateScore() {
@@ -490,14 +574,21 @@ public class QuizScreenCtrl implements Initializable {
      * Disables all button and makes their opacity normal again.
      */
     public void disableAll(){
-        buttonR0C0.setDisable(true);
-        buttonR0C0.setOpacity(1);
-        buttonR0C1.setDisable(true);
-        buttonR0C1.setOpacity(1);
-        buttonR01C0.setDisable(true);
-        buttonR01C0.setOpacity(1);
-        buttonR1C1.setDisable(true);
-        buttonR1C1.setOpacity(1);
+        if(!(game.getCurrentQuestion() instanceof OpenQuestion)) {
+            buttonR0C0.setDisable(true);
+            buttonR0C0.setOpacity(1);
+            buttonR0C1.setDisable(true);
+            buttonR0C1.setOpacity(1);
+            buttonR01C0.setDisable(true);
+            buttonR01C0.setOpacity(1);
+            buttonR1C1.setDisable(true);
+            buttonR1C1.setOpacity(1);
+        } else {
+            answerField.setDisable(true);
+            answerField.setOpacity(1);
+        }
+
+
     }
 
     /**
@@ -508,10 +599,18 @@ public class QuizScreenCtrl implements Initializable {
         buttonR0C1.setDisable(false);
         buttonR01C0.setDisable(false);
         buttonR1C1.setDisable(false);
+        buttonR1C1.setVisible(true);
+        buttonR01C0.setVisible(true);
+        buttonR0C0.setVisible(true);
+        buttonR0C1.setVisible(true);
         normalColor(buttonR0C0);
         normalColor(buttonR01C0);
         normalColor(buttonR0C1);
         normalColor(buttonR1C1);
+        answerField.clear();
+        answerField.setDisable(false);
+        answerField.setVisible(true);
+        answerField.setStyle("-fx-background-color: #888888ff; ");
     }
 
     /**
@@ -538,7 +637,6 @@ public class QuizScreenCtrl implements Initializable {
             setQuestionFields(game);
         }
     }
-
 
     // Searches for an incorrect answer and then deletes it.
     // It also disables the button.
@@ -592,6 +690,5 @@ public class QuizScreenCtrl implements Initializable {
         timeJoker.setVisible(false);
         timeJoker.setDisable(true);
     }
-
 
 }

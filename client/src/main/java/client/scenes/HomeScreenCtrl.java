@@ -12,7 +12,7 @@ import commons.Question;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
-import server.Score;
+import commons.Score;
 
 import javafx.scene.input.KeyEvent;
 
@@ -97,7 +97,8 @@ public class HomeScreenCtrl {
      * @return A new score object with the specified points
      */
     Score getNewScore(int points){
-        return new Score(nameField.getText(), points);
+        Score score = new Score(points, nameField.getText());
+        return score;
     }
 
     /**

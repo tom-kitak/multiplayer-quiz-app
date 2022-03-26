@@ -12,7 +12,8 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = CompareQuestion.class, name = "CompareQuestion"),
-        @JsonSubTypes.Type(value = WattageQuestion.class, name = "WattageQuestion")
+        @JsonSubTypes.Type(value = WattageQuestion.class, name = "WattageQuestion"),
+        @JsonSubTypes.Type(value = OpenQuestion.class, name = "OpenQuestion")
 })
 
 

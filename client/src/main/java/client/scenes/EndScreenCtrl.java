@@ -1,14 +1,15 @@
 package client.scenes;
 
-
-import client.utils.ServerUtils;
-import com.google.inject.Inject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import com.google.inject.Inject;
+import client.utils.ServerUtils;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import server.Score;
+import javafx.scene.control.cell.PropertyValueFactory;
+import commons.Score;
 
 import java.util.List;
 
@@ -19,40 +20,53 @@ public class EndScreenCtrl {
     private final MainCtrl mainCtrl;
 
     @FXML
-    private TableColumn<Score, String> usernames;
+    private final TableView<Score> tableView;
 
     @FXML
-    private TableColumn<Score, Integer> score;
+    private final TableColumn<Score, String> usernames;
 
     @FXML
-    private TableColumn<Score, Long> id;
+    private final TableColumn<Score, Long> id;
 
     @FXML
-    private TableView<Score> tableView;
-
+    private final TableColumn<Score, Integer> score;
 
     @Inject
     public EndScreenCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
         this.server = server;
+        this.tableView = new TableView<>();
+        this.usernames = new TableColumn<>("Usernames");
+        this.score = new TableColumn<>("Scores");
+        this.id = new TableColumn<>("Id");
     }
 
     @FXML
-    void returnToHomePagePressed() {
+    void returnToHomePagePressed(ActionEvent event) {
         mainCtrl.showHomeScreen();
     }
 
+    void initialize(){
+        usernames.setCellValueFactory(new PropertyValueFactory<>("name"));
+        score.setCellValueFactory(new PropertyValueFactory<>("score"));
+        id.setCellValueFactory(new PropertyValueFactory<>("id"));
+        tableView.getColumns().addAll(usernames, score, id);
+        tableView.setItems(showLeaderboard());
+        ///System.out.println(tableView.getColumns().get(0).getCellData(0));
+    }
+
     /**
-     * Supposed to update the leaderboard with new information, does not work yet.
+     * Creates a list of all "Score" entities in the database, sorts them in descendin order.
+     * @return an obeservable list of maximum 10 names and scores to be printed
      */
-    public void showLeaderboard(){
+    ObservableList<Score> showLeaderboard(){
         List<Score> scores = server.getAllScores();
         ObservableList<Score> list = FXCollections.observableArrayList();
         scores.sort((x, y) -> Integer.compare(y.getScore(), x.getScore()));
         for(int i = 0; i < Math.min(10, scores.size()); ++i){
             list.add(scores.get(i));
         }
-        tableView.setItems(list);
+        return list;
     }
 
 }
