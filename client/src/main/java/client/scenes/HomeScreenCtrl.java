@@ -87,8 +87,14 @@ public class HomeScreenCtrl {
             default: break;
         }
     }
+
+    /**
+     * Method to get a new score object with the specified amount of points.
+     * @param points The points to assign to the score object
+     * @return A new score object with the specified points
+     */
     Score getNewScore(int points, String name){
-        Score score = new Score(points, name);
+        Score score = new Score(points,name);
         return score;
     }
 
