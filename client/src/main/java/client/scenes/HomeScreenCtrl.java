@@ -16,6 +16,8 @@ import commons.Score;
 
 import javafx.scene.input.KeyEvent;
 
+import java.util.ArrayList;
+
 
 public class HomeScreenCtrl {
 
@@ -96,7 +98,7 @@ public class HomeScreenCtrl {
      */
     @FXML
     public void showLeaderBoard(){
-        mainCtrl.showEndScreen();
+        mainCtrl.showEndScreen(false, new ArrayList<>(){});
     }
 
     /**

@@ -1,10 +1,9 @@
 package client.scenes;
 
 import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.ArrayList;
-import java.util.TimerTask;
+//CHECKSTYLE:OFF
+import java.util.*;
+//CHECKSTYLE:ON
 
 import client.ConfirmBoxCtrl;
 import com.google.inject.Inject;
@@ -96,6 +95,7 @@ public class QuizScreenCtrl implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         score.setText("Score: 0");
     }
+
     public void setPlayer(Player player) {
         this.player = player;
     }
@@ -304,7 +304,7 @@ public class QuizScreenCtrl implements Initializable {
                         // game state for the correct leaderboard.
                         if(retGame.getQuestionNumber() > 20) {
                             mainCtrl.started = true;
-                            mainCtrl.showEndScreen();
+                            mainCtrl.showEndScreen(true, ((MultiGame) game).getPlayers());
                         } else {
                             setQuestionFields(retGame);
                             startRoundTimer();
@@ -620,16 +620,21 @@ public class QuizScreenCtrl implements Initializable {
         if(this.game.getQuestionNumber()>=20){
             timer.cancel();
             roundTask.cancel();
+            boolean partyLeaderboard = false;
+            List<Player> players = new ArrayList<>();
             if(game instanceof SingleGame) {
                 Score score = new Score(((SingleGame) game).getPlayer().getScore(), ((SingleGame) game).getPlayer().getUsername());
                 server.addScore(score);
+                players.add(((SingleGame) game).getPlayer());
             }else {
                 for(Player player : ((MultiGame) game).getPlayers()){
                     Score score = new Score(player.getScore(), player.getUsername());
                     server.addScore(score);
                 }
+                players = ((MultiGame) game).getPlayers();
+                partyLeaderboard = true;
             }
-            mainCtrl.showEndScreen();
+            mainCtrl.showEndScreen(partyLeaderboard, players);
         } else {
 
             Question nextQuestion = server.getQuestion();

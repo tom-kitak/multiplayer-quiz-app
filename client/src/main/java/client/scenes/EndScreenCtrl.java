@@ -1,5 +1,6 @@
 package client.scenes;
 
+import commons.Player;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,6 +12,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import commons.Score;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EndScreenCtrl {
@@ -50,7 +52,7 @@ public class EndScreenCtrl {
      * Creates the columns of the leaderboard.
      * Sets the columns to use the attributes of Score class and adds the players from the databse to the columns.
      */
-    void initialize(){
+    void initialize(boolean partyLeaderboard, List<Player> players){
         usernames.setCellValueFactory(new PropertyValueFactory<>("name"));
         score.setCellValueFactory(new PropertyValueFactory<>("score"));
         id.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -58,7 +60,7 @@ public class EndScreenCtrl {
         tableView.getColumns().add(usernames);
         tableView.getColumns().add(score);
         tableView.getColumns().add(id);
-        tableView.setItems(showLeaderboard());
+        tableView.setItems(showLeaderboard(partyLeaderboard, players));
         ///System.out.println(tableView.getColumns().get(0).getCellData(0));
     }
 
@@ -66,11 +68,17 @@ public class EndScreenCtrl {
      * Creates a list of all "Score" entities in the database, sorts them in descendin order.
      * @return an obeservable list of maximum 10 names and scores to be printed
      */
-    ObservableList<Score> showLeaderboard(){
-        List<Score> scores = server.getAllScores();
+    ObservableList<Score> showLeaderboard(boolean partyLeaderboard, List<Player> players){
+        List<Score> scores = new ArrayList<>();
+        if(!partyLeaderboard) scores =  server.getAllScores();
+        else {
+            for (Player player : players) {
+                scores.add(new Score(player.getScore(), player.getUsername()));
+            }
+        }
         ObservableList<Score> list = FXCollections.observableArrayList();
         scores.sort((x, y) -> Integer.compare(y.getScore(), x.getScore()));
-        for(int i = 0; i < Math.min(10, scores.size()); ++i){
+        for (int i = 0; i < Math.min(10, scores.size()); ++i) {
             list.add(scores.get(i));
         }
         return list;
