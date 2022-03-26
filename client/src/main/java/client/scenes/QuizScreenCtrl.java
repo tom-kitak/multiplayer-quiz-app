@@ -620,6 +620,15 @@ public class QuizScreenCtrl implements Initializable {
         if(this.game.getQuestionNumber()>=20){
             timer.cancel();
             roundTask.cancel();
+            if(game instanceof SingleGame) {
+                Score score = new Score(((SingleGame) game).getPlayer().getScore(), ((SingleGame) game).getPlayer().getUsername());
+                server.addScore(score);
+            }else {
+                for(Player player : ((MultiGame) game).getPlayers()){
+                    Score score = new Score(player.getScore(), player.getUsername());
+                    server.addScore(score);
+                }
+            }
             mainCtrl.showEndScreen();
         } else {
 
