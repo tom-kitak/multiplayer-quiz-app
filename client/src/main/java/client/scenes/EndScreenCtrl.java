@@ -20,16 +20,16 @@ public class EndScreenCtrl {
     private final MainCtrl mainCtrl;
 
     @FXML
-    private final TableView<Score> tableView;
+    private TableView<Score> tableView;
 
     @FXML
-    private final TableColumn<Score, String> usernames;
+    private TableColumn<Score, String> usernames;
 
     @FXML
-    private final TableColumn<Score, Long> id;
+    private TableColumn<Score, Long> id;
 
     @FXML
-    private final TableColumn<Score, Integer> score;
+    private TableColumn<Score, Integer> score;
 
     @Inject
     public EndScreenCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -46,11 +46,18 @@ public class EndScreenCtrl {
         mainCtrl.showHomeScreen();
     }
 
+    /**
+     * Creates the columns of the leaderboard.
+     * Sets the columns to use the attributes of Score class and adds the players from the databse to the columns.
+     */
     void initialize(){
         usernames.setCellValueFactory(new PropertyValueFactory<>("name"));
         score.setCellValueFactory(new PropertyValueFactory<>("score"));
         id.setCellValueFactory(new PropertyValueFactory<>("id"));
-        tableView.getColumns().addAll(usernames, score, id);
+        tableView.getColumns().clear();
+        tableView.getColumns().add(usernames);
+        tableView.getColumns().add(score);
+        tableView.getColumns().add(id);
         tableView.setItems(showLeaderboard());
         ///System.out.println(tableView.getColumns().get(0).getCellData(0));
     }

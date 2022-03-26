@@ -92,6 +92,14 @@ public class HomeScreenCtrl {
     }
 
     /**
+     * The client has the option of accessing the leaderboard without playing a game, from the home screen.
+     */
+    @FXML
+    public void showLeaderBoard(){
+        mainCtrl.showEndScreen();
+    }
+
+    /**
      * Method to get a new score object with the specified amount of points.
      * @param points The points to assign to the score object
      * @return A new score object with the specified points
