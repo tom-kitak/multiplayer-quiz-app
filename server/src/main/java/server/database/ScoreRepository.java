@@ -1,6 +1,6 @@
 package server.database;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import server.Score;
+import commons.Score;
 
 public interface ScoreRepository extends JpaRepository<Score, Long> {}
