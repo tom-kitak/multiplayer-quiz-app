@@ -16,13 +16,6 @@ class HomeScreenCtrlTest {
     }
 
     @Test
-    void getNewScore() {
-        Score score = ctrl.getNewScore(55, "Jimmy");
-        assertEquals(new Score(55, "Jimmy"), score);
-
-    }
-
-    @Test
     void generateRandomString() {
         String test = ctrl.generateRandomString();
         assertTrue(test.length() == 13);
