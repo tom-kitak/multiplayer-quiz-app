@@ -2,19 +2,24 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Player;
+import commons.MultiGame;
 import commons.SingleGame;
+import commons.Question;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import com.google.inject.Inject;
-import commons.Question;
+
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import commons.Score;
 
 import javafx.scene.input.KeyEvent;
+
+import java.util.ArrayList;
 
 
 public class HomeScreenCtrl {
@@ -22,8 +27,12 @@ public class HomeScreenCtrl {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
 
+
     @FXML
     private TextField nameField;
+
+    @FXML
+    private Label labelForUniqueUsername;
 
     /**Creates a new HomeScreenCtrl Object.
      * @param server the server we want to use
@@ -141,7 +150,11 @@ public class HomeScreenCtrl {
      */
     @FXML
     void playMultiPlayerButtonPressed(ActionEvent event) {
-        if (server.checkConnection()) {
+
+        if (!server.checkConnection()) {
+            throwError("There are not enough activities on this server to start a game!");
+        } else {
+
             String name;
             if (nameField.getText().length() == 0) {
                 name = generateRandomString();
@@ -149,17 +162,32 @@ public class HomeScreenCtrl {
                 name = nameField.getText();
             }
             Player player = new Player(name);
-
-            mainCtrl.showWaitingRoom(player);
-        } else {
-            throwError("There are not enough activities on this server to start a game!");
+            MultiGame multiGame = server.getLobby();
+            boolean unique = checkForUnique(name, multiGame.getPlayers());
+            if (unique) {
+                mainCtrl.showWaitingRoom(player);
+            } else {
+                labelForUniqueUsername.setText("Choose a different username and" +
+                        " click again");
+            }
         }
     }
+
+    public boolean checkForUnique(String name, ArrayList<Player> players2) {
+        for(Player player: players2){
+            if(player.getUsername().equals(name)){
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     /**
      * Method to generate a random string.
      * @return The randomly generated string
      */
+
     public String generateRandomString(){
         String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         StringBuilder s = new StringBuilder();

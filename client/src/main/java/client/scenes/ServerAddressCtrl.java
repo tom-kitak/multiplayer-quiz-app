@@ -45,7 +45,9 @@ public class ServerAddressCtrl {
         }
         if(check) {
             ServerUtils.setSession(address);
+
             mainCtrl.showHomeScreen();
+
         } else {
             Alert a = new Alert(Alert.AlertType.ERROR);
             a.setContentText("Server not responding");
@@ -53,10 +55,12 @@ public class ServerAddressCtrl {
         }
     }
 
+
     /**
      * The method to call when the exit button is pressed.
      * @param event The event which caused this method call.
      */
+
     @FXML
     void exitButtonPressed(ActionEvent event){
         boolean answer = ConfirmBoxCtrl.display("Alert", "Are you sure you want to exit?");
