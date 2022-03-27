@@ -9,6 +9,7 @@ import jakarta.ws.rs.WebApplicationException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import com.google.inject.Inject;
+import commons.Question;
 
 
 import javafx.scene.control.Alert;
@@ -18,8 +19,6 @@ import javafx.stage.Modality;
 import server.Score;
 
 import javafx.scene.input.KeyEvent;
-
-import java.util.ArrayList;
 
 
 public class HomeScreenCtrl {
