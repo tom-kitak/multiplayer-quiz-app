@@ -11,10 +11,6 @@ import commons.Question;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-import javafx.stage.Modality;
-import commons.Score;
-
-import javafx.scene.input.KeyEvent;
 
 import java.util.ArrayList;
 
@@ -45,7 +41,7 @@ public class HomeScreenCtrl {
         if (server.checkConnection()) {
             String name;
             if (nameField.getText().length() == 0) {
-                name = "anonymous user";
+                name = generateRandomString();
             } else {
                 name = nameField.getText();
             }
@@ -80,20 +76,6 @@ public class HomeScreenCtrl {
     }
 
     /**
-     * The method to handle key presses.
-     * @param e The key event that caused this methods call.
-     */
-    @FXML
-    public void keyPressed(KeyEvent e){
-        switch (e.getCode()) {
-            case ENTER -> addNameAndScore();
-            case ESCAPE -> cancelEvent();
-            default -> {
-            }
-        }
-    }
-
-    /**
      * The client has the option of accessing the leaderboard without playing a game, from the home screen.
      */
     @FXML
@@ -101,40 +83,6 @@ public class HomeScreenCtrl {
         mainCtrl.showEndScreen(false, new ArrayList<>(){});
     }
 
-    /**
-     * Method to get a new score object with the specified amount of points.
-     * @param points The points to assign to the score object
-     * @return A new score object with the specified points
-     */
-    Score getNewScore(int points){
-        Score score = new Score(points, nameField.getText());
-        return score;
-    }
-
-    /**
-     * Method to call when the escape button is hit.
-     */
-    void cancelEvent(){
-        nameField.clear();
-    }
-
-    /**
-     * The method to add name and score to the server.
-     */
-    void addNameAndScore(){
-        try{
-            server.addScore(getNewScore(0));
-        } catch (WebApplicationException e){
-
-            var alert = new Alert(Alert.AlertType.ERROR);
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
-            return;
-        }
-        cancelEvent();
-        mainCtrl.showHomeScreen();
-    }
 
     /**
      * Method to call when admin button is pressed.
