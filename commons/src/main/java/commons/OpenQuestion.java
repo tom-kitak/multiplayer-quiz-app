@@ -2,6 +2,7 @@ package commons;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class OpenQuestion extends Question{
@@ -48,7 +49,7 @@ public class OpenQuestion extends Question{
     @Override
     @JsonIgnore
     public String getQuestionDescription() {
-        return "How many watt hour does " + this.getAnswerTitles()[0] + " consume?";
+        return "How many watt hours does " + this.getAnswerTitles()[0] + " consume?";
     }
 
     /**
@@ -67,6 +68,7 @@ public class OpenQuestion extends Question{
      */
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return new HashCodeBuilder(17, 37).
+                append(this.getAnswerTitles()).append(this.getAnswerWattages()).hashCode();
     }
 }

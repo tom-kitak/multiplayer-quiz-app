@@ -98,6 +98,13 @@ class MultiGameTest {
     }
 
     @Test
+    void testInequality3(){
+        MultiGame game2 = new MultiGame(question);
+        game2.setId(55);
+        assertNotEquals(game, game2);
+    }
+
+    @Test
     void testHashCode() {
         MultiGame game2 = new MultiGame(question);
         assertEquals(game.hashCode(), game2.hashCode());
@@ -123,7 +130,19 @@ class MultiGameTest {
     @Test
     void testToString() {
         String result = game.toString();
-        assertTrue(result.contains("MultiGame") && result.contains("players")
-                &&result.contains("questionNumber") && result.contains("currentQuestion"));
+        assertTrue(result.contains("MultiGame: ") && result.contains("players: ")
+                &&result.contains("questionNumber: ") && result.contains("currentQuestion: ")
+                &&result.contains("id: "));
+    }
+
+    @Test
+    void testGetId(){
+        assertEquals(0, game.getId());
+    }
+
+    @Test
+    void testSetId(){
+        game.setId(5);
+        assertEquals(5, game.getId());
     }
 }

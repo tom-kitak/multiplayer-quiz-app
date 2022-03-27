@@ -77,7 +77,8 @@ public class MultiGame extends Game{
         if (!(o instanceof MultiGame)) return false;
         if (!super.equals(o)) return false;
         MultiGame multiGame = (MultiGame) o;
-        return Objects.equals(getPlayers(), multiGame.getPlayers());
+        return Objects.equals(getPlayers(), multiGame.getPlayers())
+                && this.id == multiGame.id;
     }
 
     /**
@@ -95,6 +96,7 @@ public class MultiGame extends Game{
     public String toString() {
         return "MultiGame: \nplayers: " + players.toString()
                 +"\nquestionNumber: " + this.getQuestionNumber()
-                +"\ncurrentQuestion" + this.getCurrentQuestion();
+                +"\ncurrentQuestion: " + this.getCurrentQuestion()
+                +"\nid: "+ this.id;
     }
 }

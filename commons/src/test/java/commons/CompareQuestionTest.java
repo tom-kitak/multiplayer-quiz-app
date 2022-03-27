@@ -119,9 +119,13 @@ class CompareQuestionTest {
         System.out.println(s);
     }
 
-
-
-
+    @Test
+    void testGetDescription(){
+        CompareQuestion question = new CompareQuestion(new String[]{"x", "x", "x", "x"},
+                new long[]{2, 2, 2, 2});
+        assertEquals("Which of the following activities "
+        +"uses the least amount of wh?", question.getQuestionDescription());
+    }
 
 
 }

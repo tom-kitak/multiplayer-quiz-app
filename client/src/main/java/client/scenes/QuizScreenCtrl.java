@@ -36,6 +36,7 @@ public class QuizScreenCtrl implements Initializable {
     private TimerTask roundTask;
     private Player player;
     private boolean doublePoints = false;
+    private boolean eliminateUsed = false;
 
     @FXML
     private Button buttonR01C0;
@@ -146,6 +147,8 @@ public class QuizScreenCtrl implements Initializable {
         roundTask.cancel();
         timer.cancel();
         initializeButtons();
+        eliminateJoker.setVisible(true);
+        eliminateJoker.setDisable(false);
         if(answer) mainCtrl.showHomeScreen();
     }
 
@@ -157,14 +160,14 @@ public class QuizScreenCtrl implements Initializable {
         var question = game.getCurrentQuestion();
         if(question instanceof WattageQuestion){
             WattageQuestion wattageQuestion = (WattageQuestion) question;
-            setWattageQuestionFields(wattageQuestion);
             answerField.setVisible(false);
             answerField.setDisable(true);
+            setWattageQuestionFields(wattageQuestion);
         } else if(question instanceof  CompareQuestion){
             CompareQuestion compareQuestion = (CompareQuestion) question;
-            setCompareQuestionFields(compareQuestion);
             answerField.setVisible(false);
             answerField.setDisable(true);
+            setCompareQuestionFields(compareQuestion);
         } else {
             OpenQuestion openQuestion = (OpenQuestion) question;
             setOpenQuestionFields(openQuestion);
@@ -172,6 +175,9 @@ public class QuizScreenCtrl implements Initializable {
 
     }
 
+    /**Will adjust the screen for a new OpenQuestionField.
+     * @param openQuestion the openQuestion we get our information from
+     */
     private void setOpenQuestionFields(OpenQuestion openQuestion) {
         questionField.setText(openQuestion.getQuestionDescription());
         disableAll();
@@ -181,8 +187,9 @@ public class QuizScreenCtrl implements Initializable {
         buttonR0C1.setVisible(false);
         buttonR1C1.setVisible(false);
         buttonR01C0.setVisible(false);
-
-
+        System.out.println("set the buttons");
+        eliminateJoker.setDisable(true);
+        eliminateJoker.setVisible(false);
     }
 
 
@@ -205,6 +212,9 @@ public class QuizScreenCtrl implements Initializable {
         }
     }
 
+    /**
+     * clears the input field for the open question type.
+     */
     void cancelEvent(){
         answerField.clear();
     }
@@ -277,7 +287,7 @@ public class QuizScreenCtrl implements Initializable {
     }
 
     /**Starts the Single Player game mode by starting a timer.
-     * @param game \
+     * @param game The Game we get our info from
      */
     public void startGame(Game game){
         this.game = game;
@@ -288,8 +298,10 @@ public class QuizScreenCtrl implements Initializable {
         timeJoker.setDisable(true);
         doubleJoker.setVisible(true);
         doubleJoker.setDisable(false);
-        eliminateJoker.setVisible(true);
-        eliminateJoker.setDisable(false);
+        if((game.getCurrentQuestion() instanceof OpenQuestion)) {
+            eliminateJoker.setVisible(false);
+            eliminateJoker.setDisable(true);
+        }
         if(game instanceof MultiGame) {
             timeJoker.setVisible(true);
             timeJoker.setDisable(false);
@@ -358,7 +370,7 @@ public class QuizScreenCtrl implements Initializable {
      * @return a string in the minutes:seconds format with
      *  leading zeroes if required
      */
-    public static String convertTimer(int time) {
+    public String convertTimer(int time) {
         StringBuilder resultingTime = new StringBuilder();
         if(time < 600) {
             resultingTime.append(0);
@@ -374,7 +386,7 @@ public class QuizScreenCtrl implements Initializable {
 
 
     /**
-     * Compares all the buttons to see which one is the correct one to indicate the player.
+     * Redirects us to the right ShowAnswer method.
      * @param button is the button the player has chosen
      */
     public void showRightAnswer(Button button){
@@ -390,8 +402,15 @@ public class QuizScreenCtrl implements Initializable {
         }
     }
 
+    /**Shows the rightAnswer for the openQuestion type.
+     * @param question the question where we got our info from
+     */
     private void openShowRightAnswer(OpenQuestion question) {
         long correct = game.getCurrentQuestion().getCorrectWattage();
+        if(!eliminateUsed) {
+            eliminateJoker.setVisible(true);
+            eliminateJoker.setDisable(false);
+        }
         if(answerField.getText() == null)
             answerField.setStyle("-fx-background-color: #916868ff ");
         else {
@@ -518,7 +537,7 @@ public class QuizScreenCtrl implements Initializable {
                 } else if(Integer.parseInt(buttonR1C1.getText()) == correct) {
                     rightColor(buttonR1C1);
                 }
-            } else openQuestionColloring();
+            } else openQuestionColoring();
         }
         TimerTask task = new TimerTask() {
             @Override
@@ -530,11 +549,13 @@ public class QuizScreenCtrl implements Initializable {
                 else {
                     timer.cancel();
                     Platform.runLater( () -> {
+                        answerField.setVisible(false);
+                        answerField.setDisable(true);
                         updateScore();
                         initializeButtons();
                         if(game instanceof SingleGame) {
-                            startRoundTimer();
                             setNextQuestion();
+                            startRoundTimer();
                         } else {
                             // When the answer has been shown, send the response.
                             ServerUtils.send("/app/multi/gameplay/" + ((MultiGame) game).getId(), (MultiGame) game);
@@ -550,9 +571,13 @@ public class QuizScreenCtrl implements Initializable {
     /**
      * The addition of waitingToSeeAnswers for open questions.
      */
-    public void openQuestionColloring(){
+    public void openQuestionColoring(){
         answerField.setStyle("-fx-background-color: #916868ff ");
         answerField.setText("Correct answer : " + game.getCurrentQuestion().getCorrectWattage());
+        if(!eliminateUsed) {
+            eliminateJoker.setVisible(true);
+            eliminateJoker.setDisable(false);
+        }
     }
 
     /**
@@ -606,7 +631,7 @@ public class QuizScreenCtrl implements Initializable {
     }
 
     /**
-     * Gives the buttons their initial color and makes them functinable again.
+     * Gives the buttons their initial color and makes them functional again.
      */
     public void initializeButtons(){
         buttonR0C0.setDisable(false);
@@ -622,8 +647,6 @@ public class QuizScreenCtrl implements Initializable {
         normalColor(buttonR0C1);
         normalColor(buttonR1C1);
         answerField.clear();
-        answerField.setDisable(false);
-        answerField.setVisible(true);
         answerField.setStyle("-fx-background-color: #888888ff; ");
     }
 
@@ -653,14 +676,6 @@ public class QuizScreenCtrl implements Initializable {
         } else {
 
             Question nextQuestion = server.getQuestion();
-//            Question nextQuestion;
-//            if(this.game.getQuestionNumber()%2==0){
-//                nextQuestion = new WattageQuestion(new String[] {"a", "b", "c", "d"},
-//                        new int[] {555, 777, 888, 999});
-//            } else {
-//                nextQuestion = new CompareQuestion(new String[] {"a", "b", "c", "d"},
-//                        new int[] {555, 777, 888, 999});
-//            }
 
             this.game.nextQuestion(nextQuestion);
             setQuestionFields(game);
@@ -670,6 +685,7 @@ public class QuizScreenCtrl implements Initializable {
     // Searches for an incorrect answer and then deletes it.
     // It also disables the button.
     public void eliminateIncorrect() {
+        eliminateUsed = true;
         eliminateJoker.setVisible(false);
         eliminateJoker.setDisable(true);
         if(game.getCurrentQuestion() instanceof CompareQuestion) {
