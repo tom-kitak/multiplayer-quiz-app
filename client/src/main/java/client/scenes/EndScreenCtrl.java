@@ -52,7 +52,7 @@ public class EndScreenCtrl {
      * Creates the columns of the leaderboard.
      * Sets the columns to use the attributes of Score class and adds the players from the databse to the columns.
      */
-    void initialize(boolean partyLeaderboard, List<Player> players){
+    void initialize(boolean partyLeaderboard, List<Score> players){
         usernames.setCellValueFactory(new PropertyValueFactory<>("name"));
         score.setCellValueFactory(new PropertyValueFactory<>("score"));
         id.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -68,14 +68,8 @@ public class EndScreenCtrl {
      * Creates a list of all "Score" entities in the database, sorts them in descendin order.
      * @return an obeservable list of maximum 10 names and scores to be printed
      */
-    ObservableList<Score> showLeaderboard(boolean partyLeaderboard, List<Player> players){
-        List<Score> scores = new ArrayList<>();
+    ObservableList<Score> showLeaderboard(boolean partyLeaderboard, List<Score> scores){
         if(!partyLeaderboard) scores =  server.getAllScores();
-        else {
-            for (Player player : players) {
-                scores.add(new Score(player.getScore(), player.getUsername()));
-            }
-        }
         ObservableList<Score> list = FXCollections.observableArrayList();
         scores.sort((x, y) -> Integer.compare(y.getScore(), x.getScore()));
         for (int i = 0; i < scores.size(); ++i) {

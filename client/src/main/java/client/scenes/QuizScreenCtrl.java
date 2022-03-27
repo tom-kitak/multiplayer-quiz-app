@@ -304,7 +304,15 @@ public class QuizScreenCtrl implements Initializable {
                         // game state for the correct leaderboard.
                         if(retGame.getQuestionNumber() > 20) {
                             mainCtrl.started = true;
-                            mainCtrl.showEndScreen(true, ((MultiGame) game).getPlayers());
+                            List<Score> players = new ArrayList<>();
+                            int cnt = 0;
+                            for(Player player : ((MultiGame) game).getPlayers()){
+                                Score score = new Score(player.getScore(), player.getUsername());
+                                score.setId((long) ++cnt);
+                                players.add(score);
+                                server.addScore(score);
+                            }
+                            mainCtrl.showEndScreen(true, players);
                         } else {
                             setQuestionFields(retGame);
                             startRoundTimer();
@@ -563,6 +571,12 @@ public class QuizScreenCtrl implements Initializable {
                 this.score.setText("Score: " + ((SingleGame) game).getPlayer().getScore());
             } else {
                 // Score kept locally
+                List<Player> players = ((MultiGame) game).getPlayers();
+                for(int i = 0 ; i < players.size(); ++i){
+                    if(players.get(i).equals(player)){
+                        players.get(i).upDateScore(score);
+                    }
+                }
                 player.upDateScore(score);
                 this.score.setText("Score: " + player.getScore());
             }
@@ -621,17 +635,18 @@ public class QuizScreenCtrl implements Initializable {
             timer.cancel();
             roundTask.cancel();
             boolean partyLeaderboard = false;
-            List<Player> players = new ArrayList<>();
+            List<Score> players = new ArrayList<>();
             if(game instanceof SingleGame) {
                 Score score = new Score(((SingleGame) game).getPlayer().getScore(), ((SingleGame) game).getPlayer().getUsername());
                 server.addScore(score);
-                players.add(((SingleGame) game).getPlayer());
+                players.add(score);
             }else {
                 for(Player player : ((MultiGame) game).getPlayers()){
                     Score score = new Score(player.getScore(), player.getUsername());
+
+                    players.add(score);
                     server.addScore(score);
                 }
-                players = ((MultiGame) game).getPlayers();
                 partyLeaderboard = true;
             }
             mainCtrl.showEndScreen(partyLeaderboard, players);

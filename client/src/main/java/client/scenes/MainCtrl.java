@@ -19,6 +19,7 @@ import client.utils.ServerUtils;
 import commons.Activity;
 import commons.Game;
 import commons.Player;
+import commons.Score;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -131,7 +132,7 @@ public class MainCtrl {
         primaryStage.setScene(quizScreen);
     }
 
-    public void showEndScreen(boolean partyLeaderboard, List<Player> players) {
+    public void showEndScreen(boolean partyLeaderboard, List<Score> players) {
         primaryStage.setTitle("End Screen");
         primaryStage.setScene(endScreen);
         endScreenCtrl.initialize(partyLeaderboard, players);
