@@ -15,7 +15,7 @@
          </font>
       </Text>
       <Button layoutX="374.0" layoutY="426.0" mnemonicParsing="false" onAction="#howToPlay" onMouseClicked="#howToPlay" style="-fx-background-color: #f2a443ff#f2a443ff;" text="How to play?" />
-      <TextField fx:id="nameField" alignment="CENTER" layoutX="268.0" layoutY="256.0" onKeyPressed="#keyPressed" prefHeight="37.0" prefWidth="300.0" promptText="Enter your name" style="-fx-background-color: #888888ff;">
+      <TextField fx:id="nameField" alignment="CENTER" layoutX="268.0" layoutY="281.0" prefHeight="37.0" prefWidth="300.0" promptText="Enter your name" style="-fx-background-color: #888888ff;">
          <font>
             <Font size="16.0" />
          </font>
@@ -31,7 +31,12 @@
          </font>
       </Button>
       <Button layoutX="59.0" layoutY="49.0" mnemonicParsing="false" onAction="#exitButtonPressed" onMouseClicked="#exitButtonPressed" prefHeight="37.0" prefWidth="88.0" style="-fx-background-color: #f2a443ff#f2a443ff;" text="Exit" />
-      <Button layoutX="618.0" layoutY="452.0" mnemonicParsing="false" onAction="#adminToolsPressed" prefHeight="15.0" prefWidth="186.0" style="-fx-background-color: #f2a443ff;" text="Administrator tools">
+      <Button layoutX="598.0" layoutY="452.0" mnemonicParsing="false" onAction="#adminToolsPressed" prefHeight="15.0" prefWidth="186.0" style="-fx-background-color: #f2a443ff;" text="Administrator tools">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Button layoutX="59.0" layoutY="452.0" mnemonicParsing="false" onAction="#showLeaderBoard" prefHeight="15.0" prefWidth="186.0" style="-fx-background-color: #f2a443ff;" text="Leaderboard">
          <font>
             <Font size="16.0" />
          </font>

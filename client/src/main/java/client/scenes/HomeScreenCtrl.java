@@ -4,8 +4,6 @@ import client.utils.ServerUtils;
 import commons.Player;
 import commons.MultiGame;
 import commons.SingleGame;
-import commons.Question;
-import jakarta.ws.rs.WebApplicationException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import com.google.inject.Inject;
@@ -15,15 +13,13 @@ import commons.Question;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Modality;
-import server.Score;
 
-import javafx.scene.input.KeyEvent;
+import java.util.ArrayList;
 
 
 public class HomeScreenCtrl {
 
-    private ServerUtils server;
+    private final ServerUtils server;
     private final MainCtrl mainCtrl;
 
 
@@ -48,79 +44,65 @@ public class HomeScreenCtrl {
      */
     @FXML
     void playSinglePlayerButtonPressed(ActionEvent event) {
-        String name;
-        if (nameField.getText().length() == 0){
-            name = "anonymous user";
+        if (server.checkConnection()) {
+            String name;
+            if (nameField.getText().length() == 0) {
+                name = generateRandomString();
+            } else {
+                name = nameField.getText();
+            }
+            Player player = new Player(name);
+
+
+            Question question = server.getQuestion();
+
+            SingleGame game = new SingleGame(player, question);
+
+            mainCtrl.showQuizScreen(game);
         } else {
-            name = nameField.getText();
+            throwError("There are not enough activities on this server to start a game!");
         }
-        Player player = new Player(name);
-
-
-        Question question = server.getQuestion();
-
-        SingleGame game = new SingleGame(player, question);
-
-        mainCtrl.showQuizScreen(game);
     }
 
+    /**
+     * The method for when the exit button is pressed.
+     * @param event The event which caused this method call
+     */
     @FXML
     void exitButtonPressed(ActionEvent event){
         mainCtrl.showServerAddress();
     }
 
+    /**
+     * The method for when the how to play button is pressed.
+     */
     @FXML
     void howToPlay(){
         mainCtrl.showHowToPlay();
     }
 
+    /**
+     * The client has the option of accessing the leaderboard without playing a game, from the home screen.
+     */
     @FXML
-    public void keyPressed(KeyEvent e){
-        switch (e.getCode()){
-            case ENTER:
-                addNameAndScore();
-                break;
-            case ESCAPE:
-                cancelEvent();
-                break;
-            default: break;
-        }
+    public void showLeaderBoard(){
+        mainCtrl.showEndScreen(false, new ArrayList<>(){});
     }
+
 
     /**
-     * Method to get a new score object with the specified amount of points.
-     * @param points The points to assign to the score object
-     * @return A new score object with the specified points
+     * Method to call when admin button is pressed.
+     * @param event The event which caused this method call.
      */
-    Score getNewScore(int points, String name){
-        Score score = new Score(points,name);
-        return score;
-    }
-
-    void cancelEvent(){
-        nameField.clear();
-    }
-
-    void addNameAndScore(){
-        try{
-            server.addScore(getNewScore(0, nameField.getText()));
-        } catch (WebApplicationException e){
-
-            var alert = new Alert(Alert.AlertType.ERROR);
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
-            return;
-        }
-        cancelEvent();
-        mainCtrl.showHomeScreen();
-    }
-
     @FXML
     void adminToolsPressed(ActionEvent event) {
         mainCtrl.showAdministratorInterface();
     }
 
+    /**
+     * The method to call when multiplayer button is pressed.
+     * @param event The event which caused this method call.
+     */
     @FXML
     void playMultiPlayerButtonPressed(ActionEvent event) {
 
@@ -163,13 +145,13 @@ public class HomeScreenCtrl {
 
     public String generateRandomString(){
         String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-        String s = "";
+        StringBuilder s = new StringBuilder();
         for(int i = 0; i<=12; i++){
             int index = generateIndex(51);
             char a = letters.charAt(index);
-            s = s +a;
+            s.append(a);
         }
-        return s;
+        return s.toString();
 
     }
 
@@ -179,8 +161,18 @@ public class HomeScreenCtrl {
      */
     public int generateIndex(int max){
         double factor = Math.random();
-        int result = (int) (Math.round(factor * max));
-        return result;
+        return (int) (Math.round(factor * max));
     }
+
+    /**
+     * Method to show an error prompt with the specified message.
+     * @param errorMessage The error message to display
+     */
+    private void throwError(String errorMessage) {
+        Alert a = new Alert(Alert.AlertType.ERROR);
+        a.setContentText(errorMessage);
+        a.show();
+    }
+
 
 }

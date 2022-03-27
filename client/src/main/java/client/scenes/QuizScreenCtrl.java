@@ -1,10 +1,9 @@
 package client.scenes;
 
 import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.ArrayList;
-import java.util.TimerTask;
+//CHECKSTYLE:OFF
+import java.util.*;
+//CHECKSTYLE:ON
 
 import client.ConfirmBoxCtrl;
 import com.google.inject.Inject;
@@ -19,6 +18,8 @@ import javafx.fxml.FXML;
 
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 
 public class QuizScreenCtrl implements Initializable {
@@ -61,6 +62,18 @@ public class QuizScreenCtrl implements Initializable {
     @FXML
     private Button score;
 
+    @FXML
+    private TextField answerField;
+
+    @FXML
+    private Button eliminateJoker;
+
+    @FXML
+    private Button doubleJoker;
+
+    @FXML
+    private Button timeJoker;
+
     @Inject
     public QuizScreenCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
@@ -84,10 +97,6 @@ public class QuizScreenCtrl implements Initializable {
         score.setText("Score: 0");
     }
 
-
-    /**Sets the player that is playing.
-     * @param player the Player that is playing
-     */
     public void setPlayer(Player player) {
         this.player = player;
     }
@@ -178,7 +187,6 @@ public class QuizScreenCtrl implements Initializable {
         buttonR0C1.setVisible(false);
         buttonR1C1.setVisible(false);
         buttonR01C0.setVisible(false);
-        System.out.println("set the buttons");
         eliminateJoker.setDisable(true);
         eliminateJoker.setVisible(false);
     }
@@ -294,6 +302,8 @@ public class QuizScreenCtrl implements Initializable {
             eliminateJoker.setDisable(true);
         }
         if(game instanceof MultiGame) {
+            timeJoker.setVisible(true);
+            timeJoker.setDisable(false);
             ServerUtils.registerForMessages("/topic/multi/gameplay/" + ((MultiGame) game).getId(), MultiGame.class, retGame -> {
                 if(retGame != null) {
                     this.game = retGame;
@@ -305,13 +315,27 @@ public class QuizScreenCtrl implements Initializable {
                         // game state for the correct leaderboard.
                         if(retGame.getQuestionNumber() > 20) {
                             mainCtrl.started = true;
-                            mainCtrl.showEndScreen();
+                            List<Score> players = new ArrayList<>();
+                            int cnt = 0;
+                            for(Player player : ((MultiGame) game).getPlayers()){
+                                Score score = new Score(player.getScore(), player.getUsername());
+                                score.setId((long) ++cnt);
+                                players.add(score);
+                                server.addScore(score);
+                            }
+                            mainCtrl.showEndScreen(true, players);
                         } else {
                             setQuestionFields(retGame);
                             startRoundTimer();
                         }
                     });
                 }
+            });
+            ServerUtils.registerForMessages("/topic/multi/jokers/" + ((MultiGame) game).getId(), MultiGame.class, retGame -> {
+                System.out.println("receive shorten");
+                Platform.runLater(() -> {
+                    timeLeft = (int) (timeLeft * 0.6);
+                });
             });
         }
     }
@@ -368,9 +392,12 @@ public class QuizScreenCtrl implements Initializable {
         if(game.getCurrentQuestion() instanceof WattageQuestion){
             WattageQuestion question = (WattageQuestion) game.getCurrentQuestion();
             wattageShowRightAnswer(button, question);
-        } else {
+        } else if(game.getCurrentQuestion() instanceof CompareQuestion){
             CompareQuestion question = (CompareQuestion) game.getCurrentQuestion();
             compareShowRightAnswer(button, question);
+        } else {
+            OpenQuestion question = (OpenQuestion) game.getCurrentQuestion();
+            openShowRightAnswer(question);
         }
     }
 
@@ -483,7 +510,7 @@ public class QuizScreenCtrl implements Initializable {
      */
     //CHECKSTYLE:OFF
     public void waitingToSeeAnswers(){
-        Timer timer = new Timer();
+        timer = new Timer();
         seconds[0] = 0;
         roundTask.cancel();
         if(timeLeft <= 0) {
@@ -498,7 +525,7 @@ public class QuizScreenCtrl implements Initializable {
                 } else if(buttonR1C1.getText().equals(correct)) {
                     rightColor(buttonR1C1);
                 }
-            } else {
+            } else if(game.getCurrentQuestion() instanceof  WattageQuestion){
                 long correct = game.getCurrentQuestion().getCorrectWattage();
                 if(Integer.parseInt(buttonR0C0.getText()) == correct) {
                     rightColor(buttonR0C0);
@@ -558,12 +585,23 @@ public class QuizScreenCtrl implements Initializable {
     public void updateScore() {
 
         if(answeredCorrectly){
+            int score = timeLeft;
+            if(doublePoints) {
+                score += score;
+                doublePoints = false;
+            }
             if(game instanceof SingleGame) {
-                ((SingleGame) game).upDateScore(timeLeft);
+                ((SingleGame) game).upDateScore(score);
                 this.score.setText("Score: " + ((SingleGame) game).getPlayer().getScore());
             } else {
                 // Score kept locally
-                player.upDateScore(timeLeft);
+                List<Player> players = ((MultiGame) game).getPlayers();
+                for(int i = 0 ; i < players.size(); ++i){
+                    if(players.get(i).equals(player)){
+                        players.get(i).upDateScore(score);
+                    }
+                }
+                player.upDateScore(score);
                 this.score.setText("Score: " + player.getScore());
             }
         }
@@ -574,14 +612,21 @@ public class QuizScreenCtrl implements Initializable {
      * Disables all button and makes their opacity normal again.
      */
     public void disableAll(){
-        buttonR0C0.setDisable(true);
-        buttonR0C0.setOpacity(1);
-        buttonR0C1.setDisable(true);
-        buttonR0C1.setOpacity(1);
-        buttonR01C0.setDisable(true);
-        buttonR01C0.setOpacity(1);
-        buttonR1C1.setDisable(true);
-        buttonR1C1.setOpacity(1);
+        if(!(game.getCurrentQuestion() instanceof OpenQuestion)) {
+            buttonR0C0.setDisable(true);
+            buttonR0C0.setOpacity(1);
+            buttonR0C1.setDisable(true);
+            buttonR0C1.setOpacity(1);
+            buttonR01C0.setDisable(true);
+            buttonR01C0.setOpacity(1);
+            buttonR1C1.setDisable(true);
+            buttonR1C1.setOpacity(1);
+        } else {
+            answerField.setDisable(true);
+            answerField.setOpacity(1);
+        }
+
+
     }
 
     /**
@@ -592,6 +637,10 @@ public class QuizScreenCtrl implements Initializable {
         buttonR0C1.setDisable(false);
         buttonR01C0.setDisable(false);
         buttonR1C1.setDisable(false);
+        buttonR1C1.setVisible(true);
+        buttonR01C0.setVisible(true);
+        buttonR0C0.setVisible(true);
+        buttonR0C1.setVisible(true);
         normalColor(buttonR0C0);
         normalColor(buttonR01C0);
         normalColor(buttonR0C1);
@@ -605,7 +654,24 @@ public class QuizScreenCtrl implements Initializable {
      */
     public void setNextQuestion() {
         if(this.game.getQuestionNumber()>=20){
-            mainCtrl.showEndScreen();
+            timer.cancel();
+            roundTask.cancel();
+            boolean partyLeaderboard = false;
+            List<Score> players = new ArrayList<>();
+            if(game instanceof SingleGame) {
+                Score score = new Score(((SingleGame) game).getPlayer().getScore(), ((SingleGame) game).getPlayer().getUsername());
+                server.addScore(score);
+                players.add(score);
+            }else {
+                for(Player player : ((MultiGame) game).getPlayers()){
+                    Score score = new Score(player.getScore(), player.getUsername());
+
+                    players.add(score);
+                    server.addScore(score);
+                }
+                partyLeaderboard = true;
+            }
+            mainCtrl.showEndScreen(partyLeaderboard, players);
         } else {
 
             Question nextQuestion = server.getQuestion();
@@ -652,5 +718,21 @@ public class QuizScreenCtrl implements Initializable {
                 return;
             }
         }
+
+    }
+
+    // Sets the doublePoints flag true and disables the button
+    public void activateDoublePoints(){
+        doublePoints = true;
+        doubleJoker.setDisable(true);
+        doubleJoker.setVisible(false);
+    }
+
+    // Sends the time shorten message and disables the button.
+    public void activateShorterTime(){
+        ServerUtils.send("/app/multi/jokers/" + ((MultiGame) game).getId(), (MultiGame) game);
+        timeJoker.setVisible(false);
+        timeJoker.setDisable(true);
+    }
 
 }

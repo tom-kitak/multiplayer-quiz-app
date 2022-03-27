@@ -1,4 +1,4 @@
-package server;
+package commons;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -12,14 +12,12 @@ import javax.persistence.Id;
 
 @Entity
 public class Score {
-
-    public String name;
-
-    public int score;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
+
+    public int score;
+    public String name;
 
     public Score() {
     }
