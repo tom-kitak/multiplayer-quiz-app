@@ -20,16 +20,16 @@ public class EndScreenCtrl {
     private final MainCtrl mainCtrl;
 
     @FXML
-    private final TableView<Score> tableView;
+    private TableView<Score> tableView;
 
     @FXML
-    private final TableColumn<Score, String> usernames;
+    private TableColumn<Score, String> usernames;
 
     @FXML
-    private final TableColumn<Score, Long> id;
+    private TableColumn<Score, Long> id;
 
     @FXML
-    private final TableColumn<Score, Integer> score;
+    private TableColumn<Score, Integer> score;
 
     @Inject
     public EndScreenCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -46,12 +46,19 @@ public class EndScreenCtrl {
         mainCtrl.showHomeScreen();
     }
 
-    void initialize(){
+    /**
+     * Creates the columns of the leaderboard.
+     * Sets the columns to use the attributes of Score class and adds the players from the databse to the columns.
+     */
+    void initialize(boolean partyLeaderboard, List<Score> players){
         usernames.setCellValueFactory(new PropertyValueFactory<>("name"));
         score.setCellValueFactory(new PropertyValueFactory<>("score"));
         id.setCellValueFactory(new PropertyValueFactory<>("id"));
-        tableView.getColumns().addAll(usernames, score, id);
-        tableView.setItems(showLeaderboard());
+        tableView.getColumns().clear();
+        tableView.getColumns().add(usernames);
+        tableView.getColumns().add(score);
+        tableView.getColumns().add(id);
+        tableView.setItems(showLeaderboard(partyLeaderboard, players));
         ///System.out.println(tableView.getColumns().get(0).getCellData(0));
     }
 
@@ -59,11 +66,11 @@ public class EndScreenCtrl {
      * Creates a list of all "Score" entities in the database, sorts them in descendin order.
      * @return an obeservable list of maximum 10 names and scores to be printed
      */
-    ObservableList<Score> showLeaderboard(){
-        List<Score> scores = server.getAllScores();
+    ObservableList<Score> showLeaderboard(boolean partyLeaderboard, List<Score> scores){
+        if(!partyLeaderboard) scores =  server.getAllScores();
         ObservableList<Score> list = FXCollections.observableArrayList();
         scores.sort((x, y) -> Integer.compare(y.getScore(), x.getScore()));
-        for(int i = 0; i < Math.min(10, scores.size()); ++i){
+        for (int i = 0; i < scores.size(); ++i) {
             list.add(scores.get(i));
         }
         return list;

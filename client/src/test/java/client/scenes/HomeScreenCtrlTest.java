@@ -1,6 +1,5 @@
 package client.scenes;
 
-import commons.Score;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,13 +12,6 @@ class HomeScreenCtrlTest {
     @BeforeEach
     void setUp(){
         this.ctrl = new HomeScreenCtrl(null, null);
-    }
-
-    @Test
-    void getNewScore() {
-        Score score = ctrl.getNewScore(55, "Jimmy");
-        assertEquals(new Score(55, "Jimmy"), score);
-
     }
 
     @Test
