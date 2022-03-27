@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 //CHECKSTYLE:OFF
 import org.springframework.web.bind.annotation.*;
 //CHECKSTYLE:ON
-import commons.Score;
+import server.Score;
 import server.database.ScoreRepository;
 
 import java.util.List;

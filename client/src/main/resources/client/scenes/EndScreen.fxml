@@ -13,11 +13,11 @@
             <Font size="21.0" />
          </font>
       </Button>
-      <TableView fx:id="tableView" accessibleText="-" layoutX="58.0" layoutY="177.0" prefHeight="301.0" prefWidth="725.0" style="-fx-background-color: #f2a443ff;">
+      <TableView fx:id="tableView" layoutX="62.0" layoutY="198.0" prefHeight="291.0" prefWidth="718.0" style="-fx-background-color: #f2a443ff#f2a443ff #f2a443ff#f2a443ff #f2a443ff#f2a443ff #f2a443ff#f2a443ff;">
         <columns>
-          <TableColumn fx:id="usernames" prefWidth="387.0" sortType="DESCENDING" style="-fx-background-color: #888888ff;" text="Usernames " />
-            <TableColumn fx:id="score" prefWidth="218.0" sortType="DESCENDING" style="-fx-background-color: #888888ff;" text="Scores" />
-            <TableColumn fx:id="id" prefWidth="118.0" style="-fx-background-color: #888888ff #888888ff;" text="Id" />
+          <TableColumn fx:id="usernames" prefWidth="376.0" style="-fx-background-color: #888888ff #888888ff;" text="Username" />
+          <TableColumn fx:id="score" prefWidth="190.0" style="-fx-background-color: #888888ff #888888ff #888888ff #888888ff;" text="Score" />
+            <TableColumn fx:id="id" prefWidth="151.0" style="-fx-background-color: #888888ff #888888ff #888888ff #888888ff;" text="Id" />
         </columns>
       </TableView>
    </children>

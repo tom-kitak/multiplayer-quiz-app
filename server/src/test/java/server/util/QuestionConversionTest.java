@@ -1,9 +1,8 @@
 package server.util;
 
-import commons.Question;
 import commons.Activity;
-import commons.OpenQuestion;
 import commons.CompareQuestion;
+import commons.Question;
 import commons.WattageQuestion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
@@ -62,10 +61,8 @@ class QuestionConversionTest {
                 Arrays.copyOf(this.wattages, 4));
         Question wattage = new WattageQuestion(Arrays.copyOf(this.titles, 4),
                 Arrays.copyOf(this.wattages, 4));
-        Question open = new OpenQuestion(Arrays.copyOf(this.titles, 4),
-                Arrays.copyOf(this.wattages, 4));
         Question result = QuestionConversion.convertActivity(activities);
-        assertTrue(result.equals(compare) || result.equals(wattage) || result.equals(open));
+        assertTrue(result.equals(compare) || result.equals(wattage));
     }
 
     @Test
