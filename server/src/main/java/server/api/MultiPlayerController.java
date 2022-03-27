@@ -1,15 +1,18 @@
 package server.api;
 
-import commons.Activity;
+import commons.Emoji;
 import commons.MultiGame;
 import commons.Player;
-
+import commons.Activity;
 import commons.Question;
+
+import org.springframework.http.ResponseEntity;
 
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import server.database.ActivityRepository;
 //CHECKSTYLE:OFF
@@ -170,6 +173,25 @@ public class MultiPlayerController {
     }
 
 
+    @GetMapping("topic/lobby")
+    public ResponseEntity<MultiGame> getLobby(){
+        return ResponseEntity.ok(currentLobbyGame);
+    }
 
+
+
+
+    // Passes the "shorten time message".
+    @MessageMapping("/multi/jokers/{gameId}")
+    @SendTo("/topic/multi/jokers/{gameId}")
+    public MultiGame shortenTime(@DestinationVariable String gameId, MultiGame game) {
+        return game;
+    }
+
+    @MessageMapping("/multi/emoji/{type}")
+    @SendTo("/topic/multi/emoji/{type}")
+    public Emoji emojiHandler(@DestinationVariable String type, Emoji emoji){
+        return emoji;
+    }
 
 }

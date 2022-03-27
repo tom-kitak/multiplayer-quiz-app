@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 //CHECKSTYLE:OFF
 import org.springframework.web.bind.annotation.*;
 //CHECKSTYLE:ON
-import server.Score;
+import commons.Score;
 import server.database.ScoreRepository;
 
 import java.util.List;
@@ -53,14 +53,14 @@ public class ScoreController {
     @PutMapping(path = "/put/{id}")
     public Score updateById(@RequestBody Score newScore, @PathVariable("id") long id){
         return repo.findById(id).map(score -> {
-                    score.setScore(newScore.getScore());
-                    score.setName(newScore.getName());
-                    score.setId(newScore.getId());
-                    return repo.save(score);
-                }).orElseGet(()->{
-                    newScore.setId(id);
-                    return repo.save(newScore);
-                });
+            score.setScore(newScore.getScore());
+            score.setName(newScore.getName());
+            score.setId(newScore.getId());
+            return repo.save(score);
+        }).orElseGet(()->{
+            newScore.setId(id);
+            return repo.save(newScore);
+        });
     }
 
     @DeleteMapping(path = "/delete/{id}")

@@ -41,13 +41,21 @@ public class ServerAddressCtrl {
         }
         if(check) {
             ServerUtils.setSession(address);
+
             mainCtrl.showHomeScreen();
+
         } else {
             Alert a = new Alert(Alert.AlertType.ERROR);
             a.setContentText("Server not responding");
             a.show();
         }
     }
+
+
+    /**
+     * The method to call when the exit button is pressed.
+     * @param event The event which caused this method call.
+     */
 
     @FXML
     void exitButtonPressed(ActionEvent event){

@@ -2,28 +2,32 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Player;
+import commons.MultiGame;
 import commons.SingleGame;
-import jakarta.ws.rs.WebApplicationException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import com.google.inject.Inject;
 import commons.Question;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.TextField;
-import javafx.stage.Modality;
-import server.Score;
 
-import javafx.scene.input.KeyEvent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+
+import java.util.ArrayList;
 
 
 public class HomeScreenCtrl {
 
-    private ServerUtils server;
+    private final ServerUtils server;
     private final MainCtrl mainCtrl;
+
 
     @FXML
     private TextField nameField;
+
+    @FXML
+    private Label labelForUniqueUsername;
 
     /**Creates a new HomeScreenCtrl Object.
      * @param server the server we want to use
@@ -40,95 +44,114 @@ public class HomeScreenCtrl {
      */
     @FXML
     void playSinglePlayerButtonPressed(ActionEvent event) {
-        String name;
-        if (nameField.getText().length() == 0){
-            name = "anonymous user";
+        if (server.checkConnection()) {
+            String name;
+            if (nameField.getText().length() == 0) {
+                name = generateRandomString();
+            } else {
+                name = nameField.getText();
+            }
+            Player player = new Player(name);
+
+
+            Question question = server.getQuestion();
+
+            SingleGame game = new SingleGame(player, question);
+
+            mainCtrl.showQuizScreen(game);
         } else {
-            name = nameField.getText();
+            throwError("There are not enough activities on this server to start a game!");
         }
-        Player player = new Player(name);
-
-
-        Question question = server.getQuestion();
-
-        SingleGame game = new SingleGame(player, question);
-
-        mainCtrl.showQuizScreen(game);
     }
 
+    /**
+     * The method for when the exit button is pressed.
+     * @param event The event which caused this method call
+     */
     @FXML
     void exitButtonPressed(ActionEvent event){
         mainCtrl.showServerAddress();
     }
 
+    /**
+     * The method for when the how to play button is pressed.
+     */
     @FXML
     void howToPlay(){
         mainCtrl.showHowToPlay();
     }
 
+    /**
+     * The client has the option of accessing the leaderboard without playing a game, from the home screen.
+     */
     @FXML
-    public void keyPressed(KeyEvent e){
-        switch (e.getCode()){
-            case ENTER:
-                addNameAndScore();
-                break;
-            case ESCAPE:
-                cancelEvent();
-                break;
-            default: break;
-        }
-    }
-    Score getNewScore(int points){
-        Score score = new Score(nameField.getText(), points);
-        return score;
+    public void showLeaderBoard(){
+        mainCtrl.showEndScreen(false, new ArrayList<>(){});
     }
 
-    void cancelEvent(){
-        nameField.clear();
-    }
 
-    void addNameAndScore(){
-        try{
-            server.addScore(getNewScore(0));
-        } catch (WebApplicationException e){
-
-            var alert = new Alert(Alert.AlertType.ERROR);
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
-            return;
-        }
-        cancelEvent();
-        mainCtrl.showHomeScreen();
-    }
-
+    /**
+     * Method to call when admin button is pressed.
+     * @param event The event which caused this method call.
+     */
     @FXML
     void adminToolsPressed(ActionEvent event) {
         mainCtrl.showAdministratorInterface();
     }
 
+    /**
+     * The method to call when multiplayer button is pressed.
+     * @param event The event which caused this method call.
+     */
     @FXML
     void playMultiPlayerButtonPressed(ActionEvent event) {
-        String name;
-        if (nameField.getText().length() == 0){
-            name = generateRandomString();
-        } else {
-            name = nameField.getText();
-        }
-        Player player = new Player(name);
 
-        mainCtrl.showWaitingRoom(player);
+        if (!server.checkConnection()) {
+            throwError("There are not enough activities on this server to start a game!");
+        } else {
+
+            String name;
+            if (nameField.getText().length() == 0) {
+                name = generateRandomString();
+            } else {
+                name = nameField.getText();
+            }
+            Player player = new Player(name);
+            MultiGame multiGame = server.getLobby();
+            boolean unique = checkForUnique(name, multiGame.getPlayers());
+            if (unique) {
+                mainCtrl.showWaitingRoom(player);
+            } else {
+                labelForUniqueUsername.setText("Choose a different username and" +
+                        " click again");
+            }
+        }
     }
+
+    public boolean checkForUnique(String name, ArrayList<Player> players2) {
+        for(Player player: players2){
+            if(player.getUsername().equals(name)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * Method to generate a random string.
+     * @return The randomly generated string
+     */
 
     public String generateRandomString(){
         String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-        String s = "";
+        StringBuilder s = new StringBuilder();
         for(int i = 0; i<=12; i++){
             int index = generateIndex(51);
             char a = letters.charAt(index);
-            s = s +a;
+            s.append(a);
         }
-        return s;
+        return s.toString();
 
     }
 
@@ -138,10 +161,18 @@ public class HomeScreenCtrl {
      */
     public int generateIndex(int max){
         double factor = Math.random();
-        int result = (int) (Math.round(factor * max));
-        return result;
+        return (int) (Math.round(factor * max));
     }
-    
+
+    /**
+     * Method to show an error prompt with the specified message.
+     * @param errorMessage The error message to display
+     */
+    private void throwError(String errorMessage) {
+        Alert a = new Alert(Alert.AlertType.ERROR);
+        a.setContentText(errorMessage);
+        a.show();
+    }
 
 
 }

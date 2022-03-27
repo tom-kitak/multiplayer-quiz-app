@@ -1,10 +1,9 @@
 package client.scenes;
 
 import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.ArrayList;
-import java.util.TimerTask;
+//CHECKSTYLE:OFF
+import java.util.*;
+//CHECKSTYLE:ON
 
 import client.ConfirmBoxCtrl;
 import com.google.inject.Inject;
@@ -19,6 +18,8 @@ import javafx.fxml.FXML;
 
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 
 public class QuizScreenCtrl implements Initializable {
@@ -34,6 +35,8 @@ public class QuizScreenCtrl implements Initializable {
     private int timeLeft = roundTime;
     private TimerTask roundTask;
     private Player player;
+    private boolean doublePoints = false;
+    private boolean eliminateUsed = false;
 
     @FXML
     private Button buttonR01C0;
@@ -59,6 +62,18 @@ public class QuizScreenCtrl implements Initializable {
     @FXML
     private Button score;
 
+    @FXML
+    private TextField answerField;
+
+    @FXML
+    private Button eliminateJoker;
+
+    @FXML
+    private Button doubleJoker;
+
+    @FXML
+    private Button timeJoker;
+
     @Inject
     public QuizScreenCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
@@ -81,6 +96,7 @@ public class QuizScreenCtrl implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         score.setText("Score: 0");
     }
+
     public void setPlayer(Player player) {
         this.player = player;
     }
@@ -130,6 +146,9 @@ public class QuizScreenCtrl implements Initializable {
         boolean answer = ConfirmBoxCtrl.display("Alert", "Are you sure you want to exit the game session?");
         roundTask.cancel();
         timer.cancel();
+        initializeButtons();
+        eliminateJoker.setVisible(true);
+        eliminateJoker.setDisable(false);
         if(answer) mainCtrl.showHomeScreen();
     }
 
@@ -141,13 +160,64 @@ public class QuizScreenCtrl implements Initializable {
         var question = game.getCurrentQuestion();
         if(question instanceof WattageQuestion){
             WattageQuestion wattageQuestion = (WattageQuestion) question;
+            answerField.setVisible(false);
+            answerField.setDisable(true);
             setWattageQuestionFields(wattageQuestion);
-        } else {
+        } else if(question instanceof  CompareQuestion){
             CompareQuestion compareQuestion = (CompareQuestion) question;
+            answerField.setVisible(false);
+            answerField.setDisable(true);
             setCompareQuestionFields(compareQuestion);
+        } else {
+            OpenQuestion openQuestion = (OpenQuestion) question;
+            setOpenQuestionFields(openQuestion);
         }
 
     }
+
+    /**Will adjust the screen for a new OpenQuestionField.
+     * @param openQuestion the openQuestion we get our information from
+     */
+    private void setOpenQuestionFields(OpenQuestion openQuestion) {
+        questionField.setText(openQuestion.getQuestionDescription());
+        disableAll();
+        answerField.setVisible(true);
+        answerField.setDisable(false);
+        buttonR0C0.setVisible(false);
+        buttonR0C1.setVisible(false);
+        buttonR1C1.setVisible(false);
+        buttonR01C0.setVisible(false);
+        eliminateJoker.setDisable(true);
+        eliminateJoker.setVisible(false);
+    }
+
+
+    /**
+     * when the player presses enter their answer is stored.
+     * when the player presses escape their answer is deleted from the text field.
+     * @param e consumes the event and identifies which key was pressed.
+     */
+    @FXML
+    void keyPressed(KeyEvent e){
+        switch (e.getCode()){
+            case ENTER:
+                showRightAnswer(new Button());
+                waitingToSeeAnswers();
+                break;
+            case ESCAPE:
+                cancelEvent();
+                break;
+            default: break;
+        }
+    }
+
+    /**
+     * clears the input field for the open question type.
+     */
+    void cancelEvent(){
+        answerField.clear();
+    }
+
 
     /**Sets the question field and answers for the CompareQuestion.
      * @param question The Question from which we get information
@@ -216,13 +286,24 @@ public class QuizScreenCtrl implements Initializable {
     }
 
     /**Starts the Single Player game mode by starting a timer.
-     * @param game \
+     * @param game The Game we get our info from
      */
     public void startGame(Game game){
         this.game = game;
         setQuestionFields(game);
         startRoundTimer();
+        timeLeft = roundTime;
+        timeJoker.setVisible(false);
+        timeJoker.setDisable(true);
+        doubleJoker.setVisible(true);
+        doubleJoker.setDisable(false);
+        if((game.getCurrentQuestion() instanceof OpenQuestion)) {
+            eliminateJoker.setVisible(false);
+            eliminateJoker.setDisable(true);
+        }
         if(game instanceof MultiGame) {
+            timeJoker.setVisible(true);
+            timeJoker.setDisable(false);
             ServerUtils.registerForMessages("/topic/multi/gameplay/" + ((MultiGame) game).getId(), MultiGame.class, retGame -> {
                 if(retGame != null) {
                     this.game = retGame;
@@ -234,13 +315,27 @@ public class QuizScreenCtrl implements Initializable {
                         // game state for the correct leaderboard.
                         if(retGame.getQuestionNumber() > 20) {
                             mainCtrl.started = true;
-                            mainCtrl.showEndScreen();
+                            List<Score> players = new ArrayList<>();
+                            int cnt = 0;
+                            for(Player player : ((MultiGame) game).getPlayers()){
+                                Score score = new Score(player.getScore(), player.getUsername());
+                                score.setId((long) ++cnt);
+                                players.add(score);
+                                server.addScore(score);
+                            }
+                            mainCtrl.showEndScreen(true, players);
                         } else {
                             setQuestionFields(retGame);
                             startRoundTimer();
                         }
                     });
                 }
+            });
+            ServerUtils.registerForMessages("/topic/multi/jokers/" + ((MultiGame) game).getId(), MultiGame.class, retGame -> {
+                System.out.println("receive shorten");
+                Platform.runLater(() -> {
+                    timeLeft = (int) (timeLeft * 0.6);
+                });
             });
         }
     }
@@ -274,7 +369,7 @@ public class QuizScreenCtrl implements Initializable {
      * @return a string in the minutes:seconds format with
      *  leading zeroes if required
      */
-    public static String convertTimer(int time) {
+    public String convertTimer(int time) {
         StringBuilder resultingTime = new StringBuilder();
         if(time < 600) {
             resultingTime.append(0);
@@ -290,17 +385,50 @@ public class QuizScreenCtrl implements Initializable {
 
 
     /**
-     * Compares all the buttons to see which one is the correct one to indicate the player.
+     * Redirects us to the right ShowAnswer method.
      * @param button is the button the player has chosen
      */
     public void showRightAnswer(Button button){
         if(game.getCurrentQuestion() instanceof WattageQuestion){
             WattageQuestion question = (WattageQuestion) game.getCurrentQuestion();
             wattageShowRightAnswer(button, question);
-        } else {
+        } else if(game.getCurrentQuestion() instanceof CompareQuestion){
             CompareQuestion question = (CompareQuestion) game.getCurrentQuestion();
             compareShowRightAnswer(button, question);
+        } else {
+            OpenQuestion question = (OpenQuestion) game.getCurrentQuestion();
+            openShowRightAnswer(question);
         }
+    }
+
+    /**Shows the rightAnswer for the openQuestion type.
+     * @param question the question where we got our info from
+     */
+    private void openShowRightAnswer(OpenQuestion question) {
+        long correct = game.getCurrentQuestion().getCorrectWattage();
+        if(!eliminateUsed) {
+            eliminateJoker.setVisible(true);
+            eliminateJoker.setDisable(false);
+        }
+        if(answerField.getText() == null)
+            answerField.setStyle("-fx-background-color: #916868ff ");
+        else {
+            try{
+                long answer = Integer.parseInt(answerField.getText());
+                if (correct == answer) {
+                    answerField.setStyle("-fx-background-color: #f2a443ff; ");
+                    this.answeredCorrectly = true;
+                } else answerField.setStyle("-fx-background-color: #916868ff ");
+            }catch (NumberFormatException e){
+                answerField.setStyle("-fx-background-color: #916868ff ");
+            }
+//            long answer = Integer.parseInt(answerField.getText());
+//            if (correct == answer) {
+//                answerField.setStyle("-fx-background-color: #f2a443ff; ");
+//                this.answeredCorrectly = true;
+//            } else answerField.setStyle("-fx-background-color: #916868ff ");
+        }
+        answerField.setText("Correct answer: " + game.getCurrentQuestion().getCorrectWattage());
     }
 
     /**shows the right answers for the compareQuestion type.
@@ -382,7 +510,7 @@ public class QuizScreenCtrl implements Initializable {
      */
     //CHECKSTYLE:OFF
     public void waitingToSeeAnswers(){
-        Timer timer = new Timer();
+        timer = new Timer();
         seconds[0] = 0;
         roundTask.cancel();
         if(timeLeft <= 0) {
@@ -397,7 +525,7 @@ public class QuizScreenCtrl implements Initializable {
                 } else if(buttonR1C1.getText().equals(correct)) {
                     rightColor(buttonR1C1);
                 }
-            } else {
+            } else if(game.getCurrentQuestion() instanceof  WattageQuestion){
                 long correct = game.getCurrentQuestion().getCorrectWattage();
                 if(Integer.parseInt(buttonR0C0.getText()) == correct) {
                     rightColor(buttonR0C0);
@@ -408,7 +536,7 @@ public class QuizScreenCtrl implements Initializable {
                 } else if(Integer.parseInt(buttonR1C1.getText()) == correct) {
                     rightColor(buttonR1C1);
                 }
-            }
+            } else openQuestionColoring();
         }
         TimerTask task = new TimerTask() {
             @Override
@@ -420,11 +548,13 @@ public class QuizScreenCtrl implements Initializable {
                 else {
                     timer.cancel();
                     Platform.runLater( () -> {
+                        answerField.setVisible(false);
+                        answerField.setDisable(true);
                         updateScore();
                         initializeButtons();
                         if(game instanceof SingleGame) {
-                            startRoundTimer();
                             setNextQuestion();
+                            startRoundTimer();
                         } else {
                             // When the answer has been shown, send the response.
                             ServerUtils.send("/app/multi/gameplay/" + ((MultiGame) game).getId(), (MultiGame) game);
@@ -438,17 +568,40 @@ public class QuizScreenCtrl implements Initializable {
     }
 
     /**
+     * The addition of waitingToSeeAnswers for open questions.
+     */
+    public void openQuestionColoring(){
+        answerField.setStyle("-fx-background-color: #916868ff ");
+        answerField.setText("Correct answer : " + game.getCurrentQuestion().getCorrectWattage());
+        if(!eliminateUsed) {
+            eliminateJoker.setVisible(true);
+            eliminateJoker.setDisable(false);
+        }
+    }
+
+    /**
      * Will update the score of the player and it will update the field on the client.
      */
     public void updateScore() {
 
         if(answeredCorrectly){
+            int score = timeLeft;
+            if(doublePoints) {
+                score += score;
+                doublePoints = false;
+            }
             if(game instanceof SingleGame) {
-                ((SingleGame) game).upDateScore(timeLeft);
+                ((SingleGame) game).upDateScore(score);
                 this.score.setText("Score: " + ((SingleGame) game).getPlayer().getScore());
             } else {
                 // Score kept locally
-                player.upDateScore(timeLeft);
+                List<Player> players = ((MultiGame) game).getPlayers();
+                for(int i = 0 ; i < players.size(); ++i){
+                    if(players.get(i).equals(player)){
+                        players.get(i).upDateScore(score);
+                    }
+                }
+                player.upDateScore(score);
                 this.score.setText("Score: " + player.getScore());
             }
         }
@@ -459,28 +612,41 @@ public class QuizScreenCtrl implements Initializable {
      * Disables all button and makes their opacity normal again.
      */
     public void disableAll(){
-        buttonR0C0.setDisable(true);
-        buttonR0C0.setOpacity(1);
-        buttonR0C1.setDisable(true);
-        buttonR0C1.setOpacity(1);
-        buttonR01C0.setDisable(true);
-        buttonR01C0.setOpacity(1);
-        buttonR1C1.setDisable(true);
-        buttonR1C1.setOpacity(1);
+        if(!(game.getCurrentQuestion() instanceof OpenQuestion)) {
+            buttonR0C0.setDisable(true);
+            buttonR0C0.setOpacity(1);
+            buttonR0C1.setDisable(true);
+            buttonR0C1.setOpacity(1);
+            buttonR01C0.setDisable(true);
+            buttonR01C0.setOpacity(1);
+            buttonR1C1.setDisable(true);
+            buttonR1C1.setOpacity(1);
+        } else {
+            answerField.setDisable(true);
+            answerField.setOpacity(1);
+        }
+
+
     }
 
     /**
-     * Gives the buttons their initial color and makes them functinable again.
+     * Gives the buttons their initial color and makes them functional again.
      */
     public void initializeButtons(){
         buttonR0C0.setDisable(false);
         buttonR0C1.setDisable(false);
         buttonR01C0.setDisable(false);
         buttonR1C1.setDisable(false);
+        buttonR1C1.setVisible(true);
+        buttonR01C0.setVisible(true);
+        buttonR0C0.setVisible(true);
+        buttonR0C1.setVisible(true);
         normalColor(buttonR0C0);
         normalColor(buttonR01C0);
         normalColor(buttonR0C1);
         normalColor(buttonR1C1);
+        answerField.clear();
+        answerField.setStyle("-fx-background-color: #888888ff; ");
     }
 
     /**
@@ -488,23 +654,85 @@ public class QuizScreenCtrl implements Initializable {
      */
     public void setNextQuestion() {
         if(this.game.getQuestionNumber()>=20){
-            mainCtrl.showEndScreen();
+            timer.cancel();
+            roundTask.cancel();
+            boolean partyLeaderboard = false;
+            List<Score> players = new ArrayList<>();
+            if(game instanceof SingleGame) {
+                Score score = new Score(((SingleGame) game).getPlayer().getScore(), ((SingleGame) game).getPlayer().getUsername());
+                server.addScore(score);
+                players.add(score);
+            }else {
+                for(Player player : ((MultiGame) game).getPlayers()){
+                    Score score = new Score(player.getScore(), player.getUsername());
+
+                    players.add(score);
+                    server.addScore(score);
+                }
+                partyLeaderboard = true;
+            }
+            mainCtrl.showEndScreen(partyLeaderboard, players);
         } else {
 
             Question nextQuestion = server.getQuestion();
-//            Question nextQuestion;
-//            if(this.game.getQuestionNumber()%2==0){
-//                nextQuestion = new WattageQuestion(new String[] {"a", "b", "c", "d"},
-//                        new int[] {555, 777, 888, 999});
-//            } else {
-//                nextQuestion = new CompareQuestion(new String[] {"a", "b", "c", "d"},
-//                        new int[] {555, 777, 888, 999});
-//            }
 
             this.game.nextQuestion(nextQuestion);
             setQuestionFields(game);
         }
     }
 
+    // Searches for an incorrect answer and then deletes it.
+    // It also disables the button.
+    public void eliminateIncorrect() {
+        eliminateUsed = true;
+        eliminateJoker.setVisible(false);
+        eliminateJoker.setDisable(true);
+        if(game.getCurrentQuestion() instanceof CompareQuestion) {
+            String correct = game.getCurrentQuestion().getCorrectAnswer();
+            if(!buttonR0C0.getText().equals(correct)) {
+                wrongColor(buttonR0C0);
+                return;
+            } else if(!buttonR0C1.getText().equals(correct)) {
+                wrongColor(buttonR0C1);
+                return;
+            } else if(!buttonR01C0.getText().equals(correct)) {
+                wrongColor(buttonR01C0);
+                return;
+            } else if(!buttonR1C1.getText().equals(correct)) {
+                wrongColor(buttonR1C1);
+                return;
+            }
+        } else {
+            long correct = game.getCurrentQuestion().getCorrectWattage();
+            if(Integer.parseInt(buttonR0C0.getText()) != correct) {
+                wrongColor(buttonR0C0);
+                return;
+            } else if(Integer.parseInt(buttonR0C1.getText()) != correct) {
+                wrongColor(buttonR0C1);
+                return;
+            } else if(Integer.parseInt(buttonR01C0.getText()) != correct) {
+                wrongColor(buttonR01C0);
+                return;
+            } else if(Integer.parseInt(buttonR1C1.getText()) != correct) {
+                wrongColor(buttonR1C1);
+                return;
+            }
+        }
+
+    }
+
+    // Sets the doublePoints flag true and disables the button
+    public void activateDoublePoints(){
+        doublePoints = true;
+        doubleJoker.setDisable(true);
+        doubleJoker.setVisible(false);
+    }
+
+    // Sends the time shorten message and disables the button.
+    public void activateShorterTime(){
+        ServerUtils.send("/app/multi/jokers/" + ((MultiGame) game).getId(), (MultiGame) game);
+        timeJoker.setVisible(false);
+        timeJoker.setDisable(true);
+    }
 
 }
