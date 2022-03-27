@@ -34,7 +34,7 @@ import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
-import commons.Score;
+import server.Score;
 
 import java.lang.reflect.Type;
 import java.util.List;

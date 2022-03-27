@@ -1,11 +1,9 @@
 package server.util;
 
+import commons.CompareQuestion;
 import commons.Activity;
-import commons.OpenQuestion;
 import commons.Question;
 import commons.WattageQuestion;
-import commons.CompareQuestion;
-
 import java.util.Random;
 
 public class QuestionConversion {
@@ -38,12 +36,11 @@ public class QuestionConversion {
     private static Question getRandomQuestion(String[] titles, long[] wattages) {
         random = new Random();
         //bound is amount of types of questions.
-        int idx = random.nextInt(3);
+        int idx = random.nextInt(2);
         //for each type of question add a new case.
         return switch (idx) {
             case 0 -> new CompareQuestion(titles, wattages);
             case 1 -> new WattageQuestion(titles, wattages);
-            case 2 -> new OpenQuestion(titles, wattages);
             default -> throw new IllegalStateException("Unexpected value: " + idx);
         };
     }

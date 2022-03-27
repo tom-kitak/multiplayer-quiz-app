@@ -12,7 +12,7 @@ import javafx.scene.control.TextField;
 
 public class ServerAddressCtrl {
 
-    private final ServerUtils server;
+    private ServerUtils server;
     private final MainCtrl mainCtrl;
 
     @Inject
@@ -24,9 +24,6 @@ public class ServerAddressCtrl {
     @FXML
     private TextField addressField;
 
-    /**
-     * Method to call when the submit button is pressed.
-     */
     @FXML
     void submitButtonPressed() {
         String address = addressField.getText();
@@ -35,11 +32,10 @@ public class ServerAddressCtrl {
             address = "localhost:8080";
         }
         ServerUtils.setSERVER("http://" + address + "/");
-        boolean check;
+        boolean check = false;
         // Try to connect, show error if not possible.
         try {
-            server.checkConnection();
-            check = true;
+            check = server.checkConnection();
         } catch (Exception e) {
             check = false;
         }
@@ -53,10 +49,6 @@ public class ServerAddressCtrl {
         }
     }
 
-    /**
-     * The method to call when the exit button is pressed.
-     * @param event The event which caused this method call.
-     */
     @FXML
     void exitButtonPressed(ActionEvent event){
         boolean answer = ConfirmBoxCtrl.display("Alert", "Are you sure you want to exit?");

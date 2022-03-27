@@ -31,14 +31,9 @@ public class ActivityController {
         return repo.findAll();
     }
 
-    /**
-     * Method to check the amount of activities and connection.
-     * @return True if amount if activities is bigger or equal to 4,
-     * false otherwise
-     */
     @GetMapping("/check")
     public Boolean returnCheck() {
-        return repo.count() >= 4;
+        return true;
     }
 
     /**
