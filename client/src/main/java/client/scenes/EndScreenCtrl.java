@@ -1,6 +1,5 @@
 package client.scenes;
 
-import commons.Player;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,7 +11,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import commons.Score;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class EndScreenCtrl {
