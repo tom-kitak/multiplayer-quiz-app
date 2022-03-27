@@ -3,7 +3,6 @@ package client.scenes;
 import client.utils.ServerUtils;
 import commons.Player;
 import commons.SingleGame;
-import jakarta.ws.rs.WebApplicationException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import com.google.inject.Inject;
