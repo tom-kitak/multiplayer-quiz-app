@@ -7,13 +7,12 @@ import commons.SingleGame;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import com.google.inject.Inject;
+import commons.Question;
 
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-
-import java.util.ArrayList;
 
 import java.util.ArrayList;
 
