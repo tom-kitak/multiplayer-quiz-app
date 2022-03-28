@@ -23,6 +23,8 @@ public abstract class Question {
 
     private final String[] answerTitles;
     private final long[] answerWattages;
+    private final byte[] questionImage;
+
 
 
     /**
@@ -30,10 +32,12 @@ public abstract class Question {
      * @param answerTitles The answers for this question, index 0 is the correct one.
      * @param answerWattages The wattage's for this question, index 0 is the correct one.
      */
-    public Question(String[] answerTitles, long[] answerWattages) {
-        if (answerTitles != null && answerWattages != null && answerTitles.length == 4 && answerWattages.length == 4) {
+    public Question(String[] answerTitles, long[] answerWattages, byte[] questionImage) {
+        if (answerTitles != null && answerWattages != null && answerTitles.length == 4 &&
+                answerWattages.length == 4 && questionImage != null) {
             this.answerTitles = Arrays.copyOf(answerTitles, answerTitles.length);
             this.answerWattages = Arrays.copyOf(answerWattages, answerWattages.length);
+            this.questionImage = Arrays.copyOf(questionImage, questionImage.length);
         } else {
             throw new IllegalArgumentException("The provided arrays were null or not length 4.");
         }
@@ -45,6 +49,15 @@ public abstract class Question {
     public  Question() {
         this.answerTitles = null;
         this.answerWattages = null;
+        this.questionImage = null;
+    }
+
+    /**
+     * Getter for the question image byte[].
+     * @return this.questionImage
+     */
+    public byte[] getQuestionImage() {
+        return questionImage;
     }
 
     /**

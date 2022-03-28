@@ -11,8 +11,8 @@ public class OpenQuestion extends Question{
      * @param answers The answers for this question, index 0 is the correct one.
      * @param wattage The wattage's for this question, index 0 is the correct one.
      */
-    public OpenQuestion(String[] answers, long[] wattage) {
-        super(answers, wattage);
+    public OpenQuestion(String[] answers, long[] wattage, byte[] questionImage) {
+        super(answers, wattage, questionImage);
     }
 
     /**

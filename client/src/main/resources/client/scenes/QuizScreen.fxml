@@ -19,7 +19,7 @@
       <Button fx:id="buttonR1C1" accessibleText="~" layoutX="489.0" layoutY="372.0" mnemonicParsing="false" onAction="#pressedR1C1" prefHeight="51.0" prefWidth="306.0" style="-fx-background-color: #888888ff#888888ff;" text="buttonR1C1" />
       <Button fx:id="buttonR0C0" accessibleText="~" layoutX="67.0" layoutY="305.0" mnemonicParsing="false" onAction="#pressedR0C0" prefHeight="51.0" prefWidth="318.0" style="-fx-background-color: #888888ff#888888ff;" text="buttonR0C0" textAlignment="CENTER" />
       <Button fx:id="buttonR0C1" accessibleText="~" layoutX="489.0" layoutY="305.0" mnemonicParsing="false" onAction="#pressedR0C1" prefHeight="51.0" prefWidth="306.0" style="-fx-background-color: #888888ff;" text="buttonR0C1" />
-      <ImageView fitHeight="182.0" fitWidth="255.0" layoutX="67.0" layoutY="81.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="questionImage" fitHeight="182.0" fitWidth="255.0" layoutX="67.0" layoutY="81.0" pickOnBounds="true" preserveRatio="true" />
       <Pane disable="true" layoutX="373.0" layoutY="243.0" prefHeight="41.0" prefWidth="129.0" style="-fx-background-color: #f2cfa4ff;">
          <children>
             <Text fx:id="timerSpot" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="00:00" textAlignment="CENTER" wrappingWidth="129.0">

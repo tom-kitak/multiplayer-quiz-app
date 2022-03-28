@@ -1,5 +1,6 @@
 package client.scenes;
 
+import java.io.ByteArrayInputStream;
 import java.net.URL;
 //CHECKSTYLE:OFF
 import java.util.*;
@@ -19,6 +20,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 
@@ -73,6 +76,9 @@ public class QuizScreenCtrl implements Initializable {
 
     @FXML
     private Button timeJoker;
+
+    @FXML
+    private ImageView questionImage;
 
     @Inject
     public QuizScreenCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -158,6 +164,7 @@ public class QuizScreenCtrl implements Initializable {
     public void setQuestionFields(Game game){
         QuestionNumber.setText("QuestionNumber: " + this.game.getQuestionNumber());
         var question = game.getCurrentQuestion();
+        questionImage.setImage(new Image(new ByteArrayInputStream(question.getQuestionImage())));
         if(question instanceof WattageQuestion){
             WattageQuestion wattageQuestion = (WattageQuestion) question;
             answerField.setVisible(false);

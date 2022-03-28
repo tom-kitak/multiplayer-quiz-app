@@ -32,7 +32,7 @@ class MultiGameTest {
         descriptions[1] = "b";
         descriptions[2]= "c";
         descriptions[3] = "d";
-        question = new CompareQuestion(descriptions, wattages);
+        question = new CompareQuestion(descriptions, wattages, null);
         this.game = new MultiGame(question);
     }
 
@@ -92,7 +92,7 @@ class MultiGameTest {
         descriptions[1] = "b";
         descriptions[2]= "c";
         descriptions[3] = "d";
-        Question question2 = new WattageQuestion(descriptions, wattages);
+        Question question2 = new WattageQuestion(descriptions, wattages, null);
         MultiGame game2 = new MultiGame(question2);
         assertNotEquals(game2, game);
     }
@@ -122,7 +122,7 @@ class MultiGameTest {
         descriptions[1] = "b";
         descriptions[2]= "c";
         descriptions[3] = "e";
-        Question question2 = new WattageQuestion(descriptions, wattages);
+        Question question2 = new WattageQuestion(descriptions, wattages, null);
         MultiGame game2 = new MultiGame(question2);
         assertNotEquals(game2.hashCode(), game.hashCode());
     }
