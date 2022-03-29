@@ -37,6 +37,7 @@ public class QuizScreenCtrl implements Initializable {
     private Player player;
     private boolean doublePoints = false;
     private boolean eliminateUsed = false;
+    private int scoreForOpenQuestion = 0;
 
     @FXML
     private Button buttonR01C0;
@@ -415,9 +416,10 @@ public class QuizScreenCtrl implements Initializable {
         else {
             try{
                 long answer = Integer.parseInt(answerField.getText());
-                if (correct == answer) {
+                if (inRangeForOpenQuestion(answer, correct)) {
                     answerField.setStyle("-fx-background-color: #f2a443ff; ");
                     this.answeredCorrectly = true;
+                    this.scoreForOpenQuestion = calculateScoreForOpenQuestion(answer, correct);
                 } else answerField.setStyle("-fx-background-color: #916868ff ");
             }catch (NumberFormatException e){
                 answerField.setStyle("-fx-background-color: #916868ff ");
@@ -429,6 +431,48 @@ public class QuizScreenCtrl implements Initializable {
 //            } else answerField.setStyle("-fx-background-color: #916868ff ");
         }
         answerField.setText("Correct answer: " + game.getCurrentQuestion().getCorrectWattage());
+    }
+
+    /**
+     * Calculates the score for an OpenQuestion, this method is only called when the user.
+     * clicked the right answer
+     * @param answer the answer a user provided.
+     * @param correct the actual correct answer
+     * @return an integer that is least 150 and will go up based on the time left
+     * and how close the user got to the rightAnswer
+     */
+    public int calculateScoreForOpenQuestion(long answer, long correct) {
+        int retScore;
+        if(answer == correct){
+            retScore = 350;
+        } else if(answer>=(0.9* correct) && answer<=(1.1*correct)){
+            retScore = 250;
+        } else if(answer>=(0.8* correct) && answer<=(1.2*correct)){
+            retScore = 225;
+        } else if(answer>=(0.7* correct) && answer<=(1.3*correct)){
+            retScore = 200;
+        } else if(answer>=(0.6* correct) && answer<=(1.4*correct)){
+            retScore = 175;
+        } else {
+            retScore = 150;
+        }
+        retScore += (timeLeft * 3);
+        return retScore;
+    }
+
+    /**
+     * Checks if the user's for the openQuestion is in the range of being correct.
+     * @param answer the long that represents the users answer
+     * @param correct the actual correct answer
+     * @return true iff the users answer is bigger than between 0.5*correct
+     * and smaller than 1.5correct
+     */
+    public boolean inRangeForOpenQuestion(long answer, long correct) {
+        long half = correct/2;
+        if(answer>=(correct-half)&&(correct+half)>=answer){
+            return true;
+        }
+        return false;
     }
 
     /**shows the right answers for the compareQuestion type.
@@ -580,12 +624,12 @@ public class QuizScreenCtrl implements Initializable {
     }
 
     /**
-     * Will update the score of the player and it will update the field on the client.
+     * Will update the score of the player, it will update the field on the client.
      */
     public void updateScore() {
 
         if(answeredCorrectly){
-            int score = timeLeft;
+            int score = calculatePoints();
             if(doublePoints) {
                 score += score;
                 doublePoints = false;
@@ -606,6 +650,21 @@ public class QuizScreenCtrl implements Initializable {
             }
         }
         this.answeredCorrectly = false;
+        this.scoreForOpenQuestion = 0;
+    }
+
+    /**
+     * Calculates the points depending on the Question type.
+     * @return an int representing the points the user obtained in this round
+     */
+    public int calculatePoints() {
+        if(game.getCurrentQuestion() instanceof OpenQuestion){
+            // the scoreForOpenQuestion will be calculated while we show the rightAnswer
+            // for the OpenQuestion because there we have access to the response of the user
+            return scoreForOpenQuestion;
+        } else {
+            return 100 + (timeLeft * 3);
+        }
     }
 
     /**
