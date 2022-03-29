@@ -45,6 +45,7 @@ public class ActivityController {
         if(id < 0 || !repo.existsById(id)) {
             return ResponseEntity.badRequest().build();
         }
+
         return  ResponseEntity.ok(repo.findById(id).orElse(null));
     }
 
