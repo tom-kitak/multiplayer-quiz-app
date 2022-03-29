@@ -19,11 +19,16 @@ import java.util.List;
 public class ActivityController {
     private final ActivityRepository repo;
 
+    /**
+     * Creates a new ActivityController and assigns the repository.
+     * @param repo the repository we assign to the repo attribute
+     */
     public ActivityController(ActivityRepository repo) {
         this.repo = repo;
     }
 
     /**
+     * Responds to the get method and getting all the activities.
      * @return Returns all objects stored in the database.
      */
     @GetMapping(path = {"", "/", "/getAll"})
@@ -31,13 +36,18 @@ public class ActivityController {
         return repo.findAll();
     }
 
+    /**
+     * checks if the server is alive and if there are enough activities in the repository.
+     * @return always true
+     */
     @GetMapping("/check")
     public Boolean returnCheck() {
         return true;
     }
 
     /**
-     * @param id The identifier of the object to be retrieved.
+     * Will get an activity by the specified ID that was a path variable.
+     * @param id The identifier of the object to be retrieved
      * @return Returns only the specified object
      */
     @GetMapping("/{id}")
@@ -49,6 +59,7 @@ public class ActivityController {
     }
 
     /**
+     * Saves the activity that was sent by the client in the repository.
      * @param activity The activity to be added.
      * @return The activity that was added.
      */
@@ -66,6 +77,7 @@ public class ActivityController {
     }
 
     /**
+     * Will delete the activity that was sent from the client from the repository.
      * @param id The identifier of the object to be deleted
      * @return The deleted object
      */

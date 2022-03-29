@@ -46,7 +46,8 @@ public class MultiPlayerController {
         allPlayersResponded.add(0);
     }
 
-    /**Called when the player connects or disconnect from the lobby.
+    /**
+     * Called when the player connects or disconnect from the lobby.
      * @param player the player send by the client
      * @return the game object that acts as the lobby
      */
@@ -68,8 +69,9 @@ public class MultiPlayerController {
         return currentLobbyGame;
     }
 
-    /**Starts the game and creates a new lobby.
-     * @return the game that started
+    /**
+     * Starts the game and creates a new lobby.
+     * @return the game that started and sends it to that lobby
      */
     @MessageMapping("/start")
     @SendTo("/topic/started")
@@ -87,8 +89,9 @@ public class MultiPlayerController {
         return started;
     }
 
-    /**NEEDS REFACTORING: only TEMP.
-     * @return
+    /**
+     * Gets a question by generating 4 random activities from the server/
+     * @return a random Question
      */
     public Question getQuestion() {
         // Can't create a question if there aren't enough activities
@@ -120,6 +123,12 @@ public class MultiPlayerController {
         return question;
     }
 
+    /**
+     * Will generate a new Question and send it to the players of the certain lobby if everyone answered.
+     * @param gameId the integer that identifies the game in which the sender is engaged
+     * @param gameFromPlayer the MultiGame that represents the lobby of this player
+     * @return
+     */
     @MessageMapping("/multi/gameplay/{gameId}")
     @SendTo("/topic/multi/gameplay/{gameId}")
     public MultiGame gameplayQuestionSender(@DestinationVariable String gameId, MultiGame gameFromPlayer) {
@@ -149,6 +158,12 @@ public class MultiPlayerController {
         return null;
     }
 
+    /**
+     * Generates a new Question and sends the Multigame object.
+     * @param gameId the integer that identifies the game in which the sender is engaged
+     * @param game the MultiGame that represents the lobby of this player
+     * @return
+     */
     @SendTo("/topic/multi/gameplay/{gameId}")
     public MultiGame sendQuestion(@DestinationVariable String gameId,MultiGame game) {
         System.out.println(gameId);
@@ -156,6 +171,11 @@ public class MultiPlayerController {
         return game;
     }
 
+    /**
+     * Will delete the Player from the MultiGame object while they are answering questions.
+     * @param gameId the id of the MultiGame in which the Player is engaged
+     * @param player the player that disconnects
+     */
     @MessageMapping("/multi/leaveInGame/{gameId}")
     public void disconnect(@DestinationVariable String gameId, Player player) {
         MultiGame game= null;
@@ -173,21 +193,35 @@ public class MultiPlayerController {
     }
 
 
+    /**
+     * Gets the current lobby that is waiting in the waiting room.
+     * @return the MultiGame object that represents the current lobby
+     */
     @GetMapping("topic/lobby")
     public ResponseEntity<MultiGame> getLobby(){
         return ResponseEntity.ok(currentLobbyGame);
     }
 
 
-
-
-    // Passes the "shorten time message".
+    /**
+     * Sends a game to the lobby in where the shorten-time-joker is used.
+     * @param gameId the gameId that identifies their MultiGame lobby
+     * @param game the game representing the lobby in which the joker was called
+     * @return the game object representing that lobby
+     */
     @MessageMapping("/multi/jokers/{gameId}")
     @SendTo("/topic/multi/jokers/{gameId}")
     public MultiGame shortenTime(@DestinationVariable String gameId, MultiGame game) {
         return game;
     }
 
+
+    /**
+     * Will send the type of the emoji to the right lobby.
+     * @param type the String representing which type of emoji is sent
+     * @param emoji the actual emoji that was sent
+     * @return the emoji
+     */
     @MessageMapping("/multi/emoji/{type}")
     @SendTo("/topic/multi/emoji/{type}")
     public Emoji emojiHandler(@DestinationVariable String type, Emoji emoji){

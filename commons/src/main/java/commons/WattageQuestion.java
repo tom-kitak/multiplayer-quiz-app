@@ -10,7 +10,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class WattageQuestion extends Question{
 
-    /**Generates new Question Object.
+    /**
+     * Generates new Question Object.
      * @param answers The answers for this question, index 0 is the correct one.
      * @param wattage The wattage's for this question, index 0 is the correct one.
      */
@@ -34,7 +35,8 @@ public class WattageQuestion extends Question{
     }
 
 
-    /**checks if two objects are equal.
+    /**
+     * checks if two objects are equal.
      * @param o the object we want to compare this Question with
      * @return true iff o and this Question have the same right answer and
      * the same question
@@ -71,7 +73,6 @@ public class WattageQuestion extends Question{
 
     /**
      * Hashcode generator for questions.
-     *
      * @return Hashcode of this question.
      */
     @Override
