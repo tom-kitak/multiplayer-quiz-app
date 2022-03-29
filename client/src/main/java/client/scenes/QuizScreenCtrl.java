@@ -26,13 +26,13 @@ public class QuizScreenCtrl implements Initializable {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private Timer timer;
-    private int[] seconds;
+    private final int[] seconds;
     private Game game;
     private boolean answeredCorrectly;
     // Default value can be changed later
     private final int roundTime = 15;
     private Timeline timeline;
-    private int timeLeft = roundTime;
+    private int timeLeft;
     private TimerTask roundTask;
     private Player player;
     private boolean doublePoints = false;
@@ -80,7 +80,6 @@ public class QuizScreenCtrl implements Initializable {
         this.mainCtrl = mainCtrl;
         this.timer = new Timer();
         this.seconds = new int[1];
-        seconds[0] = 0;
         this.answeredCorrectly = false;
         this.game = null;
         this.timeLeft = roundTime;
@@ -89,8 +88,8 @@ public class QuizScreenCtrl implements Initializable {
     /**
      * Here we initialise placeholder for question text with actual question.
      * Buttons are also initialised with values here
-     * @param location
-     * @param resources
+     * @param location The URL to use
+     * @param resources The ResourceBundle to use
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -152,19 +151,18 @@ public class QuizScreenCtrl implements Initializable {
         if(answer) mainCtrl.showHomeScreen();
     }
 
-    /**Sets the fields of the QuizScreen with the given question and answers.
+    /**
+     * Sets the fields of the QuizScreen with the given question and answers.
      * @param game the game from which we retrieve our info
      */
     public void setQuestionFields(Game game){
         QuestionNumber.setText("QuestionNumber: " + this.game.getQuestionNumber());
         var question = game.getCurrentQuestion();
-        if(question instanceof WattageQuestion){
-            WattageQuestion wattageQuestion = (WattageQuestion) question;
+        if(question instanceof WattageQuestion wattageQuestion){
             answerField.setVisible(false);
             answerField.setDisable(true);
             setWattageQuestionFields(wattageQuestion);
-        } else if(question instanceof  CompareQuestion){
-            CompareQuestion compareQuestion = (CompareQuestion) question;
+        } else if(question instanceof CompareQuestion compareQuestion){
             answerField.setVisible(false);
             answerField.setDisable(true);
             setCompareQuestionFields(compareQuestion);
@@ -175,7 +173,8 @@ public class QuizScreenCtrl implements Initializable {
 
     }
 
-    /**Will adjust the screen for a new OpenQuestionField.
+    /**
+     * Will adjust the screen for a new OpenQuestionField.
      * @param openQuestion the openQuestion we get our information from
      */
     private void setOpenQuestionFields(OpenQuestion openQuestion) {
@@ -199,15 +198,14 @@ public class QuizScreenCtrl implements Initializable {
      */
     @FXML
     void keyPressed(KeyEvent e){
-        switch (e.getCode()){
-            case ENTER:
+        switch (e.getCode()) {
+            case ENTER -> {
                 showRightAnswer(new Button());
                 waitingToSeeAnswers();
-                break;
-            case ESCAPE:
-                cancelEvent();
-                break;
-            default: break;
+            }
+            case ESCAPE -> cancelEvent();
+            default -> {
+            }
         }
     }
 
@@ -219,7 +217,8 @@ public class QuizScreenCtrl implements Initializable {
     }
 
 
-    /**Sets the question field and answers for the CompareQuestion.
+    /**
+     * Sets the question field and answers for the CompareQuestion.
      * @param question The Question from which we get information
      */
     public void setCompareQuestionFields(CompareQuestion question) {
@@ -233,9 +232,7 @@ public class QuizScreenCtrl implements Initializable {
         //make a list of all the answers
         ArrayList<String> answers = new ArrayList<>(4);
         String[] temp = question.getAnswerTitles();
-        for (String i: temp){
-            answers.add(i);
-        }//assigns a random answer to a random button
+        Collections.addAll(answers, temp);
         for(int i = 3; i >=1; i--){
             int indexAnswer = this.generateIndex(i);
             int indexButton  = this.generateIndex(i);
@@ -247,7 +244,8 @@ public class QuizScreenCtrl implements Initializable {
 
     }
 
-    /**Sets the question fields of the screen for a WattageQuestion.
+    /**
+     * Sets the question fields of the screen for a WattageQuestion.
      * @param wattageQuestion the question of which we will retrieve the info
      */
     public void setWattageQuestionFields(WattageQuestion wattageQuestion) {
@@ -276,16 +274,17 @@ public class QuizScreenCtrl implements Initializable {
     }
 
     /**
-     * @param max the max value of index we want to obtain.
+     * Method to generate a random index.
+     * @param max the max value of index we want to obtain
      * @return a randomly generated Index
      */
     public int generateIndex(int max){
         double factor = Math.random();
-        int result = (int) (Math.round(factor * max));
-        return result;
+        return (int) (Math.round(factor * max));
     }
 
-    /**Starts the Single Player game mode by starting a timer.
+    /**
+     * Starts the Single Player game mode by starting a timer.
      * @param game The Game we get our info from
      */
     public void startGame(Game game){
@@ -319,7 +318,7 @@ public class QuizScreenCtrl implements Initializable {
                             int cnt = 0;
                             for(Player player : ((MultiGame) game).getPlayers()){
                                 Score score = new Score(player.getScore(), player.getUsername());
-                                score.setId((long) ++cnt);
+                                score.setId(++cnt);
                                 players.add(score);
                                 server.addScore(score);
                             }
@@ -333,9 +332,7 @@ public class QuizScreenCtrl implements Initializable {
             });
             ServerUtils.registerForMessages("/topic/multi/jokers/" + ((MultiGame) game).getId(), MultiGame.class, retGame -> {
                 System.out.println("receive shorten");
-                Platform.runLater(() -> {
-                    timeLeft = (int) (timeLeft * 0.6);
-                });
+                Platform.runLater(() -> timeLeft = (int) (timeLeft * 0.6));
             });
         }
     }
@@ -389,11 +386,9 @@ public class QuizScreenCtrl implements Initializable {
      * @param button is the button the player has chosen
      */
     public void showRightAnswer(Button button){
-        if(game.getCurrentQuestion() instanceof WattageQuestion){
-            WattageQuestion question = (WattageQuestion) game.getCurrentQuestion();
+        if(game.getCurrentQuestion() instanceof WattageQuestion question){
             wattageShowRightAnswer(button, question);
-        } else if(game.getCurrentQuestion() instanceof CompareQuestion){
-            CompareQuestion question = (CompareQuestion) game.getCurrentQuestion();
+        } else if(game.getCurrentQuestion() instanceof CompareQuestion question){
             compareShowRightAnswer(button, question);
         } else {
             OpenQuestion question = (OpenQuestion) game.getCurrentQuestion();
@@ -414,7 +409,7 @@ public class QuizScreenCtrl implements Initializable {
             answerField.setStyle("-fx-background-color: #916868ff ");
         else {
             try{
-                long answer = Integer.parseInt(answerField.getText());
+                long answer = Long.parseLong(answerField.getText());
                 if (correct == answer) {
                     answerField.setStyle("-fx-background-color: #f2a443ff; ");
                     this.answeredCorrectly = true;
@@ -422,7 +417,8 @@ public class QuizScreenCtrl implements Initializable {
             }catch (NumberFormatException e){
                 answerField.setStyle("-fx-background-color: #916868ff ");
             }
-//            long answer = Integer.parseInt(answerField.getText());
+            //ToDO Why is this here?
+//            long answer = Long.parseLong(answerField.getText());
 //            if (correct == answer) {
 //                answerField.setStyle("-fx-background-color: #f2a443ff; ");
 //                this.answeredCorrectly = true;
@@ -458,9 +454,10 @@ public class QuizScreenCtrl implements Initializable {
 
     }
 
-    /**Shows the right answer for the WattageQuestion type.
+    /**
+     * Shows the right answer for the WattageQuestion type.
      * @param button the button that was pressed
-     * @param question
+     * @param question The question that was used
      */
     public void wattageShowRightAnswer(Button button, WattageQuestion question) {
         if(Long.parseLong(buttonR1C1.getText()) == question.getRightAnswer())
@@ -527,13 +524,13 @@ public class QuizScreenCtrl implements Initializable {
                 }
             } else if(game.getCurrentQuestion() instanceof  WattageQuestion){
                 long correct = game.getCurrentQuestion().getCorrectWattage();
-                if(Integer.parseInt(buttonR0C0.getText()) == correct) {
+                if(Long.parseLong(buttonR0C0.getText()) == correct) {
                     rightColor(buttonR0C0);
-                } else if(Integer.parseInt(buttonR0C1.getText()) == correct) {
+                } else if(Long.parseLong(buttonR0C1.getText()) == correct) {
                     rightColor(buttonR0C1);
-                } else if(Integer.parseInt(buttonR01C0.getText()) == correct) {
+                } else if(Long.parseLong(buttonR01C0.getText()) == correct) {
                     rightColor(buttonR01C0);
-                } else if(Integer.parseInt(buttonR1C1.getText()) == correct) {
+                } else if(Long.parseLong(buttonR1C1.getText()) == correct) {
                     rightColor(buttonR1C1);
                 }
             } else openQuestionColoring();
@@ -557,7 +554,8 @@ public class QuizScreenCtrl implements Initializable {
                             startRoundTimer();
                         } else {
                             // When the answer has been shown, send the response.
-                            ServerUtils.send("/app/multi/gameplay/" + ((MultiGame) game).getId(), (MultiGame) game);
+                            ServerUtils.send("/app/multi/gameplay/" + ((MultiGame) game).getId(),
+                                    game);
                             System.out.println("Response send");
                         }
                     });
@@ -596,9 +594,9 @@ public class QuizScreenCtrl implements Initializable {
             } else {
                 // Score kept locally
                 List<Player> players = ((MultiGame) game).getPlayers();
-                for(int i = 0 ; i < players.size(); ++i){
-                    if(players.get(i).equals(player)){
-                        players.get(i).upDateScore(score);
+                for (Player value : players) {
+                    if (value.equals(player)) {
+                        value.upDateScore(score);
                     }
                 }
                 player.upDateScore(score);
@@ -691,31 +689,23 @@ public class QuizScreenCtrl implements Initializable {
             String correct = game.getCurrentQuestion().getCorrectAnswer();
             if(!buttonR0C0.getText().equals(correct)) {
                 wrongColor(buttonR0C0);
-                return;
             } else if(!buttonR0C1.getText().equals(correct)) {
                 wrongColor(buttonR0C1);
-                return;
             } else if(!buttonR01C0.getText().equals(correct)) {
                 wrongColor(buttonR01C0);
-                return;
             } else if(!buttonR1C1.getText().equals(correct)) {
                 wrongColor(buttonR1C1);
-                return;
             }
         } else {
             long correct = game.getCurrentQuestion().getCorrectWattage();
-            if(Integer.parseInt(buttonR0C0.getText()) != correct) {
+            if(Long.parseLong(buttonR0C0.getText()) != correct) {
                 wrongColor(buttonR0C0);
-                return;
-            } else if(Integer.parseInt(buttonR0C1.getText()) != correct) {
+            } else if(Long.parseLong(buttonR0C1.getText()) != correct) {
                 wrongColor(buttonR0C1);
-                return;
-            } else if(Integer.parseInt(buttonR01C0.getText()) != correct) {
+            } else if(Long.parseLong(buttonR01C0.getText()) != correct) {
                 wrongColor(buttonR01C0);
-                return;
-            } else if(Integer.parseInt(buttonR1C1.getText()) != correct) {
+            } else if(Long.parseLong(buttonR1C1.getText()) != correct) {
                 wrongColor(buttonR1C1);
-                return;
             }
         }
 
@@ -730,7 +720,7 @@ public class QuizScreenCtrl implements Initializable {
 
     // Sends the time shorten message and disables the button.
     public void activateShorterTime(){
-        ServerUtils.send("/app/multi/jokers/" + ((MultiGame) game).getId(), (MultiGame) game);
+        ServerUtils.send("/app/multi/jokers/" + ((MultiGame) game).getId(), game);
         timeJoker.setVisible(false);
         timeJoker.setDisable(true);
     }
