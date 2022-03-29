@@ -39,7 +39,7 @@ public abstract class Question {
             this.answerWattages = Arrays.copyOf(answerWattages, answerWattages.length);
             this.questionImage = Arrays.copyOf(questionImage, questionImage.length);
         } else {
-            throw new IllegalArgumentException("The provided arrays were null or not length 4.");
+            throw new IllegalArgumentException("The provided arguments were null or not length 4.");
         }
     }
 
@@ -103,9 +103,7 @@ public abstract class Question {
     public boolean equals(Object o) {
         if (this == o) return true;
 
-        if (!(o instanceof Question)) return false;
-
-        Question question = (Question) o;
+        if (!(o instanceof Question question)) return false;
 
         return new EqualsBuilder().append(answerTitles, question.answerTitles)
                 .append(answerWattages, question.answerWattages).isEquals();

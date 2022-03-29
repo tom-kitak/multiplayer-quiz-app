@@ -3,6 +3,8 @@ package commons;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,9 +18,16 @@ class MultiGameTest {
     private ArrayList<Player> players;
     private Player player;
     private Question question;
+    byte[] test_image;
 
     @BeforeEach
     void setUp(){
+        System.out.println("loading tests!");
+        try {
+            test_image = new FileInputStream("src/test/resources/images/test_image.jpg").readAllBytes();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         player = new Player("j");
         players = new ArrayList<>();
         players.add(player);
@@ -32,7 +41,7 @@ class MultiGameTest {
         descriptions[1] = "b";
         descriptions[2]= "c";
         descriptions[3] = "d";
-        question = new CompareQuestion(descriptions, wattages, null);
+        question = new CompareQuestion(descriptions, wattages, test_image);
         this.game = new MultiGame(question);
     }
 
@@ -92,7 +101,7 @@ class MultiGameTest {
         descriptions[1] = "b";
         descriptions[2]= "c";
         descriptions[3] = "d";
-        Question question2 = new WattageQuestion(descriptions, wattages, null);
+        Question question2 = new WattageQuestion(descriptions, wattages, test_image);
         MultiGame game2 = new MultiGame(question2);
         assertNotEquals(game2, game);
     }
@@ -122,7 +131,7 @@ class MultiGameTest {
         descriptions[1] = "b";
         descriptions[2]= "c";
         descriptions[3] = "e";
-        Question question2 = new WattageQuestion(descriptions, wattages, null);
+        Question question2 = new WattageQuestion(descriptions, wattages, test_image);
         MultiGame game2 = new MultiGame(question2);
         assertNotEquals(game2.hashCode(), game.hashCode());
     }
