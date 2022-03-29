@@ -8,7 +8,8 @@ public abstract class Game {
     private Question currentQuestion;
 
 
-    /**Creates a new Game Object.
+    /**
+     * Creates a new Game Object.
      * @param currentQuestion the first Question we start the game with.
      */
     public Game(Question currentQuestion) {
@@ -19,7 +20,8 @@ public abstract class Game {
     public Game() {
     }
 
-    /**Updates the questionNumber and currentQuestion of this SingleGame.
+    /**
+     * Updates the questionNumber and currentQuestion of this SingleGame.
      * @param question the new currentQuestion
      */
     public void nextQuestion(Question question){
@@ -34,7 +36,8 @@ public abstract class Game {
         return questionNumber;
     }
 
-    /**Sets the questionNumber.
+    /**
+     * Sets the questionNumber.
      * @param questionNumber the int we want the questionNumber to be.
      */
     public void setQuestionNumber(int questionNumber) {
@@ -48,14 +51,16 @@ public abstract class Game {
         return currentQuestion;
     }
 
-    /**Sets the currentQuestion.
+    /**
+     * Sets the currentQuestion.
      * @param currentQuestion the question we want to assign.
      */
     public void setCurrentQuestion(Question currentQuestion) {
         this.currentQuestion = currentQuestion;
     }
 
-    /**Checks this Game and o for equality.
+    /**
+     * Checks this Game and o for equality.
      * @param o the object we want to compare for equality with
      * @return true iff o is a Game and it has equal the same fields as this Game
      */
@@ -75,6 +80,9 @@ public abstract class Game {
         return Objects.hash(questionNumber, currentQuestion);
     }
 
+    /**
+     * @return a String representation of this Game object.
+     */
     @Override
     public String toString() {
         return "Game{" +

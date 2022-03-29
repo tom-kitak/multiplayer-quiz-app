@@ -107,6 +107,9 @@ public abstract class Question {
         return new HashCodeBuilder(17, 37).append(answerTitles).append(answerWattages).toHashCode();
     }
 
+    /**
+     * @return a String representation of this Question object.
+     */
     @Override
     public String toString() {
         return new ToStringBuilder(this)
