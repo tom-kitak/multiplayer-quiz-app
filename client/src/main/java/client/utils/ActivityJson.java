@@ -27,7 +27,6 @@ public class ActivityJson {
      * @param pathString Absolute path of json file were this object was read from.
      * @return The byte[] of the image that was read
      */
-    //ToDo Handle Exceptions
     private byte[] readImage(String pathString) throws Exception {
         String path = Paths.get(pathString).getParent().toString() + '\\' + image_path;
         try {
