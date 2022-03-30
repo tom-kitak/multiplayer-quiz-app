@@ -1,18 +1,31 @@
 package client.scenes;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.URL;
-//CHECKSTYLE:OFF
-import java.util.*;
-//CHECKSTYLE:ON
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import client.ConfirmBoxCtrl;
 import com.google.inject.Inject;
 import client.utils.ServerUtils;
-
-//CHECKSTYLE:OFF
-import commons.*;
-//CHECKSTYLE:ON
+import commons.CompareQuestion;
+import commons.Game;
+import commons.MultiGame;
+import commons.OpenQuestion;
+import commons.Player;
+import commons.Question;
+import commons.Score;
+import commons.SingleGame;
+import commons.WattageQuestion;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -20,10 +33,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 public class QuizScreenCtrl implements Initializable {
     private final ServerUtils server;
@@ -80,6 +95,18 @@ public class QuizScreenCtrl implements Initializable {
     @FXML
     private ImageView questionImage;
 
+    @FXML
+    private ImageView happyImage;
+
+    @FXML
+    private ImageView sadImage;
+
+    @FXML
+    private ImageView angryImage;
+
+    @FXML
+    private ImageView shockedImage;
+
     @Inject
     public QuizScreenCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
@@ -100,8 +127,20 @@ public class QuizScreenCtrl implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         score.setText("Score: 0");
+        try {
+            this.happyImage.setImage(new Image(new FileInputStream("src/main/resources/client/emojis/emoji_happy.png")));
+            this.angryImage.setImage(new Image(new FileInputStream("src/main/resources/client/emojis/emoji_angry.png")));
+            this.sadImage.setImage(new Image(new FileInputStream("src/main/resources/client/emojis/emoji_sad.png")));
+            this.shockedImage.setImage(new Image(new FileInputStream("src/main/resources/client/emojis/emoji_shocked.png")));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * Method to set the player.
+     * @param player The player to set this.player to
+     */
     public void setPlayer(Player player) {
         this.player = player;
     }
@@ -368,7 +407,8 @@ public class QuizScreenCtrl implements Initializable {
     }
 
 
-    /** Converts the time in seconds to the displayed String.
+    /**
+     * Converts the time in seconds to the displayed String.
      * @param time remaining time in seconds
      * @return a string in the minutes:seconds format with
      *  leading zeroes if required
@@ -403,7 +443,8 @@ public class QuizScreenCtrl implements Initializable {
         }
     }
 
-    /**Shows the rightAnswer for the openQuestion type.
+    /**
+     * Shows the rightAnswer for the openQuestion type.
      * @param question the question where we got our info from
      */
     private void openShowRightAnswer(OpenQuestion question) {
@@ -424,17 +465,12 @@ public class QuizScreenCtrl implements Initializable {
             }catch (NumberFormatException e){
                 answerField.setStyle("-fx-background-color: #916868ff ");
             }
-            //ToDO Why is this here?
-//            long answer = Long.parseLong(answerField.getText());
-//            if (correct == answer) {
-//                answerField.setStyle("-fx-background-color: #f2a443ff; ");
-//                this.answeredCorrectly = true;
-//            } else answerField.setStyle("-fx-background-color: #916868ff ");
         }
         answerField.setText("Correct answer: " + game.getCurrentQuestion().getCorrectWattage());
     }
 
-    /**shows the right answers for the compareQuestion type.
+    /**
+     * shows the right answers for the compareQuestion type.
      * @param button the button that was clicked
      * @param question the question from which we get the rightAnswer
      */
@@ -718,18 +754,97 @@ public class QuizScreenCtrl implements Initializable {
 
     }
 
-    // Sets the doublePoints flag true and disables the button
+    /**
+     * Method to activate the double points.
+     */
     public void activateDoublePoints(){
         doublePoints = true;
         doubleJoker.setDisable(true);
         doubleJoker.setVisible(false);
     }
 
-    // Sends the time shorten message and disables the button.
+    /**
+     * Sends the time shorten message and disables the button.
+     */
     public void activateShorterTime(){
         ServerUtils.send("/app/multi/jokers/" + ((MultiGame) game).getId(), game);
         timeJoker.setVisible(false);
         timeJoker.setDisable(true);
+    }
+
+    /**
+     * Method to handle happy emoji clicked.
+     */
+    @FXML
+    void happyClicked() {
+        emojiAnimation(happyImage);
+        //ToDo Client side to server emoji management
+    }
+
+    /**
+     * Method to handle sad emoji clicked.
+     */
+    @FXML
+    void sadClicked() {
+        emojiAnimation(sadImage);
+        //ToDo Client side to server emoji management
+    }
+
+    /**
+     * Method to handle angry emoji clicked.
+     */
+    @FXML
+    void angryClicked() {
+        emojiAnimation(angryImage);
+        //ToDo Client side to server emoji management
+    }
+
+    /**
+     * Method to handle shocked emoji clicked.
+     */
+    @FXML
+    void shockedClicked() {
+       emojiAnimation(shockedImage);
+        //ToDo Client side to server emoji management
+    }
+
+    /**
+     * Method to play animation for emoji's.
+     * @param image the imageview to play the animation on
+     */
+    private void emojiAnimation(ImageView image) {
+        Timeline increase = new Timeline(new KeyFrame(Duration.seconds(0.5),
+                new KeyValue(image.scaleXProperty(), 1.5),
+                new KeyValue(image.scaleYProperty(), 1.5),
+                new KeyValue(image.scaleZProperty(), 1.5),
+                new KeyValue(((Glow)image.getEffect()).levelProperty(), 1),
+                new KeyValue(image.rotateProperty(), 360)
+                ));
+        Timeline decrease = new Timeline(new KeyFrame(Duration.seconds(0.5),
+                new KeyValue(image.scaleXProperty(), 1),
+                new KeyValue(image.scaleYProperty(), 1),
+                new KeyValue(image.scaleZProperty(), 1),
+                new KeyValue(((Glow)image.getEffect()).levelProperty(), 0)
+        ));
+        Timeline end = new Timeline(new KeyFrame(Duration.ONE,
+                new KeyValue(image.rotateProperty(), 0)
+        ));
+        SequentialTransition transition = new SequentialTransition(increase, decrease, end);
+        transition.play();
+    }
+
+    /**
+     * Method to play animation based on an input string.
+     * @param emoji The emoji to play in String form
+     */
+    public void emojiAnimation(String emoji) {
+        switch (emoji){
+            case "happy": emojiAnimation(happyImage);
+            case "angry": emojiAnimation(angryImage);
+            case "sad": emojiAnimation(sadImage);
+            case "shocked": emojiAnimation(shockedImage);
+            default: throw new IllegalArgumentException("String must be happy, angry, sad or shocked!");
+        }
     }
 
 }
