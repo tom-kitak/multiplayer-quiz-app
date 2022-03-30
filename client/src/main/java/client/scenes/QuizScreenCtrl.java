@@ -812,6 +812,7 @@ public class QuizScreenCtrl implements Initializable {
      * Method to play animation for emoji's.
      * @param image the imageview to play the animation on
      */
+    //ToDo Can be used from this class to play animations for incomming emoji's
     private void emojiAnimation(ImageView image) {
         Timeline increase = new Timeline(new KeyFrame(Duration.seconds(0.5),
                 new KeyValue(image.scaleXProperty(), 1.5),
@@ -837,6 +838,7 @@ public class QuizScreenCtrl implements Initializable {
      * Method to play animation based on an input string.
      * @param emoji The emoji to play in String form
      */
+    //ToDo can be used for incomming emoji's in a other class
     public void emojiAnimation(String emoji) {
         switch (emoji){
             case "happy": emojiAnimation(happyImage);
