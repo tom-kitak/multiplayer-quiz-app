@@ -6,7 +6,8 @@ public class SingleGame extends Game {
 
     private Player player;
 
-    /**Constructs a new SingleGame Object.
+    /**
+     * Constructs a new SingleGame Object.
      * @param player the Player we want to assign as Field
      * @param currentQuestion the Question we will display as the first question
      */
@@ -22,14 +23,16 @@ public class SingleGame extends Game {
         return player;
     }
 
-    /**Updates the score of the Player of the SingleGame.
+    /**
+     * Updates the score of the Player of the SingleGame.
      * @param add the number of Points to add
      */
     public void upDateScore(int add){
         this.player.upDateScore(add);
     }
 
-    /**Checks o and this Singlegame object for equality.
+    /**
+     * Checks o and this Singlegame object for equality.
      * @param o the object we want to compare for equality with
      * @return true iff o is a SngleGame object and has equal fields
      */
