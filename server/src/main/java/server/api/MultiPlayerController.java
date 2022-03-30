@@ -6,12 +6,14 @@ import commons.Player;
 import commons.Activity;
 import commons.Question;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import server.database.ActivityRepository;
@@ -29,6 +31,12 @@ public class MultiPlayerController {
     private final ActivityRepository repo;
     private int id;
     private ArrayList<Integer> allPlayersResponded;
+    private ArrayList<Integer> currentPlayerCount;
+    private ArrayList<TimerTask> lobbyTimers;
+    private Timer timer;
+
+    @Autowired
+    private SimpMessagingTemplate template;
 
     /**
      * Creates a new MultiplayerController object.
@@ -44,6 +52,9 @@ public class MultiPlayerController {
         currentLobbyGame.setId(id);
         this.allPlayersResponded = new ArrayList<>();
         allPlayersResponded.add(0);
+        this.currentPlayerCount = new ArrayList<>();
+        this.lobbyTimers = new ArrayList<>();
+        timer = new Timer();
     }
 
     /**
@@ -86,6 +97,9 @@ public class MultiPlayerController {
         // We increment it for every response, and reset it when needed.
         allPlayersResponded.add(0);
         games.add(started);
+        currentPlayerCount.add(started.getPlayers().size());
+        lobbyTimers.add(null);
+        controlPlayerResponse(started);
         return started;
     }
 
@@ -123,6 +137,19 @@ public class MultiPlayerController {
         return question;
     }
 
+    private void controlPlayerResponse(MultiGame game) {
+        TimerTask roundTask = new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("Lobby count lowered");
+                currentPlayerCount.set(game.getId(), allPlayersResponded.get(game.getId()));
+                gameplayQuestionSender(String.valueOf(game.getId()), game);
+            }
+        };
+        timer.schedule(roundTask, 20 * 1000);
+        lobbyTimers.set(game.getId(), roundTask);
+    }
+
     /**
      * Will generate a new Question and send it to the players of the certain lobby if everyone answered.
      * @param gameId the integer that identifies the game in which the sender is engaged
@@ -147,13 +174,17 @@ public class MultiPlayerController {
         // Controls the responses, that players made.
         allPlayersResponded.set(game.getId(), allPlayersResponded.get(game.getId()) + 1);
 
-        if (game.getPlayers().size() <= allPlayersResponded.get(game.getId())){
+        if (currentPlayerCount.get(game.getId()) <= allPlayersResponded.get(game.getId())){
+            lobbyTimers.get(game.getId()).cancel();
             game.setCurrentQuestion(getQuestion());
             game.setQuestionNumber(game.getQuestionNumber() + 1);
             System.out.println(game.getCurrentQuestion());
             allPlayersResponded.set(game.getId(), 0);
             System.out.println("Response for game " + gameId + " send!");
-            return game;
+            if(currentPlayerCount.get(game.getId()) > 0) {
+                controlPlayerResponse(game);
+            }
+            this.template.convertAndSend("/topic/multi/gameplay/" + gameId, game);
         }
         return null;
     }
