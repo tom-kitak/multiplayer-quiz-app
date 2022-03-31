@@ -4,12 +4,14 @@ package server.api;
 import commons.*;
 //CHECKSTYLE:ON
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +30,12 @@ public class MultiPlayerController {
     private final ActivityRepository repo;
     private int id;
     private ArrayList<Integer> allPlayersResponded;
+    private ArrayList<Integer> currentPlayerCount;
+    private ArrayList<TimerTask> lobbyTimers;
+    private Timer timer;
+
+    @Autowired
+    private SimpMessagingTemplate template;
 
     /**
      * Creates a new MultiplayerController object.
@@ -43,9 +51,13 @@ public class MultiPlayerController {
         currentLobbyGame.setId(id);
         this.allPlayersResponded = new ArrayList<>();
         allPlayersResponded.add(0);
+        this.currentPlayerCount = new ArrayList<>();
+        this.lobbyTimers = new ArrayList<>();
+        timer = new Timer();
     }
 
-    /**Called when the player connects or disconnect from the lobby.
+    /**
+     * Called when the player connects or disconnect from the lobby.
      * @param player the player send by the client
      * @return the game object that acts as the lobby
      */
@@ -72,8 +84,9 @@ public class MultiPlayerController {
         return games.get(id).getCurrentQuestion();
     }
 
-    /**Starts the game and creates a new lobby.
-     * @return the game that started
+    /**
+     * Starts the game and creates a new lobby.
+     * @return the game that started and sends it to that lobby
      */
     @MessageMapping("/start")
     @SendTo("/topic/started")
@@ -129,6 +142,25 @@ public class MultiPlayerController {
         return question;
     }
 
+    private void controlPlayerResponse(MultiGame game) {
+        TimerTask roundTask = new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("Lobby count lowered");
+                currentPlayerCount.set(game.getId(), allPlayersResponded.get(game.getId()));
+                gameplayQuestionSender(String.valueOf(game.getId()), game);
+            }
+        };
+        timer.schedule(roundTask, 20 * 1000);
+        lobbyTimers.set(game.getId(), roundTask);
+    }
+
+    /**
+     * Will generate a new Question and send it to the players of the certain lobby if everyone answered.
+     * @param gameId the integer that identifies the game in which the sender is engaged
+     * @param gameFromPlayer the MultiGame that represents the lobby of this player
+     * @return
+     */
     @MessageMapping("/multi/gameplay/{gameId}")
     @SendTo("/topic/multi/gameplay/{gameId}")
     public MultiGame gameplayQuestionSender(@DestinationVariable String gameId, MultiGame gameFromPlayer) {
@@ -162,6 +194,12 @@ public class MultiPlayerController {
         return null;
     }
 
+    /**
+     * Generates a new Question and sends the Multigame object.
+     * @param gameId the integer that identifies the game in which the sender is engaged
+     * @param game the MultiGame that represents the lobby of this player
+     * @return
+     */
     @SendTo("/topic/multi/gameplay/{gameId}")
     public MultiGame sendQuestion(@DestinationVariable String gameId,MultiGame game) {
         System.out.println(gameId);
@@ -169,6 +207,11 @@ public class MultiPlayerController {
         return game;
     }
 
+    /**
+     * Will delete the Player from the MultiGame object while they are answering questions.
+     * @param gameId the id of the MultiGame in which the Player is engaged
+     * @param player the player that disconnects
+     */
     @MessageMapping("/multi/leaveInGame/{gameId}")
     public void disconnect(@DestinationVariable String gameId, Player player) {
         MultiGame game= null;
@@ -186,15 +229,22 @@ public class MultiPlayerController {
     }
 
 
+    /**
+     * Gets the current lobby that is waiting in the waiting room.
+     * @return the MultiGame object that represents the current lobby
+     */
     @GetMapping("topic/lobby")
     public ResponseEntity<MultiGame> getLobby(){
         return ResponseEntity.ok(currentLobbyGame);
     }
 
 
-
-
-    // Passes the "shorten time message".
+    /**
+     * Sends a game to the lobby in where the shorten-time-joker is used.
+     * @param gameId the gameId that identifies their MultiGame lobby
+     * @param game the game representing the lobby in which the joker was called
+     * @return the game object representing that lobby
+     */
     @MessageMapping("/multi/jokers/{gameId}")
     @SendTo("/topic/multi/jokers/{gameId}")
     public MultiGame shortenTime(@DestinationVariable String gameId, MultiGame game) {

@@ -22,11 +22,20 @@ public class QuestionController {
     private final Random random;
     private final ActivityRepository repo;
 
+    /**
+     * Creates a new QuestionController object.
+     * @param random a new random object that we assign to our class attribute
+     * @param repo the ActivityRepository that we assign to our class attribute
+     */
     public QuestionController(Random random, ActivityRepository repo) {
         this.random = random;
         this.repo = repo;
     }
 
+    /**
+     * Will generate a new Question and send it to the client.
+     * @return a new ResponseEntity containing the Question
+     */
     @GetMapping(path = {"", "/"})
     public ResponseEntity<Question> getQuestion() {
         // Can't create a question if there aren't enough activities

@@ -21,12 +21,16 @@ public class Activity {
     @Lob
     public byte[] image;
 
+    /**
+     * a constructor that is needed for Object mappers.
+     */
     @SuppressWarnings("unused")
     private Activity() {
         //for object mappers
     }
 
-    /**Creates a new Activity Object.
+    /**
+     * Creates a new Activity Object.
      * @param title the title of the Activity
      * @param wh the watt hours of the Activity
      * @param image the byte array for the Image of the Activity
@@ -44,14 +48,16 @@ public class Activity {
         return image;
     }
 
-    /**Sets the byte array for the image field.
+    /**
+     * Sets the byte array for the image field.
      * @param image the byte array we want to set
      */
     public void setImage(byte[] image) {
         this.image = image;
     }
 
-    /**Checks o and this Activity for equality.
+    /**
+     * Checks o and this Activity for equality.
      * @param o the object we check for equality with.
      * @return true iff o is an Activity with equal fields
      * to this
@@ -98,21 +104,24 @@ public class Activity {
         return wh;
     }
 
-    /**Sets the id field of this Activity.
+    /**
+     * Sets the id field of this Activity.
      * @param id the integer we want to assign to the id.
      */
     public void setId(long id) {
         this.id = id;
     }
 
-    /**Sets the title field of this Activity.
+    /**
+     * Sets the title field of this Activity.
      * @param title the String value we want to assign to the title field
      */
     public void setTitle(String title) {
         this.title = title;
     }
 
-    /**Sets the wh field of this Activity.
+    /**
+     * Sets the wh field of this Activity.
      * @param wh the integer we want to assign to the wh field
      */
     public void setWh(long wh) {

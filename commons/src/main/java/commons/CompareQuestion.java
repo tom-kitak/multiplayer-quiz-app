@@ -35,7 +35,6 @@ public class CompareQuestion extends Question {
 
     /**
      * Hashcode generator for questions.
-     *
      * @return Hashcode of this question.
      */
     @Override
@@ -45,7 +44,6 @@ public class CompareQuestion extends Question {
 
     /**
      * Equals method for this object.
-     *
      * @param o Object to be compared against.
      * @return True if the objects are equal, false otherwise.
      */
