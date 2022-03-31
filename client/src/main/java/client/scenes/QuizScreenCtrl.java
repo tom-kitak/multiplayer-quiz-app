@@ -133,7 +133,14 @@ public class QuizScreenCtrl implements Initializable {
             this.sadImage.setImage(new Image(new FileInputStream("src/main/resources/client/emojis/emoji_sad.png")));
             this.shockedImage.setImage(new Image(new FileInputStream("src/main/resources/client/emojis/emoji_shocked.png")));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            try {
+                this.happyImage.setImage(new Image(new FileInputStream("client/src/main/resources/client/emojis/emoji_happy.png")));
+                this.angryImage.setImage(new Image(new FileInputStream("client/src/main/resources/client/emojis/emoji_angry.png")));
+                this.sadImage.setImage(new Image(new FileInputStream("client/src/main/resources/client/emojis/emoji_sad.png")));
+                this.shockedImage.setImage(new Image(new FileInputStream("client/src/main/resources/client/emojis/emoji_shocked.png")));
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
