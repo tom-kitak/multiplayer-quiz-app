@@ -61,6 +61,7 @@ public class WaitingRoomCtrl {
                     // we have to use a boolean that lets us control
                     // the app's behaviour.
                     if (!mainCtrl.started) {
+                        game.setCurrentQuestion(server.getImage(game.getId()));
                         mainCtrl.showQuizScreen(game);
                         mainCtrl.started = true;
                     }
