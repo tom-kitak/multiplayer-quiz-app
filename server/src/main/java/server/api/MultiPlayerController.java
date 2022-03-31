@@ -201,9 +201,10 @@ public class MultiPlayerController {
         return game;
     }
 
-    @MessageMapping("/multi/emoji/{type}")
-    @SendTo("/topic/multi/emoji/{type}")
-    public Emoji emojiHandler(@DestinationVariable String type, Emoji emoji){
+    @MessageMapping("/multi/emoji/{gameId}/{type}")
+    @SendTo("/topic/multi/emoji/{gameId}/{type}")
+    public Emoji emojiHandler(@DestinationVariable String gameId, @DestinationVariable String type, Emoji emoji){
+        System.out.println("Emoji sent");
         return emoji;
     }
 

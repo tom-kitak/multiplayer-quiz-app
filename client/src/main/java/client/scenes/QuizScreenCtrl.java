@@ -14,15 +14,16 @@ import java.util.TimerTask;
 import client.ConfirmBoxCtrl;
 import com.google.inject.Inject;
 import client.utils.ServerUtils;
-import commons.CompareQuestion;
+import commons.Emoji;
 import commons.Game;
+import commons.CompareQuestion;
 import commons.MultiGame;
 import commons.OpenQuestion;
 import commons.Player;
 import commons.Question;
-import commons.Score;
 import commons.SingleGame;
 import commons.WattageQuestion;
+import commons.Score;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.SequentialTransition;
@@ -337,7 +338,8 @@ public class QuizScreenCtrl implements Initializable {
     }
 
     /**
-     * Starts the Single Player game mode by starting a timer.
+     * Starts the single player or multiplayer game by starting a timer.
+     * Establish required subscriptions.
      * @param game The Game we get our info from
      */
     public void startGame(Game game){
@@ -388,7 +390,31 @@ public class QuizScreenCtrl implements Initializable {
                 System.out.println("receive shorten");
                 Platform.runLater(() -> timeLeft = (int) (timeLeft * 0.6));
             });
+            subscribeToEmojis(game);
         }
+    }
+
+    /**
+     * Method that subscribes to emoji reactions from other players.
+     * @param game the Game where you want to receive responses.
+     */
+    private void subscribeToEmojis(Game game){
+        ServerUtils.registerForMessages("/topic/multi/emoji/" + ((MultiGame) game).getId() + "/happy",
+                Emoji.class, emoji -> {
+                    System.out.println("Happy emoji received");
+                    emojiAnimation("happy");});
+        ServerUtils.registerForMessages("/topic/multi/emoji/" + ((MultiGame) game).getId() + "/sad",
+                Emoji.class, emoji -> {
+                    System.out.println("Sad emoji received");
+                    emojiAnimation("sad");});
+        ServerUtils.registerForMessages("/topic/multi/emoji/" + ((MultiGame) game).getId() + "/angry",
+                Emoji.class, emoji -> {
+                    System.out.println("Angry emoji received");
+                    emojiAnimation("angry");});
+        ServerUtils.registerForMessages("/topic/multi/emoji/" + ((MultiGame) game).getId() + "/shocked",
+                Emoji.class, emoji -> {
+                    System.out.println("Shocked emoji received");
+                    emojiAnimation("shocked");});
     }
 
     /**
@@ -790,7 +816,7 @@ public class QuizScreenCtrl implements Initializable {
     @FXML
     void happyClicked() {
         emojiAnimation(happyImage);
-        //ToDo Client side to server emoji management
+        ServerUtils.send("/app/multi/emoji/" + ((MultiGame) game).getId() + "/happy", new Emoji("happy"));
     }
 
     /**
@@ -798,8 +824,9 @@ public class QuizScreenCtrl implements Initializable {
      */
     @FXML
     void sadClicked() {
+        ServerUtils.send("/app/multi/emoji/" + ((MultiGame) game).getId() + "/sad", new Emoji("sad"));
         emojiAnimation(sadImage);
-        //ToDo Client side to server emoji management
+
     }
 
     /**
@@ -808,7 +835,7 @@ public class QuizScreenCtrl implements Initializable {
     @FXML
     void angryClicked() {
         emojiAnimation(angryImage);
-        //ToDo Client side to server emoji management
+        ServerUtils.send("/app/multi/emoji/" + ((MultiGame) game).getId() + "/angry", new Emoji("angry"));
     }
 
     /**
@@ -817,7 +844,7 @@ public class QuizScreenCtrl implements Initializable {
     @FXML
     void shockedClicked() {
        emojiAnimation(shockedImage);
-        //ToDo Client side to server emoji management
+        ServerUtils.send("/app/multi/emoji/" + ((MultiGame) game).getId() + "/shocked", new Emoji("shocked"));
     }
 
     /**
@@ -853,10 +880,18 @@ public class QuizScreenCtrl implements Initializable {
     //ToDo can be used for incomming emoji's in a other class
     public void emojiAnimation(String emoji) {
         switch (emoji){
-            case "happy": emojiAnimation(happyImage);
-            case "angry": emojiAnimation(angryImage);
-            case "sad": emojiAnimation(sadImage);
-            case "shocked": emojiAnimation(shockedImage);
+            case "happy":
+                emojiAnimation(happyImage);
+                break;
+            case "angry":
+                emojiAnimation(angryImage);
+                break;
+            case "sad":
+                emojiAnimation(sadImage);
+                break;
+            case "shocked":
+                emojiAnimation(shockedImage);
+                break;
             default: throw new IllegalArgumentException("String must be happy, angry, sad or shocked!");
         }
     }
