@@ -352,6 +352,7 @@ public class QuizScreenCtrl implements Initializable {
             ServerUtils.registerForMessages("/topic/multi/gameplay/" + ((MultiGame) game).getId(), MultiGame.class, retGame -> {
                 if(retGame != null) {
                     this.game = retGame;
+                    retGame.setCurrentQuestion(server.getImage(retGame.getId()));
                     System.out.println(game.getQuestionNumber());
                     Platform.runLater(() -> {
                         timer.cancel();
@@ -597,8 +598,10 @@ public class QuizScreenCtrl implements Initializable {
                             startRoundTimer();
                         } else {
                             // When the answer has been shown, send the response.
+                            MultiGame gameForServer = ((MultiGame) game).copy();
+                            gameForServer.setCurrentQuestion(game.getCurrentQuestion().QuestionWithoutImage());
                             ServerUtils.send("/app/multi/gameplay/" + ((MultiGame) game).getId(),
-                                    game);
+                                    gameForServer);
                             System.out.println("Response send");
                         }
                     });
@@ -767,7 +770,9 @@ public class QuizScreenCtrl implements Initializable {
      * Sends the time shorten message and disables the button.
      */
     public void activateShorterTime(){
-        ServerUtils.send("/app/multi/jokers/" + ((MultiGame) game).getId(), game);
+        MultiGame gameForServer = ((MultiGame) game).copy();
+        gameForServer.setCurrentQuestion(game.getCurrentQuestion().QuestionWithoutImage());
+        ServerUtils.send("/app/multi/jokers/" + ((MultiGame) game).getId(), gameForServer);
         timeJoker.setVisible(false);
         timeJoker.setDisable(true);
     }

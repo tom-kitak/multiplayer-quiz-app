@@ -1,10 +1,8 @@
 package server.api;
 
-import commons.Emoji;
-import commons.MultiGame;
-import commons.Player;
-import commons.Activity;
-import commons.Question;
+//CHECKSTYLE:OFF
+import commons.*;
+//CHECKSTYLE:ON
 
 import org.springframework.http.ResponseEntity;
 
@@ -13,6 +11,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import server.database.ActivityRepository;
 //CHECKSTYLE:OFF
@@ -67,6 +66,11 @@ public class MultiPlayerController {
 
         return currentLobbyGame;
     }
+    @GetMapping("multi/{id}")
+    public Question getImage(@PathVariable("id") int id) {
+        System.out.println(games.get(id).getCurrentQuestion().getQuestionImage());
+        return games.get(id).getCurrentQuestion();
+    }
 
     /**Starts the game and creates a new lobby.
      * @return the game that started
@@ -75,6 +79,7 @@ public class MultiPlayerController {
     @SendTo("/topic/started")
     public MultiGame startGame() {
         Question question = getQuestion();
+        Question cutQuestion = question.QuestionWithoutImage();
         MultiGame started = currentLobbyGame;
         started.setCurrentQuestion(question);
         this.id++;
@@ -84,8 +89,12 @@ public class MultiPlayerController {
         // We increment it for every response, and reset it when needed.
         allPlayersResponded.add(0);
         games.add(started);
-        return started;
+        MultiGame gameWithoutQuestion = started.copy();
+        gameWithoutQuestion.setCurrentQuestion(cutQuestion);
+        return gameWithoutQuestion;
     }
+
+
 
     /**NEEDS REFACTORING: only TEMP.
      * @return
@@ -139,12 +148,16 @@ public class MultiPlayerController {
         allPlayersResponded.set(game.getId(), allPlayersResponded.get(game.getId()) + 1);
 
         if (game.getPlayers().size() <= allPlayersResponded.get(game.getId())){
-            game.setCurrentQuestion(getQuestion());
+            Question question = getQuestion();
+            Question cutQuestion = question.QuestionWithoutImage();
+            game.setCurrentQuestion(question);
             game.setQuestionNumber(game.getQuestionNumber() + 1);
             System.out.println(game.getCurrentQuestion());
-            allPlayersResponded.set(game.getId(), 0);
             System.out.println("Response for game " + gameId + " send!");
-            return game;
+            allPlayersResponded.set(game.getId(), 0);
+            MultiGame gameWithoutQuestion = game.copy();
+            gameWithoutQuestion.setCurrentQuestion(cutQuestion);
+            return gameWithoutQuestion;
         }
         return null;
     }

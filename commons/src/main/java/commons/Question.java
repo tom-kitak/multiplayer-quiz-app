@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = CompareQuestion.class, name = "CompareQuestion"),
         @JsonSubTypes.Type(value = WattageQuestion.class, name = "WattageQuestion"),
@@ -23,7 +23,7 @@ public abstract class Question {
 
     private final String[] answerTitles;
     private final long[] answerWattages;
-    private final byte[] questionImage;
+    public byte[] questionImage;
 
 
 
@@ -131,6 +131,28 @@ public abstract class Question {
      * the question that will be shown to the client
      */
     public abstract String getQuestionDescription();
+
+    public Question QuestionWithoutImage() {
+        Question result = null;
+        String[] copyAnswer = Arrays.copyOf(answerTitles, answerTitles.length);
+        long[] copyWattage = Arrays.copyOf(answerWattages, answerWattages.length);
+        byte[] copyImage = new byte[questionImage.length];
+        for(int i = 0; i < copyImage.length; i++) {
+            copyImage[i] = Byte.valueOf(questionImage[i]).byteValue();
+        }
+        if(this instanceof CompareQuestion) {
+            result = new CompareQuestion(copyAnswer,copyWattage,copyImage);
+        } else if(this instanceof WattageQuestion) {
+            result = new CompareQuestion(copyAnswer, copyWattage, copyImage);
+        } else {
+            result = new OpenQuestion(copyAnswer, copyWattage, copyImage);
+        }
+        result.questionImage = null;
+        return result;
+    }
+
+
+
 
 
 
