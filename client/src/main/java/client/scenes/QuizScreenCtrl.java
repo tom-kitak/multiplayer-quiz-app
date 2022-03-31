@@ -37,6 +37,7 @@ public class QuizScreenCtrl implements Initializable {
     private Player player;
     private boolean doublePoints = false;
     private boolean eliminateUsed = false;
+    private boolean shownLeaderboard = true;
 
     @FXML
     private Button buttonR01C0;
@@ -653,7 +654,7 @@ public class QuizScreenCtrl implements Initializable {
      * Will set the Next Question or redirect to the endscreen based on the SingleGame's questionNumber.
      */
     public void setNextQuestion() {
-        if(this.game.getQuestionNumber()>=20){
+        if(this.game.getQuestionNumber()>=3){
             timer.cancel();
             roundTask.cancel();
             boolean partyLeaderboard = false;
@@ -671,9 +672,13 @@ public class QuizScreenCtrl implements Initializable {
                 }
                 partyLeaderboard = true;
             }
-            mainCtrl.showEndScreen(partyLeaderboard, players);
-        } else {
 
+            if(shownLeaderboard) {
+                mainCtrl.showEndScreen(partyLeaderboard, players);
+                shownLeaderboard = false;
+            }
+        } else {
+            shownLeaderboard = true;
             Question nextQuestion = server.getQuestion();
 
             this.game.nextQuestion(nextQuestion);
