@@ -654,7 +654,7 @@ public class QuizScreenCtrl implements Initializable {
      * Will set the Next Question or redirect to the endscreen based on the SingleGame's questionNumber.
      */
     public void setNextQuestion() {
-        if(this.game.getQuestionNumber()>=3){
+        if(this.game.getQuestionNumber()>=20){
             timer.cancel();
             roundTask.cancel();
             boolean partyLeaderboard = false;
