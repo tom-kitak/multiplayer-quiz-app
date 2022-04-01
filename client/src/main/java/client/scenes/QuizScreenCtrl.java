@@ -444,17 +444,17 @@ public class QuizScreenCtrl implements Initializable {
     public int calculateScoreForOpenQuestion(long answer, long correct) {
         int retScore;
         if(answer == correct){
-            retScore = 350;
-        } else if(answer>=(0.9* correct) && answer<=(1.1*correct)){
             retScore = 250;
-        } else if(answer>=(0.8* correct) && answer<=(1.2*correct)){
-            retScore = 225;
-        } else if(answer>=(0.7* correct) && answer<=(1.3*correct)){
+        } else if(answer>=(0.9* correct) && answer<=(1.1*correct)){
             retScore = 200;
-        } else if(answer>=(0.6* correct) && answer<=(1.4*correct)){
+        } else if(answer>=(0.8* correct) && answer<=(1.2*correct)){
             retScore = 175;
-        } else {
+        } else if(answer>=(0.7* correct) && answer<=(1.3*correct)){
             retScore = 150;
+        } else if(answer>=(0.6* correct) && answer<=(1.4*correct)){
+            retScore = 125;
+        } else {
+            retScore = 110;
         }
         retScore += (timeLeft * 3);
         return retScore;
