@@ -2,25 +2,34 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="timerField" prefHeight="526.0" prefWidth="836.0" style="-fx-background-color: #3b3f46ff#3b3f46ff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.QuizScreenCtrl">
+<AnchorPane fx:id="timerField" prefHeight="664.0" prefWidth="1048.0" style="-fx-background-color: #3b3f46ff#3b3f46ff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.QuizScreenCtrl">
    <children>
-      <Text fx:id="questionField" accessibleText="~" layoutX="422.0" layoutY="130.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Question text" wrappingWidth="358.2719268798828">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Text>
-      <Button fx:id="buttonR01C0" accessibleText="~" layoutX="67.0" layoutY="372.0" mnemonicParsing="false" onAction="#pressedR1C0" prefHeight="51.0" prefWidth="318.0" style="-fx-background-color: #888888ff#888888ff;" text="buttonR01C0" />
-      <Button fx:id="buttonR1C1" accessibleText="~" layoutX="489.0" layoutY="372.0" mnemonicParsing="false" onAction="#pressedR1C1" prefHeight="51.0" prefWidth="306.0" style="-fx-background-color: #888888ff#888888ff;" text="buttonR1C1" />
-      <Button fx:id="buttonR0C0" accessibleText="~" layoutX="67.0" layoutY="305.0" mnemonicParsing="false" onAction="#pressedR0C0" prefHeight="51.0" prefWidth="318.0" style="-fx-background-color: #888888ff#888888ff;" text="buttonR0C0" textAlignment="CENTER" />
-      <Button fx:id="buttonR0C1" accessibleText="~" layoutX="489.0" layoutY="305.0" mnemonicParsing="false" onAction="#pressedR0C1" prefHeight="51.0" prefWidth="306.0" style="-fx-background-color: #888888ff;" text="buttonR0C1" />
-      <ImageView fitHeight="182.0" fitWidth="255.0" layoutX="67.0" layoutY="81.0" pickOnBounds="true" preserveRatio="true" />
-      <Pane disable="true" layoutX="373.0" layoutY="243.0" prefHeight="41.0" prefWidth="129.0" style="-fx-background-color: #f2cfa4ff;">
+      <Pane layoutX="369.0" layoutY="120.0" prefHeight="80.0" prefWidth="358.0" style="-fx-background-color: #f2a443ff#f2a443ff #f2a443ff#f2a443ff;">
+         <children>
+            <Text fx:id="questionField" accessibleText="~" layoutY="-1.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Question text" textAlignment="CENTER" translateY="23.0" wrappingWidth="358.2719268798828">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <Button fx:id="buttonR01C0" accessibleText="~" layoutX="103.0" layoutY="510.0" mnemonicParsing="false" onAction="#pressedR1C0" prefHeight="51.0" prefWidth="318.0" style="-fx-background-color: #888888ff#888888ff;" text="buttonR01C0" />
+      <Button fx:id="buttonR1C1" accessibleText="~" layoutX="630.0" layoutY="510.0" mnemonicParsing="false" onAction="#pressedR1C1" prefHeight="51.0" prefWidth="306.0" style="-fx-background-color: #888888ff#888888ff;" text="buttonR1C1" />
+      <Button fx:id="buttonR0C0" accessibleText="~" layoutX="103.0" layoutY="430.0" mnemonicParsing="false" onAction="#pressedR0C0" prefHeight="51.0" prefWidth="318.0" style="-fx-background-color: #888888ff#888888ff;" text="buttonR0C0" textAlignment="CENTER" />
+      <Button fx:id="buttonR0C1" accessibleText="~" layoutX="630.0" layoutY="430.0" mnemonicParsing="false" onAction="#pressedR0C1" prefHeight="51.0" prefWidth="306.0" style="-fx-background-color: #888888ff;" text="buttonR0C1" />
+      <ImageView fx:id="questionImage" fitHeight="182.0" fitWidth="255.0" layoutX="97.0" layoutY="156.0" pickOnBounds="true" preserveRatio="true" />
+      <Pane disable="true" layoutX="460.5" layoutY="345.0" prefHeight="41.0" prefWidth="129.0" style="-fx-background-color: #f2cfa4ff;">
          <children>
             <Text fx:id="timerSpot" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="00:00" textAlignment="CENTER" wrappingWidth="129.0">
                <font>
@@ -28,16 +37,60 @@
                </font>
             </Text>
          </children></Pane>
-      <Button fx:id="eliminateJoker" layoutX="67.0" layoutY="471.0" mnemonicParsing="false" onAction="#eliminateIncorrect" prefHeight="26.0" prefWidth="222.0" style="-fx-background-color: WHITE;" text="Eliminate Wrong" />
-      <Button fx:id="timeJoker" layoutX="573.0" layoutY="471.0" mnemonicParsing="false" onAction="#activateShorterTime" prefHeight="26.0" prefWidth="222.0" style="-fx-background-color: WHITE;" text="Shorten Time" />
-      <Button fx:id="doubleJoker" layoutX="322.0" layoutY="471.0" mnemonicParsing="false" onAction="#activateDoublePoints" prefHeight="26.0" prefWidth="222.0" style="-fx-background-color: WHITE;" text="Double Points" />
-      <Button fx:id="score" layoutX="558.0" layoutY="39.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="222.0" style="-fx-background-color: WHITE;" text="LeaderBoard + Score" />
-      <Button fx:id="QuestionNumber" accessibleText="~" layoutX="326.0" layoutY="39.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="222.0" style="-fx-background-color: #3b3f46ff;" text="Question No." textFill="WHITE" />
+      <Button fx:id="eliminateJoker" layoutX="90.0" layoutY="589.0" mnemonicParsing="false" onAction="#eliminateIncorrect" prefHeight="26.0" prefWidth="222.0" style="-fx-background-color: WHITE;" text="Eliminate Wrong" />
+      <Button fx:id="timeJoker" layoutX="736.0" layoutY="589.0" mnemonicParsing="false" onAction="#activateShorterTime" prefHeight="26.0" prefWidth="222.0" style="-fx-background-color: WHITE;" text="Shorten Time" />
+      <Button fx:id="doubleJoker" layoutX="413.0" layoutY="588.0" mnemonicParsing="false" onAction="#activateDoublePoints" prefHeight="26.0" prefWidth="222.0" style="-fx-background-color: WHITE;" text="Double Points" />
+      <Button fx:id="score" layoutX="765.0" layoutY="38.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="222.0" style="-fx-background-color: WHITE;" text="LeaderBoard + Score" />
+      <Button fx:id="QuestionNumber" accessibleText="~" layoutX="413.0" layoutY="39.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="222.0" style="-fx-background-color: #3b3f46ff;" text="Question No." textFill="WHITE" />
       <Button layoutX="67.0" layoutY="39.0" mnemonicParsing="false" onAction="#backButton" onMouseClicked="#backButton" style="-fx-background-color: #888888ff#888888ff;" text="Exit Game" />
-      <TextField fx:id="answerField" alignment="CENTER" layoutX="177.0" layoutY="342.0" onKeyPressed="#keyPressed" prefHeight="61.0" prefWidth="521.0" promptText="Enter your answer" style="-fx-background-color: #888888ff;">
+      <TextField fx:id="answerField" alignment="CENTER" layoutX="263.5" layoutY="487.0" onKeyPressed="#keyPressed" prefHeight="61.0" prefWidth="521.0" promptText="Enter your answer" style="-fx-background-color: #888888ff;">
          <font>
             <Font size="16.0" />
          </font>
       </TextField>
+      <GridPane layoutX="797.0" layoutY="120.0" prefHeight="139.0" prefWidth="141.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <ImageView fx:id="happyImage" fitHeight="60.0" fitWidth="99.0" onMouseClicked="#happyClicked" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../emojis/emoji_happy.png" />
+               </image>
+               <effect>
+                  <Glow level="0.0" />
+               </effect>
+            </ImageView>
+            <ImageView fx:id="sadImage" fitHeight="60.0" fitWidth="99.0" onMouseClicked="#sadClicked" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
+               <image>
+                  <Image url="@../emojis/emoji_sad.png" />
+               </image>
+               <effect>
+                  <Glow level="0.0" />
+               </effect>
+            </ImageView>
+            <ImageView fx:id="angryImage" fitHeight="60.0" fitWidth="99.0" onMouseClicked="#angryClicked" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1">
+               <image>
+                  <Image url="@../emojis/emoji_angry.png" />
+               </image>
+               <effect>
+                  <Glow level="0.0" />
+               </effect>
+            </ImageView>
+            <ImageView fx:id="shockedImage" fitHeight="60.0" fitWidth="99.0" onMouseClicked="#shockedClicked" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <image>
+                  <Image url="@../emojis/emoji_shocked.png" />
+               </image>
+               <effect>
+                  <Glow level="0.0" />
+               </effect>
+            </ImageView>
+         </children>
+      </GridPane>
    </children>
 </AnchorPane>

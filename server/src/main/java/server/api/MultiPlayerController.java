@@ -1,10 +1,8 @@
 package server.api;
 
-import commons.Emoji;
-import commons.MultiGame;
-import commons.Player;
-import commons.Activity;
-import commons.Question;
+//CHECKSTYLE:OFF
+import commons.*;
+//CHECKSTYLE:ON
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +13,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import server.database.ActivityRepository;
 //CHECKSTYLE:OFF
@@ -79,6 +78,11 @@ public class MultiPlayerController {
 
         return currentLobbyGame;
     }
+    @GetMapping("multi/{id}")
+    public Question getImage(@PathVariable("id") int id) {
+        System.out.println(games.get(id).getCurrentQuestion().getQuestionImage());
+        return games.get(id).getCurrentQuestion();
+    }
 
     /**
      * Starts the game and creates a new lobby.
@@ -88,6 +92,7 @@ public class MultiPlayerController {
     @SendTo("/topic/started")
     public MultiGame startGame() {
         Question question = getQuestion();
+        Question cutQuestion = question.QuestionWithoutImage();
         MultiGame started = currentLobbyGame;
         started.setCurrentQuestion(question);
         this.id++;
@@ -97,15 +102,15 @@ public class MultiPlayerController {
         // We increment it for every response, and reset it when needed.
         allPlayersResponded.add(0);
         games.add(started);
-        currentPlayerCount.add(started.getPlayers().size());
-        lobbyTimers.add(null);
-        controlPlayerResponse(started);
-        return started;
+        MultiGame gameWithoutQuestion = started.copy();
+        gameWithoutQuestion.setCurrentQuestion(cutQuestion);
+        return gameWithoutQuestion;
     }
 
-    /**
-     * Gets a question by generating 4 random activities from the server/
-     * @return a random Question
+
+
+    /**NEEDS REFACTORING: only TEMP.
+     * @return
      */
     public Question getQuestion() {
         // Can't create a question if there aren't enough activities
@@ -174,17 +179,17 @@ public class MultiPlayerController {
         // Controls the responses, that players made.
         allPlayersResponded.set(game.getId(), allPlayersResponded.get(game.getId()) + 1);
 
-        if (currentPlayerCount.get(game.getId()) <= allPlayersResponded.get(game.getId())){
-            lobbyTimers.get(game.getId()).cancel();
-            game.setCurrentQuestion(getQuestion());
+        if (game.getPlayers().size() <= allPlayersResponded.get(game.getId())){
+            Question question = getQuestion();
+            Question cutQuestion = question.QuestionWithoutImage();
+            game.setCurrentQuestion(question);
             game.setQuestionNumber(game.getQuestionNumber() + 1);
             System.out.println(game.getCurrentQuestion());
-            allPlayersResponded.set(game.getId(), 0);
             System.out.println("Response for game " + gameId + " send!");
-            if(currentPlayerCount.get(game.getId()) > 0) {
-                controlPlayerResponse(game);
-            }
-            this.template.convertAndSend("/topic/multi/gameplay/" + gameId, game);
+            allPlayersResponded.set(game.getId(), 0);
+            MultiGame gameWithoutQuestion = game.copy();
+            gameWithoutQuestion.setCurrentQuestion(cutQuestion);
+            return gameWithoutQuestion;
         }
         return null;
     }
@@ -246,16 +251,10 @@ public class MultiPlayerController {
         return game;
     }
 
-
-    /**
-     * Will send the type of the emoji to the right lobby.
-     * @param type the String representing which type of emoji is sent
-     * @param emoji the actual emoji that was sent
-     * @return the emoji
-     */
-    @MessageMapping("/multi/emoji/{type}")
-    @SendTo("/topic/multi/emoji/{type}")
-    public Emoji emojiHandler(@DestinationVariable String type, Emoji emoji){
+    @MessageMapping("/multi/emoji/{gameId}/{type}")
+    @SendTo("/topic/multi/emoji/{gameId}/{type}")
+    public Emoji emojiHandler(@DestinationVariable String gameId, @DestinationVariable String type, Emoji emoji){
+        System.out.println("Emoji sent");
         return emoji;
     }
 

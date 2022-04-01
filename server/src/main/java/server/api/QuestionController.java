@@ -45,6 +45,7 @@ public class QuestionController {
         // This is a workaround for the id generation that isn't consistent
         // This works now but will be slow in the future, so we need to research better id assignment.
         List<Activity> currentRepo = repo.findAll();
+
         // Collects the 4 activities needed for a question
         for (int i = 0; i < 4; i++) {
 

@@ -10,8 +10,8 @@ public class CompareQuestion extends Question {
      * @param answers The answers for this question, index 0 is the correct one.
      * @param wattage The wattage's for this question, index 0 is the correct one.
      */
-    public CompareQuestion(String[] answers, long[] wattage) {
-        super(answers, wattage);
+    public CompareQuestion(String[] answers, long[] wattage, byte[] questionImage) {
+        super(answers, wattage, questionImage);
     }
 
     /**

@@ -125,6 +125,14 @@ public class ServerUtils {
                 .get(new GenericType<List<Score>>() {});
     }
 
+    public Question getImage(int Id) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/multi/" + Id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<Question>() {});
+    }
+
 
     public static void setSession(String wsAddress) {
         session = connect("ws://" + wsAddress + "/websocket");

@@ -3,6 +3,9 @@ package commons;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -14,12 +17,20 @@ class SingleGameTest {
     Player player;
     WattageQuestion question;
 
+    byte[] test_image;
+
     @BeforeEach
     void setUp(){
+        System.out.println("loading tests!");
+        try {
+            test_image = new FileInputStream("src/test/resources/images/test_image.jpg").readAllBytes();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         player = new Player("Jim");
         String[] answerTitles = {"a", "b", "c", "d"};
         long[] wattages = {1, 2, 3, 4};
-        question = new WattageQuestion(answerTitles, wattages);
+        question = new WattageQuestion(answerTitles, wattages, test_image);
         game1 = new SingleGame(player, question);
         game2 = new SingleGame(player, question);
     }
@@ -55,7 +66,7 @@ class SingleGameTest {
     void setCurrentQuestion() {
         String[] strings = {"e", "f", "g", "h"};
         long[] wattages = {1, 55, 100, 77};
-        WattageQuestion question1 = new WattageQuestion(strings, wattages);
+        WattageQuestion question1 = new WattageQuestion(strings, wattages, test_image);
         game1.setCurrentQuestion(question1);
         assertEquals(question1, game1.getCurrentQuestion());
     }
@@ -82,7 +93,7 @@ class SingleGameTest {
     void testInequality2(){
         String[] strings = {"e", "f", "g", "h"};
         long[] wattages = {1, 55, 100, 77};
-        WattageQuestion question1 = new WattageQuestion(strings, wattages);
+        WattageQuestion question1 = new WattageQuestion(strings, wattages, test_image);
         game1.setCurrentQuestion(question1);
         assertNotEquals(game1, game2);
     }
@@ -96,7 +107,7 @@ class SingleGameTest {
     void testHashCode2(){
         String[] strings = {"e", "f", "g", "h"};
         long[] wattages = {1, 55, 100, 77};
-        WattageQuestion question1 = new WattageQuestion(strings, wattages);
+        WattageQuestion question1 = new WattageQuestion(strings, wattages, test_image);
         game1.setCurrentQuestion(question1);
         assertNotEquals(game1.hashCode(), game2.hashCode());
     }
@@ -112,7 +123,7 @@ class SingleGameTest {
     void testNextQuestion(){
         String[] strings = {"e", "f", "g", "h"};
         long[] wattages = {1, 55, 100, 77};
-        WattageQuestion question1 = new WattageQuestion(strings, wattages);
+        WattageQuestion question1 = new WattageQuestion(strings, wattages, test_image);
         game1.nextQuestion(question1);
         assertTrue(game1.getQuestionNumber() == 2 && game1.getCurrentQuestion().equals(question1));
     }
