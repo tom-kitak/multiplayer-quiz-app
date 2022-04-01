@@ -22,7 +22,8 @@ public class Score {
     public Score() {
     }
 
-    /**Creates a new Score object.
+    /**
+     * Creates a new Score object.
      * @param score the integer we assign to the Score field
      * @param name the String we assign to the Name field
      */
@@ -39,7 +40,8 @@ public class Score {
     }
 
 
-    /**Sets the id of this Score.
+    /**
+     * Sets the id of this Score.
      * @param id the id we want to assign
      */
     public void setId(long id) {
@@ -54,7 +56,8 @@ public class Score {
         return score;
     }
 
-    /**Sets the score of this Score.
+    /**
+     * Sets the score of this Score.
      * @param score the integer we want to set as new score
      */
     public void setScore(int score) {
@@ -69,14 +72,16 @@ public class Score {
         return name;
     }
 
-    /**Sets the name of this Score.
+    /**
+     * Sets the name of this Score.
      * @param name the name we want to set
      */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**Compares o and this Score for equality.
+    /**
+     * Compares o and this Score for equality.
      * @param o the object we check with for equality
      * @return true iff o is a Score object and has the same id,
      * score and username
