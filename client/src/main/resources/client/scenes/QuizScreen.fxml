@@ -15,7 +15,7 @@
 
 <AnchorPane fx:id="timerField" prefHeight="664.0" prefWidth="1048.0" style="-fx-background-color: #3b3f46ff#3b3f46ff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.QuizScreenCtrl">
    <children>
-      <Pane layoutX="369.0" layoutY="120.0" prefHeight="80.0" prefWidth="358.0" style="-fx-background-color: #f2a443ff#f2a443ff #f2a443ff#f2a443ff;">
+      <Pane layoutX="369.0" layoutY="120.0" prefHeight="110.0" prefWidth="358.0" style="-fx-background-color: #f2a443ff#f2a443ff #f2a443ff#f2a443ff;">
          <children>
             <Text fx:id="questionField" accessibleText="~" layoutY="-1.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Question text" textAlignment="CENTER" translateY="23.0" wrappingWidth="358.2719268798828">
                <font>
@@ -24,7 +24,7 @@
             </Text>
          </children>
       </Pane>
-      <Button fx:id="buttonR01C0" accessibleText="~" layoutX="103.0" layoutY="510.0" mnemonicParsing="false" onAction="#pressedR1C0" prefHeight="51.0" prefWidth="318.0" style="-fx-background-color: #888888ff#888888ff;" text="buttonR01C0" />
+      <Button fx:id="buttonR1C0" accessibleText="~" layoutX="103.0" layoutY="510.0" mnemonicParsing="false" onAction="#pressedR1C0" prefHeight="51.0" prefWidth="318.0" style="-fx-background-color: #888888ff#888888ff;" text="buttonR01C0" />
       <Button fx:id="buttonR1C1" accessibleText="~" layoutX="630.0" layoutY="510.0" mnemonicParsing="false" onAction="#pressedR1C1" prefHeight="51.0" prefWidth="306.0" style="-fx-background-color: #888888ff#888888ff;" text="buttonR1C1" />
       <Button fx:id="buttonR0C0" accessibleText="~" layoutX="103.0" layoutY="430.0" mnemonicParsing="false" onAction="#pressedR0C0" prefHeight="51.0" prefWidth="318.0" style="-fx-background-color: #888888ff#888888ff;" text="buttonR0C0" textAlignment="CENTER" />
       <Button fx:id="buttonR0C1" accessibleText="~" layoutX="630.0" layoutY="430.0" mnemonicParsing="false" onAction="#pressedR0C1" prefHeight="51.0" prefWidth="306.0" style="-fx-background-color: #888888ff;" text="buttonR0C1" />

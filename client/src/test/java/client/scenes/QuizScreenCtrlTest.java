@@ -17,11 +17,10 @@ class QuizScreenCtrlTest {
 
     @Test
     void convertTimer() {
-        assertEquals("00:00", ctrl.convertTimer(0));
-        assertEquals("00:05", ctrl.convertTimer(5));
-        assertEquals("00:15", ctrl.convertTimer(15));
-        assertEquals("01:00", ctrl.convertTimer(60));
-        assertEquals("12:34", ctrl.convertTimer(754));
+        assertEquals("00:00", ctrl.convertTimer(0, 0));
+        assertEquals("00:05", ctrl.convertTimer(0, 5));
+        assertEquals("01:00", ctrl.convertTimer(1, 0));
+        assertEquals("12:34", ctrl.convertTimer(12, 34));
     }
 
     @Test
