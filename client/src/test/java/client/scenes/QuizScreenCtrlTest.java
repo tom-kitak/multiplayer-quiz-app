@@ -35,6 +35,31 @@ class QuizScreenCtrlTest {
         assertTrue(index>=0&&index<=0);
     }
 
+    @Test
+    void testInRangeForOpenQuestion(){
+        long correct = 1000;
+        long answer = 501;
+        assertTrue(ctrl.inRangeForOpenQuestion(answer, correct));
+    }
+
+    @Test
+    void testInRangeForOpenQuestion2(){
+        long correct = 5;
+        long answer = 2;
+        assertTrue(!ctrl.inRangeForOpenQuestion(answer, correct));
+    }
+
+    @Test
+    void testInRangeForOpenQuestion3(){
+        assertTrue(ctrl.inRangeForOpenQuestion(4000, 3500));
+    }
+
+    @Test
+    void testCalculateScoreOpenQuestion(){
+        long correct = 1000;
+        long answer = 1400;
+    }
+
 
 
 }
