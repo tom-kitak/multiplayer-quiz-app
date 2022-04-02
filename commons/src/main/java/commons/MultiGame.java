@@ -103,4 +103,12 @@ public class MultiGame extends Game{
                 +"\ncurrentQuestion: " + this.getCurrentQuestion()
                 +"\nid: "+ this.id;
     }
+
+    public MultiGame copy() {
+        MultiGame result = new MultiGame(getCurrentQuestion());
+        result.setId(getId());
+        result.setQuestionNumber(getQuestionNumber());
+        result.setPlayers(getPlayers());
+        return result;
+    }
 }

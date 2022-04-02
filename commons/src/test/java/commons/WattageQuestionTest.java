@@ -4,8 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
-import java.util.Arrays;
+import java.io.FileInputStream;
+import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -15,13 +17,31 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class WattageQuestionTest {
     WattageQuestion question1;
     WattageQuestion question2;
+    byte[] test_image;
+
+    public WattageQuestionTest() {
+        System.out.println("loading tests!");
+        try {
+            test_image = new FileInputStream("src/test/resources/images/test_image.jpg").readAllBytes();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @BeforeEach
     void setUp() {
         String[] answerTitles = {"a", "b", "c", "d"};
         long[] wattages = {1, 2, 3, 4};
-        question1 = new WattageQuestion(answerTitles, wattages);
-        question2 = new WattageQuestion(answerTitles, wattages);
+        question1 = new WattageQuestion(answerTitles, wattages, test_image);
+        question2 = new WattageQuestion(answerTitles, wattages, test_image);
+        try {
+            test_image = new FileInputStream("resources/images/test_image.jpg").readAllBytes();
+            System.out.println("image loaded!");
+        } catch (IOException e) {
+            System.out.println("image load failed!");
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -32,7 +52,7 @@ public class WattageQuestionTest {
     @Test
     void testConstructorError1() {
         assertThrows(IllegalArgumentException.class, () -> {
-            WattageQuestion question = new WattageQuestion(null, null);
+            WattageQuestion question = new WattageQuestion(null, null, test_image);
         });
     }
 
@@ -40,7 +60,7 @@ public class WattageQuestionTest {
     void testConstructorError2() {
         assertThrows(IllegalArgumentException.class, () -> {
             WattageQuestion question = new WattageQuestion(new String[]{"ff", "gd", "ffd", "ljk"},
-                    null);
+                    null, test_image);
         });
     }
 
@@ -48,7 +68,7 @@ public class WattageQuestionTest {
     void testConstructorError3() {
         assertThrows(IllegalArgumentException.class, () -> {
             WattageQuestion question = new WattageQuestion(null,
-                    new long[]{55, 66, 88, 99});
+                    new long[]{55, 66, 88, 99}, test_image);
         });
     }
 
@@ -56,7 +76,7 @@ public class WattageQuestionTest {
     void testConstructorError_4() {
         assertThrows(IllegalArgumentException.class, () -> {
             CompareQuestion question = new CompareQuestion(new String[]{"a", "b", "c", "d", "d"},
-                    new long[]{2, 2, 2, 2});
+                    new long[]{2, 2, 2, 2}, test_image);
         });
     }
 
@@ -64,20 +84,20 @@ public class WattageQuestionTest {
     void testConstructorError_5() {
         assertThrows(IllegalArgumentException.class, () -> {
             CompareQuestion question = new CompareQuestion(new String[]{"x", "x", "x", "x"},
-                    new long[]{544, 44, 55});
+                    new long[]{544, 44, 55}, test_image);
         });
     }
 
     @Test
     void testGetAnswerTitles(){
         String[] test = {"a", "b", "c", "d"};
-        assertTrue(Arrays.equals(test, question2.getAnswerTitles()));
+        assertArrayEquals(test, question2.getAnswerTitles());
     }
 
     @Test
     void testGetAnswerWattages(){
         long[] test = {1, 2, 3, 4};
-        assertTrue(Arrays.equals(test, question2.getAnswerWattages()));
+        assertArrayEquals(test, question2.getAnswerWattages());
     }
 
     @Test
@@ -103,21 +123,21 @@ public class WattageQuestionTest {
     @Test
     void testInequality1(){
         WattageQuestion question = new WattageQuestion(new String[]
-                {"a", "a", "c", "d"}, new long[] {1, 2, 3, 4});
+                {"a", "a", "c", "d"}, new long[] {1, 2, 3, 4}, test_image);
         assertNotEquals(question, question1);
     }
 
     @Test
     void testInequality2(){
         WattageQuestion question = new WattageQuestion(new String[]
-                {"a", "b", "c", "d"}, new long[] {1, 1, 3, 4});
+                {"a", "b", "c", "d"}, new long[] {1, 1, 3, 4}, test_image);
         assertNotEquals(question, question1);
     }
 
     @Test
     void testInequality(){
         CompareQuestion question = new CompareQuestion(new String[]{"x", "x", "x", "x"},
-                new long[]{2, 2, 2, 2});
+                new long[]{2, 2, 2, 2}, test_image);
         assertNotEquals(question, question1);
     }
 
@@ -129,7 +149,7 @@ public class WattageQuestionTest {
     @Test
     void testDifferentHashCodes(){
         CompareQuestion question = new CompareQuestion(new String[]{"x", "x", "x", "x"},
-                new long[]{2, 2, 2, 2});
+                new long[]{2, 2, 2, 2}, test_image);
         assertNotEquals(question.hashCode(), question1.hashCode());
     }
 

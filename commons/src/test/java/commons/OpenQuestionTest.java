@@ -3,6 +3,9 @@ package commons;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -12,10 +15,17 @@ class OpenQuestionTest {
     long[] wattages = {1, 2, 3, 4};
     String[] descr = {"a", "b", "c", "d"};
     OpenQuestion openQuestion;
+    byte[] test_image;
 
     @BeforeEach
     void setUp(){
-        openQuestion = new OpenQuestion(descr, wattages);
+        System.out.println("loading tests!");
+        try {
+            test_image = new FileInputStream("src/test/resources/images/test_image.jpg").readAllBytes();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        openQuestion = new OpenQuestion(descr, wattages, test_image);
 
     }
 
@@ -26,7 +36,7 @@ class OpenQuestionTest {
 
     @Test
     void testEquals() {
-        OpenQuestion openQuestion2 = new OpenQuestion(descr, wattages);
+        OpenQuestion openQuestion2 = new OpenQuestion(descr, wattages, test_image);
         assertEquals(openQuestion2, openQuestion);
     }
 
@@ -37,14 +47,14 @@ class OpenQuestionTest {
     @Test
     void testInEquality1(){
         long[] diff = {1, 2, 3, 5};
-        OpenQuestion openQuestion1 = new OpenQuestion(descr, diff);
+        OpenQuestion openQuestion1 = new OpenQuestion(descr, diff, test_image);
         assertNotEquals(openQuestion1, openQuestion);
     }
 
     @Test
     void testInEquality2(){
         String[] diff = {"a", "b", "d", "e"};
-        OpenQuestion openQuestion1 = new OpenQuestion(diff, wattages);
+        OpenQuestion openQuestion1 = new OpenQuestion(diff, wattages, test_image);
         assertNotEquals(openQuestion1, openQuestion);
     }
 
@@ -63,21 +73,21 @@ class OpenQuestionTest {
 
     @Test
     void testHashCode() {
-        OpenQuestion openQuestion1 = new OpenQuestion(descr, wattages);
+        OpenQuestion openQuestion1 = new OpenQuestion(descr, wattages, test_image);
         assertEquals(openQuestion.hashCode(), openQuestion1.hashCode());
     }
 
     @Test
     void testDifferentHashCodes(){
         String[] diff = {"a", "b", "d", "e"};
-        OpenQuestion openQuestion1 = new OpenQuestion(diff, wattages);
+        OpenQuestion openQuestion1 = new OpenQuestion(diff, wattages, test_image);
         assertNotEquals(openQuestion1.hashCode(), openQuestion.hashCode());
     }
 
     @Test
     void testDifferentHashCodes2(){
         long[] diff = {1, 2, 3, 5};
-        OpenQuestion openQuestion1 = new OpenQuestion(descr, diff);
+        OpenQuestion openQuestion1 = new OpenQuestion(descr, diff, test_image);
         assertNotEquals(openQuestion1.hashCode(), openQuestion.hashCode());
     }
 

@@ -24,7 +24,7 @@ public class QuestionConversion {
             if (!createTitlesAndWattages(activities,titles,wattages)) {
                 return null;
             }
-            result = getRandomQuestion(titles, wattages);
+            result = getRandomQuestion(titles, wattages, activities[0].getImage());
         }
         return result;
     }
@@ -35,15 +35,15 @@ public class QuestionConversion {
      * @param wattages the wattages to use for the question.
      * @return A new question.
      */
-    private static Question getRandomQuestion(String[] titles, long[] wattages) {
+    private static Question getRandomQuestion(String[] titles, long[] wattages, byte[] image) {
         random = new Random();
         //bound is amount of types of questions.
         int idx = random.nextInt(3);
         //for each type of question add a new case.
         return switch (idx) {
-            case 0 -> new CompareQuestion(titles, wattages);
-            case 1 -> new WattageQuestion(titles, wattages);
-            case 2 -> new OpenQuestion(titles, wattages);
+            case 0 -> new CompareQuestion(titles, wattages, image);
+            case 1 -> new WattageQuestion(titles, wattages, image);
+            case 2 -> new OpenQuestion(titles, wattages, image);
             default -> throw new IllegalStateException("Unexpected value: " + idx);
         };
     }
