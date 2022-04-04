@@ -49,7 +49,8 @@ public class QuizScreenCtrl implements Initializable {
     private Game game;
     private boolean answeredCorrectly;
     // Default value can be changed later
-    private final int roundTime = 15;
+    private final int roundTime = 10;
+    private int centiseconds = 0;
     private Timeline timeline;
     private int timeLeft;
     private TimerTask roundTask;
@@ -59,7 +60,7 @@ public class QuizScreenCtrl implements Initializable {
     private int scoreForOpenQuestion = 0;
 
     @FXML
-    private Button buttonR01C0;
+    private Button buttonR1C0;
 
     @FXML
     private Button buttonR0C0;
@@ -159,8 +160,7 @@ public class QuizScreenCtrl implements Initializable {
      */
     @FXML
     void pressedR0C0() {
-        showRightAnswer(buttonR0C0);
-        waitingToSeeAnswers();
+        buttonClicked(buttonR0C0);
     }
 
     /**
@@ -168,8 +168,7 @@ public class QuizScreenCtrl implements Initializable {
      */
     @FXML
     void pressedR0C1() {
-        showRightAnswer(buttonR0C1);
-        waitingToSeeAnswers();
+        buttonClicked(buttonR0C1);
     }
 
 
@@ -178,8 +177,7 @@ public class QuizScreenCtrl implements Initializable {
      */
     @FXML
     void pressedR1C0() {
-        showRightAnswer(buttonR01C0);
-        waitingToSeeAnswers();
+        buttonClicked(buttonR1C0);
     }
 
     /**
@@ -187,8 +185,99 @@ public class QuizScreenCtrl implements Initializable {
      */
     @FXML
     void pressedR1C1() {
-        showRightAnswer(buttonR1C1);
+        buttonClicked(buttonR1C1);
+    }
+
+
+    /**
+     * Method that manages answer button clicks.
+     * @param button
+     */
+    public void buttonClicked(Button button) {
+        showRightAnswer(button);
         waitingToSeeAnswers();
+    }
+
+    public void resetScreen() {
+        // Resetting buttons.
+        buttonR0C1.setVisible(true);
+        buttonR0C1.setDisable(false);
+        buttonR0C0.setVisible(true);
+        buttonR0C0.setDisable(false);
+        buttonR1C0.setVisible(true);
+        buttonR1C0.setDisable(false);
+        buttonR1C1.setVisible(true);
+        buttonR1C1.setDisable(false);
+        // Reset emojis
+        happyImage.setDisable(false);
+        happyImage.setVisible(true);
+        sadImage.setDisable(false);
+        sadImage.setVisible(true);
+        angryImage.setDisable(false);
+        angryImage.setVisible(true);
+        shockedImage.setDisable(false);
+        shockedImage.setVisible(true);
+        // Reset Open Question
+        answerField.setDisable(false);
+        answerField.setVisible(true);
+        // Reset the jokers
+        timeJoker.setDisable(false);
+        timeJoker.setVisible(true);
+        eliminateJoker.setDisable(false);
+        eliminateJoker.setVisible(true);
+        doubleJoker.setDisable(false);
+        doubleJoker.setVisible(true);
+        eliminateUsed = false;
+        roundTask.cancel();
+        timer.cancel();
+    }
+
+    public void showRightAnswer() {
+        if(game.getCurrentQuestion() instanceof CompareQuestion) {
+            String correct = game.getCurrentQuestion().getCorrectAnswer();
+            if(buttonR0C0.getText().equals(correct)) {
+                rightColor(buttonR0C0);
+            } else if(buttonR0C1.getText().equals(correct)) {
+                rightColor(buttonR0C1);
+            } else if(buttonR1C0.getText().equals(correct)) {
+                rightColor(buttonR1C0);
+            } else if(buttonR1C1.getText().equals(correct)) {
+                rightColor(buttonR1C1);
+            }
+        } else if(game.getCurrentQuestion() instanceof  WattageQuestion){
+            long correct = game.getCurrentQuestion().getCorrectWattage();
+            if(Long.parseLong(buttonR0C0.getText()) == correct) {
+                rightColor(buttonR0C0);
+            } else if(Long.parseLong(buttonR0C1.getText()) == correct) {
+                rightColor(buttonR0C1);
+            } else if(Long.parseLong(buttonR1C0.getText()) == correct) {
+                rightColor(buttonR1C0);
+            } else if(Long.parseLong(buttonR1C1.getText()) == correct) {
+                rightColor(buttonR1C1);
+            }
+        } else openQuestionColoring();
+    }
+
+    void firstQuestionSetup(Game game) {
+        setQuestionFields(game);
+        if(game instanceof SingleGame) {
+            // We disable the time joker, which is unusable in single.
+            timeJoker.setVisible(false);
+            timeJoker.setDisable(true);
+            // We disable the emojis, which are unusable in single.
+            happyImage.setDisable(true);
+            happyImage.setVisible(false);
+            sadImage.setDisable(true);
+            sadImage.setVisible(false);
+            angryImage.setDisable(true);
+            angryImage.setVisible(false);
+            shockedImage.setDisable(true);
+            shockedImage.setVisible(false);
+        }
+        if(game.getCurrentQuestion() instanceof OpenQuestion) {
+            eliminateJoker.setVisible(false);
+            eliminateJoker.setDisable(true);
+        }
     }
 
     /**
@@ -197,11 +286,7 @@ public class QuizScreenCtrl implements Initializable {
     @FXML
     void backButton(){
         boolean answer = ConfirmBoxCtrl.display("Alert", "Are you sure you want to exit the game session?");
-        roundTask.cancel();
-        timer.cancel();
-        initializeButtons();
-        eliminateJoker.setVisible(true);
-        eliminateJoker.setDisable(false);
+        resetScreen();
         if(answer) mainCtrl.showHomeScreen();
     }
 
@@ -240,7 +325,7 @@ public class QuizScreenCtrl implements Initializable {
         buttonR0C0.setVisible(false);
         buttonR0C1.setVisible(false);
         buttonR1C1.setVisible(false);
-        buttonR01C0.setVisible(false);
+        buttonR1C0.setVisible(false);
         eliminateJoker.setDisable(true);
         eliminateJoker.setVisible(false);
     }
@@ -278,11 +363,13 @@ public class QuizScreenCtrl implements Initializable {
      */
     public void setCompareQuestionFields(CompareQuestion question) {
         questionField.setText(question.getQuestionDescription());
+        answerField.setDisable(true);
+        answerField.setVisible(false);
         //creates a list of the buttons
         ArrayList<Button> buttons = new ArrayList<>(4);
         buttons.add(buttonR0C0);
         buttons.add(buttonR0C1);
-        buttons.add(buttonR01C0);
+        buttons.add(buttonR1C0);
         buttons.add(buttonR1C1);
         //make a list of all the answers
         ArrayList<String> answers = new ArrayList<>(4);
@@ -305,11 +392,13 @@ public class QuizScreenCtrl implements Initializable {
      */
     public void setWattageQuestionFields(WattageQuestion wattageQuestion) {
         questionField.setText(wattageQuestion.getQuestionDescription());
+        answerField.setVisible(false);
+        answerField.setDisable(true);
         //makes an ArrayList of all the buttons
         ArrayList<Button> buttons = new ArrayList<>(4);
         buttons.add(buttonR0C0);
         buttons.add(buttonR0C1);
-        buttons.add(buttonR01C0);
+        buttons.add(buttonR1C0);
         buttons.add(buttonR1C1);
         //make an ArrayList of all the answers
         ArrayList<Long> answers = new ArrayList<>(4);
@@ -345,20 +434,9 @@ public class QuizScreenCtrl implements Initializable {
      */
     public void startGame(Game game){
         this.game = game;
-        setQuestionFields(game);
-        startRoundTimer();
         timeLeft = roundTime;
-        timeJoker.setVisible(false);
-        timeJoker.setDisable(true);
-        doubleJoker.setVisible(true);
-        doubleJoker.setDisable(false);
-        if((game.getCurrentQuestion() instanceof OpenQuestion)) {
-            eliminateJoker.setVisible(false);
-            eliminateJoker.setDisable(true);
-        }
+        firstQuestionSetup(game);
         if(game instanceof MultiGame) {
-            timeJoker.setVisible(true);
-            timeJoker.setDisable(false);
             ServerUtils.registerForMessages("/topic/multi/gameplay/" + ((MultiGame) game).getId(), MultiGame.class, retGame -> {
                 if(retGame != null) {
                     this.game = retGame;
@@ -379,9 +457,11 @@ public class QuizScreenCtrl implements Initializable {
                                 players.add(score);
                                 server.addScore(score);
                             }
+                            resetScreen();
                             mainCtrl.showEndScreen(true, players);
                         } else {
                             setQuestionFields(retGame);
+                            initializeButtons();
                             startRoundTimer();
                         }
                     });
@@ -393,6 +473,7 @@ public class QuizScreenCtrl implements Initializable {
             });
             subscribeToEmojis(game);
         }
+        startRoundTimer();
     }
 
     /**
@@ -424,41 +505,52 @@ public class QuizScreenCtrl implements Initializable {
     public void startRoundTimer(){
         Timer roundTimer = new Timer();
         timeLeft = roundTime;
-        timerSpot.setText(convertTimer(timeLeft));
+        centiseconds = 0;
+        timerSpot.setText(convertTimer(timeLeft, centiseconds));
         // If someone wants to stop the timer, they have to use roundTask.cancel().
         roundTask = new TimerTask() {
             @Override
             public void run() {
                 Platform.runLater( () -> {
-                    timerSpot.setText(convertTimer(timeLeft--));
-                    if(timeLeft < 0) {
+                    centiseconds--;
+                    if(centiseconds < 0) {
+                        timeLeft--;
+                        centiseconds = 99;
+                    }
+                    timerSpot.setText(convertTimer(timeLeft, centiseconds));
+                    if(centiseconds == 0 && timeLeft == 0) {
                         this.cancel();
                         waitingToSeeAnswers();
                     }
                 });
             }
         };
-        roundTimer.scheduleAtFixedRate(roundTask, 1, 1000);
+        roundTimer.scheduleAtFixedRate(roundTask, 1, 10);
     }
 
 
     /**
      * Converts the time in seconds to the displayed String.
-     * @param time remaining time in seconds
+     * @param seconds remaining time in seconds
+     * @param centiseconds remaining centiseconds
      * @return a string in the minutes:seconds format with
      *  leading zeroes if required
      */
-    public String convertTimer(int time) {
+    public String convertTimer(int seconds, int centiseconds) {
         StringBuilder resultingTime = new StringBuilder();
-        if(time < 600) {
+        if(seconds < 10) {
             resultingTime.append(0);
         }
-        resultingTime.append(time / 60);
+        resultingTime.append(seconds);
         resultingTime.append(":");
-        if(time % 60 < 10) {
+        if(centiseconds < 10) {
             resultingTime.append(0);
         }
-        resultingTime.append(time % 60);
+        if(centiseconds >= 100) {
+            resultingTime.append(centiseconds % 100);
+        } else {
+            resultingTime.append(centiseconds);
+        }
         return resultingTime.toString();
     }
 
@@ -484,10 +576,6 @@ public class QuizScreenCtrl implements Initializable {
      */
     private void openShowRightAnswer(OpenQuestion question) {
         long correct = game.getCurrentQuestion().getCorrectWattage();
-        if(!eliminateUsed) {
-            eliminateJoker.setVisible(true);
-            eliminateJoker.setDisable(false);
-        }
         if(answerField.getText() == null)
             answerField.setStyle("-fx-background-color: #916868ff ");
         else {
@@ -557,8 +645,8 @@ public class QuizScreenCtrl implements Initializable {
             rightColor(buttonR0C0);
         if(buttonR0C1.getText().equals(correct))
             rightColor(buttonR0C1);
-        if(buttonR01C0.getText().equals(correct))
-            rightColor(buttonR01C0);
+        if(buttonR1C0.getText().equals(correct))
+            rightColor(buttonR1C0);
         if(buttonR1C1.getText().equals(correct))
             rightColor(buttonR1C1);
         if(button != null){
@@ -582,8 +670,8 @@ public class QuizScreenCtrl implements Initializable {
     public void wattageShowRightAnswer(Button button, WattageQuestion question) {
         if(Long.parseLong(buttonR1C1.getText()) == question.getRightAnswer())
             rightColor(buttonR1C1);
-        if(Long.parseLong(buttonR01C0.getText()) == question.getRightAnswer())
-            rightColor(buttonR01C0);
+        if(Long.parseLong(buttonR1C0.getText()) == question.getRightAnswer())
+            rightColor(buttonR1C0);
         if(Long.parseLong(buttonR0C1.getText()) == question.getRightAnswer())
             rightColor(buttonR0C1);
         if(Long.parseLong(buttonR0C0.getText()) == question.getRightAnswer())
@@ -631,50 +719,27 @@ public class QuizScreenCtrl implements Initializable {
         seconds[0] = 0;
         roundTask.cancel();
         if(timeLeft <= 0) {
-            if(game.getCurrentQuestion() instanceof CompareQuestion) {
-                String correct = game.getCurrentQuestion().getCorrectAnswer();
-                if(buttonR0C0.getText().equals(correct)) {
-                    rightColor(buttonR0C0);
-                } else if(buttonR0C1.getText().equals(correct)) {
-                    rightColor(buttonR0C1);
-                } else if(buttonR01C0.getText().equals(correct)) {
-                    rightColor(buttonR01C0);
-                } else if(buttonR1C1.getText().equals(correct)) {
-                    rightColor(buttonR1C1);
-                }
-            } else if(game.getCurrentQuestion() instanceof  WattageQuestion){
-                long correct = game.getCurrentQuestion().getCorrectWattage();
-                if(Long.parseLong(buttonR0C0.getText()) == correct) {
-                    rightColor(buttonR0C0);
-                } else if(Long.parseLong(buttonR0C1.getText()) == correct) {
-                    rightColor(buttonR0C1);
-                } else if(Long.parseLong(buttonR01C0.getText()) == correct) {
-                    rightColor(buttonR01C0);
-                } else if(Long.parseLong(buttonR1C1.getText()) == correct) {
-                    rightColor(buttonR1C1);
-                }
-            } else openQuestionColoring();
+            showRightAnswer();
         }
-        TimerTask task = new TimerTask() {
+        disableAll();
+        TimerTask answerTimeTask = new TimerTask() {
             @Override
             public void run() {
                 if(seconds[0] < 3) {
                     seconds[0]++;
-                    disableAll();
                 }
                 else {
                     timer.cancel();
                     Platform.runLater( () -> {
-                        answerField.setVisible(false);
-                        answerField.setDisable(true);
                         updateScore();
-                        initializeButtons();
                         if(game instanceof SingleGame) {
                             setNextQuestion();
+                            initializeButtons();
                             startRoundTimer();
                         } else {
                             // When the answer has been shown, send the response.
                             MultiGame gameForServer = ((MultiGame) game).copy();
+                            // We have to cut the image from the game, to send it back to the server.
                             gameForServer.setCurrentQuestion(game.getCurrentQuestion().QuestionWithoutImage());
                             ServerUtils.send("/app/multi/gameplay/" + ((MultiGame) game).getId(),
                                     gameForServer);
@@ -684,19 +749,16 @@ public class QuizScreenCtrl implements Initializable {
                 }
             }
         };
-        timer.scheduleAtFixedRate(task, 0, 1000);
+        timer.scheduleAtFixedRate(answerTimeTask, 0, 1000);
     }
 
     /**
      * The addition of waitingToSeeAnswers for open questions.
      */
     public void openQuestionColoring(){
-        answerField.setStyle("-fx-background-color: #916868ff ");
+        answerField.setStyle("-fx-background-color: #f2a443ff;");
         answerField.setText("Correct answer : " + game.getCurrentQuestion().getCorrectWattage());
-        if(!eliminateUsed) {
-            eliminateJoker.setVisible(true);
-            eliminateJoker.setDisable(false);
-        }
+
     }
 
     /**
@@ -752,8 +814,8 @@ public class QuizScreenCtrl implements Initializable {
             buttonR0C0.setOpacity(1);
             buttonR0C1.setDisable(true);
             buttonR0C1.setOpacity(1);
-            buttonR01C0.setDisable(true);
-            buttonR01C0.setOpacity(1);
+            buttonR1C0.setDisable(true);
+            buttonR1C0.setOpacity(1);
             buttonR1C1.setDisable(true);
             buttonR1C1.setOpacity(1);
         } else {
@@ -768,18 +830,25 @@ public class QuizScreenCtrl implements Initializable {
      * Gives the buttons their initial color and makes them functional again.
      */
     public void initializeButtons(){
-        buttonR0C0.setDisable(false);
-        buttonR0C1.setDisable(false);
-        buttonR01C0.setDisable(false);
-        buttonR1C1.setDisable(false);
-        buttonR1C1.setVisible(true);
-        buttonR01C0.setVisible(true);
-        buttonR0C0.setVisible(true);
-        buttonR0C1.setVisible(true);
         normalColor(buttonR0C0);
-        normalColor(buttonR01C0);
+        normalColor(buttonR1C0);
         normalColor(buttonR0C1);
         normalColor(buttonR1C1);
+        if(!(game.getCurrentQuestion() instanceof OpenQuestion)) {
+            buttonR0C0.setDisable(false);
+            buttonR0C1.setDisable(false);
+            buttonR1C0.setDisable(false);
+            buttonR1C1.setDisable(false);
+            buttonR1C1.setVisible(true);
+            buttonR1C0.setVisible(true);
+            buttonR0C0.setVisible(true);
+            buttonR0C1.setVisible(true);
+            if(!eliminateUsed) {
+                eliminateJoker.setVisible(true);
+                eliminateJoker.setDisable(false);
+            }
+        }
+
         answerField.clear();
         answerField.setStyle("-fx-background-color: #888888ff; ");
     }
@@ -806,6 +875,7 @@ public class QuizScreenCtrl implements Initializable {
                 }
                 partyLeaderboard = true;
             }
+            resetScreen();
             mainCtrl.showEndScreen(partyLeaderboard, players);
         } else {
 
@@ -828,8 +898,8 @@ public class QuizScreenCtrl implements Initializable {
                 wrongColor(buttonR0C0);
             } else if(!buttonR0C1.getText().equals(correct)) {
                 wrongColor(buttonR0C1);
-            } else if(!buttonR01C0.getText().equals(correct)) {
-                wrongColor(buttonR01C0);
+            } else if(!buttonR1C0.getText().equals(correct)) {
+                wrongColor(buttonR1C0);
             } else if(!buttonR1C1.getText().equals(correct)) {
                 wrongColor(buttonR1C1);
             }
@@ -839,8 +909,8 @@ public class QuizScreenCtrl implements Initializable {
                 wrongColor(buttonR0C0);
             } else if(Long.parseLong(buttonR0C1.getText()) != correct) {
                 wrongColor(buttonR0C1);
-            } else if(Long.parseLong(buttonR01C0.getText()) != correct) {
-                wrongColor(buttonR01C0);
+            } else if(Long.parseLong(buttonR1C0.getText()) != correct) {
+                wrongColor(buttonR1C0);
             } else if(Long.parseLong(buttonR1C1.getText()) != correct) {
                 wrongColor(buttonR1C1);
             }
