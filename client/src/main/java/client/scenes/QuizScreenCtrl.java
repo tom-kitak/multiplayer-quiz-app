@@ -37,6 +37,7 @@ public class QuizScreenCtrl implements Initializable {
     private Player player;
     private boolean doublePoints = false;
     private boolean eliminateUsed = false;
+    private boolean shownLeaderboard = true;
 
     @FXML
     private Button buttonR01C0;
@@ -671,9 +672,13 @@ public class QuizScreenCtrl implements Initializable {
                 }
                 partyLeaderboard = true;
             }
-            mainCtrl.showEndScreen(partyLeaderboard, players);
-        } else {
 
+            if(shownLeaderboard) {
+                mainCtrl.showEndScreen(partyLeaderboard, players);
+                shownLeaderboard = false;
+            }
+        } else {
+            shownLeaderboard = true;
             Question nextQuestion = server.getQuestion();
 
             this.game.nextQuestion(nextQuestion);
