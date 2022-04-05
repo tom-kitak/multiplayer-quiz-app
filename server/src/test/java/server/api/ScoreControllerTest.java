@@ -83,18 +83,6 @@ class ScoreControllerTest {
                 .andExpect(status().is4xxClientError());
     }
 
-    @Test
-    void getRandom() throws Exception {
-        Mockito.when(repo.count()).thenReturn((long) 3);
-        Mockito.when(mockRandom.nextInt(3)).thenReturn(0);
-        Mockito.when(repo.findById((long) 0)).thenReturn(java.util.Optional.ofNullable(score1));
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/api/score/get/rnd")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("name", is("a")))
-                .andExpect(jsonPath("score", is(55)));
-    }
 
     @Test
     void add() throws Exception {

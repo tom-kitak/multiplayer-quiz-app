@@ -117,9 +117,9 @@ public class ServerUtils {
                 .get(new GenericType<MultiGame>() {});
     }
 
-    public List<Score> getAllScores() {
+    public List<Score> getTopScores() {
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("/api/score/get")
+                .target(SERVER).path("/api/score/top")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<Score>>() {});

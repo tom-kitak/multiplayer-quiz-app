@@ -54,13 +54,12 @@ public class ScoreController {
     }
 
     /**
-     * Gets a random Score from the repository.
-     * @return a Random Score object
+     * Gets the top 10 results from the database.
+     * @return an array of Score objects
      */
-    @GetMapping(path = "/get/rnd")
-    public ResponseEntity<Score> getRandom(){
-        var indx = random.nextInt((int)repo.count());
-        return ResponseEntity.ok(repo.findById((long) indx).orElse(null));
+    @GetMapping(path = "/top")
+    public ResponseEntity<List<Score>> getRandom(){
+        return ResponseEntity.ok(repo.getTopScores().stream().toList());
     }
 
     /**
