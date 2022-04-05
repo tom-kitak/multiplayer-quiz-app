@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import server.database.ActivityRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -33,7 +34,11 @@ public class ActivityController {
      */
     @GetMapping(path = {"", "/", "/getAll"})
     public List<Activity> getAll() {
-        return repo.findAll();
+        if(repo.count() > 0) {
+            return repo.findAll();
+        }else {
+            return new ArrayList<Activity>();
+        }
     }
 
     /**

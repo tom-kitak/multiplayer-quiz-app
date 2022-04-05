@@ -172,8 +172,9 @@ public class MultiPlayerController {
             }
         }
         for(int i = 0; i < gameFromPlayer.getPlayers().size(); i++) {
-            if(game.getPlayers().get(i) != gameFromPlayer.getPlayers().get(i)) {
+            if(game.getPlayers().get(i).getScore() < gameFromPlayer.getPlayers().get(i).getScore()) {
                 game.getPlayers().set(i, gameFromPlayer.getPlayers().get(i));
+                System.out.println(game.getPlayers().get(i).getUsername()+ " score set to " + game.getPlayers().get(i).getScore());
             }
         }
         // Controls the responses, that players made.
