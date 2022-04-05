@@ -10,7 +10,6 @@ import java.util.Random;
 
 public class QuestionConversion {
 
-    private static Random random;
     /**
      * Method to convert activities to a Question.
      * @param activities The activities to be used.
@@ -24,7 +23,14 @@ public class QuestionConversion {
             if (!createTitlesAndWattages(activities,titles,wattages)) {
                 return null;
             }
-            result = getRandomQuestion(titles, wattages, activities[0].getImage());
+            Random random = new Random();
+            //bound is amount of types of questions.
+            int idx = random.nextInt(3);
+            byte[] image = activities[0].getImage();
+            if (idx == 0) {
+                image = activities[random.nextInt(4)].getImage();
+            }
+            result = getRandomQuestion(titles, wattages, image, idx);
         }
         return result;
     }
@@ -35,10 +41,7 @@ public class QuestionConversion {
      * @param wattages the wattages to use for the question.
      * @return A new question.
      */
-    private static Question getRandomQuestion(String[] titles, long[] wattages, byte[] image) {
-        random = new Random();
-        //bound is amount of types of questions.
-        int idx = random.nextInt(3);
+    private static Question getRandomQuestion(String[] titles, long[] wattages, byte[] image, int idx) {
         //for each type of question add a new case.
         return switch (idx) {
             case 0 -> new CompareQuestion(titles, wattages, image);
