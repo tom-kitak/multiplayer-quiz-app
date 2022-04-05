@@ -43,6 +43,7 @@ public class ActivityControllerTest {
     public void getAll() throws Exception {
         List<Activity> activityList = new ArrayList<>(Arrays.asList(record_1, record_2));
 
+        Mockito.when(activityRepository.count()).thenReturn(2L);
         Mockito.when(activityRepository.findAll()).thenReturn(activityList);
 
         mockMvc.perform(MockMvcRequestBuilders
