@@ -102,6 +102,9 @@ public class MultiPlayerController {
         // We increment it for every response, and reset it when needed.
         allPlayersResponded.add(0);
         games.add(started);
+        currentPlayerCount.add(started.getPlayers().size());
+        lobbyTimers.add(null);
+        controlPlayerResponse(started);
         MultiGame gameWithoutQuestion = started.copy();
         gameWithoutQuestion.setCurrentQuestion(cutQuestion);
         return gameWithoutQuestion;
@@ -180,7 +183,7 @@ public class MultiPlayerController {
         // Controls the responses, that players made.
         allPlayersResponded.set(game.getId(), allPlayersResponded.get(game.getId()) + 1);
 
-        if (game.getPlayers().size() <= allPlayersResponded.get(game.getId())){
+        if (currentPlayerCount.get(game.getId()) <= allPlayersResponded.get(game.getId())){
             Question question = getQuestion();
             Question cutQuestion = question.QuestionWithoutImage();
             game.setCurrentQuestion(question);
@@ -190,6 +193,9 @@ public class MultiPlayerController {
             allPlayersResponded.set(game.getId(), 0);
             MultiGame gameWithoutQuestion = game.copy();
             gameWithoutQuestion.setCurrentQuestion(cutQuestion);
+            if(currentPlayerCount.get(game.getId()) > 0) {
+                controlPlayerResponse(game);
+            }
             return gameWithoutQuestion;
         }
         return null;
