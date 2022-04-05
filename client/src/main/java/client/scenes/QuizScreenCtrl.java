@@ -907,14 +907,7 @@ public class QuizScreenCtrl implements Initializable {
             }
             resetScreen();
             mainCtrl.showEndScreen(partyLeaderboard, players);
-        } else {
-
-            if(shownLeaderboard) {
-                mainCtrl.showEndScreen(partyLeaderboard, players);
-                shownLeaderboard = false;
-            }
-        } else {
-            shownLeaderboard = true;
+        }  else {
             Question nextQuestion = server.getQuestion();
 
             this.game.nextQuestion(nextQuestion);
