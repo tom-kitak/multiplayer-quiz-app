@@ -186,6 +186,7 @@ public class MultiPlayerController {
         if (currentPlayerCount.get(game.getId()) <= allPlayersResponded.get(game.getId())){
             Question question = getQuestion();
             Question cutQuestion = question.QuestionWithoutImage();
+            lobbyTimers.get(game.getId()).cancel();
             game.setCurrentQuestion(question);
             game.setQuestionNumber(game.getQuestionNumber() + 1);
             System.out.println(game.getCurrentQuestion());

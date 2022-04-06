@@ -211,6 +211,10 @@ public class QuizScreenCtrl implements Initializable {
         buttonR1C0.setDisable(false);
         buttonR1C1.setVisible(true);
         buttonR1C1.setDisable(false);
+        normalColor(buttonR0C1);
+        normalColor(buttonR0C0);
+        normalColor(buttonR1C0);
+        normalColor(buttonR1C1);
         // Reset emojis
         happyImage.setDisable(false);
         happyImage.setVisible(true);
@@ -223,6 +227,8 @@ public class QuizScreenCtrl implements Initializable {
         // Reset Open Question
         answerField.setDisable(false);
         answerField.setVisible(true);
+        answerField.clear();
+        answerField.setStyle("-fx-background-color: #888888ff; ");
         // Reset the jokers
         timeJoker.setDisable(false);
         timeJoker.setVisible(true);
@@ -291,8 +297,11 @@ public class QuizScreenCtrl implements Initializable {
     @FXML
     void backButton(){
         boolean answer = ConfirmBoxCtrl.display("Alert", "Are you sure you want to exit the game session?");
-        resetScreen();
-        if(answer) mainCtrl.showHomeScreen();
+
+        if(answer) {
+            resetScreen();
+            mainCtrl.showHomeScreen();
+        }
     }
 
     /**
@@ -531,7 +540,6 @@ public class QuizScreenCtrl implements Initializable {
                     if(timeLeft == 4 && centiseconds == 0) {
                         Platform.runLater( () -> {
                             timerSpot.setFill(Color.valueOf( "#832020"));
-                            System.out.println("es");
                         });
                     }
                     timerSpot.setText(convertTimer(timeLeft, centiseconds));

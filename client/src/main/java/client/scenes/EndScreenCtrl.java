@@ -73,6 +73,7 @@ public class EndScreenCtrl {
         tableView.setItems(showLeaderboard(partyLeaderboard, players));
         barChart.setLegendVisible(false);
         barChart.getData().clear();
+        series.getData().clear();
         for(Score x : scores) {
             series.getData().add(new XYChart.Data(x.getName(), x.getScore()));
         }
