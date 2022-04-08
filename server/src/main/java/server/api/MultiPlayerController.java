@@ -12,6 +12,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +24,7 @@ import java.util.*;
 import static server.util.QuestionConversion.convertActivity;
 
 @RestController
+@Controller
 public class MultiPlayerController {
     private ArrayList<MultiGame> games;
     private MultiGame currentLobbyGame;
@@ -119,27 +121,9 @@ public class MultiPlayerController {
         // Can't create a question if there aren't enough activities
         if (repo.count() < 4)
             return null;
-        Activity[] activities = new Activity[4];
+        Activity[] activities = repo.getRandomActivities().toArray( new Activity[4] );
         // This is a workaround for the id generation that isn't consistent
         // This works now but will be slow in the future, so we need to research better id assignment.
-        List<Activity> currentRepo = repo.findAll();
-        // Collects the 4 activities needed for a question
-        for (int i = 0; i < 4; i++) {
-
-            // Picks a random activity
-            var idx = random.nextInt(currentRepo.size());
-            Activity a = currentRepo.get(idx);
-            // Makes a list of current activities and checks for duplicates
-            // Old implementation changed because of a java API 1.6 error.
-            List<Activity> list = new ArrayList<>();
-            Collections.addAll(list, activities);
-            // Adds the activity or reruns the iteration.
-            if (!list.contains(a)) {
-                activities[i] = a;
-            } else {
-                i--;
-            }
-        }
         // Returns the result.
         Question question = convertActivity(activities);
         return question;
@@ -154,7 +138,7 @@ public class MultiPlayerController {
                 gameplayQuestionSender(String.valueOf(game.getId()), game);
             }
         };
-        timer.schedule(roundTask, 20 * 1000);
+        timer.schedule(roundTask, 15 * 1000);
         lobbyTimers.set(game.getId(), roundTask);
     }
 
@@ -197,7 +181,7 @@ public class MultiPlayerController {
             if(currentPlayerCount.get(game.getId()) > 0) {
                 controlPlayerResponse(game);
             }
-            return gameWithoutQuestion;
+            this.template.convertAndSend("/topic/multi/gameplay/" + gameId,gameWithoutQuestion);
         }
         return null;
     }
