@@ -7,12 +7,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class OpenQuestion extends Question{
 
-    /**Generates new Question Object.
+    /**
+     * Generates new Question Object.
      * @param answers The answers for this question, index 0 is the correct one.
      * @param wattage The wattage's for this question, index 0 is the correct one.
      */
-    public OpenQuestion(String[] answers, long[] wattage) {
-        super(answers, wattage);
+    public OpenQuestion(String[] answers, long[] wattage, byte[] questionImage) {
+        super(answers, wattage, questionImage);
     }
 
     /**
@@ -29,7 +30,8 @@ public class OpenQuestion extends Question{
         return this.getCorrectWattage();
     }
 
-    /**checks if two objects are equal.
+    /**
+     * checks if two objects are equal.
      * @param o the object we want to compare this Question with
      * @return true iff o and this Question have the same right answer and
      * the same description

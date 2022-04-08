@@ -10,7 +10,6 @@ public class MultiGame extends Game{
 
     /**
      * Creates a new Game Object.
-     *
      * @param currentQuestion the first Question we start the game with.
      */
     public MultiGame(Question currentQuestion) {
@@ -25,14 +24,16 @@ public class MultiGame extends Game{
         super();
     }
 
-    /**Adds a player to the list of players.
+    /**
+     * Adds a player to the list of players.
      * @param player the player we want to add
      */
     public void addPlayer(Player player){
         players.add(player);
     }
 
-    /**Removes a player from the list.
+    /**
+     * Removes a player from the list.
      * @param player the player we want to remove
      */
     public void removePlayer(Player player){
@@ -46,7 +47,8 @@ public class MultiGame extends Game{
         return players;
     }
 
-    /**Sets the list of Players.
+    /**
+     * Sets the list of Players.
      * @param players the new value we want to assign to players
      */
     public void setPlayers(ArrayList<Player> players) {
@@ -60,14 +62,16 @@ public class MultiGame extends Game{
         return id;
     }
 
-    /**Sets the id of this MultiGame.
+    /**
+     * Sets the id of this MultiGame.
      * @param id the new value for the id field
      */
     public void setId(int id) {
         this.id = id;
     }
 
-    /**Checks this MultiGame and o for equality.
+    /**
+     * Checks this MultiGame and o for equality.
      * @param o the object we want to compare for equality with
      * @return true iff o is a MultiGame with equal fields
      */
@@ -98,5 +102,13 @@ public class MultiGame extends Game{
                 +"\nquestionNumber: " + this.getQuestionNumber()
                 +"\ncurrentQuestion: " + this.getCurrentQuestion()
                 +"\nid: "+ this.id;
+    }
+
+    public MultiGame copy() {
+        MultiGame result = new MultiGame(getCurrentQuestion());
+        result.setId(getId());
+        result.setQuestionNumber(getQuestionNumber());
+        result.setPlayers(getPlayers());
+        return result;
     }
 }

@@ -49,7 +49,7 @@ class QuestionControllerTest {
         List<Activity> activityList = new ArrayList<>(Arrays.asList(act1, act2, act3, act4));
         Mockito.when(repository.count()).thenReturn(num);
         Mockito.when(random.nextInt(activityList.size())).thenReturn(0, 1, 2, 3);
-        Mockito.when(repository.findAll()).thenReturn(activityList);
+        Mockito.when(repository.getRandomActivities()).thenReturn(activityList);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/question/")

@@ -21,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @WebMvcTest(ActivityController.class)
 public class ActivityControllerTest {
@@ -42,6 +43,7 @@ public class ActivityControllerTest {
     public void getAll() throws Exception {
         List<Activity> activityList = new ArrayList<>(Arrays.asList(record_1, record_2));
 
+        Mockito.when(activityRepository.count()).thenReturn(2L);
         Mockito.when(activityRepository.findAll()).thenReturn(activityList);
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -52,27 +54,84 @@ public class ActivityControllerTest {
                         .andExpect(jsonPath("$[0].title", is("title")));
     }
 
+    @Test
     @DisplayName("Checks whether the /api/activity/{id} returns the correct activity")
     public void getId() throws Exception {
-        // This test fails because of optionals, I will make a post regarding this on stackOverflow.
-        Mockito.when(activityRepository.findById(0L).orElse(null)).thenReturn(record_1);
-        Mockito.when(activityRepository.findById(1L).orElse(null)).thenReturn(record_2);
+
+        Mockito.when(activityRepository.findById(0L)).thenReturn(Optional.of(record_1));
+        Mockito.when(activityRepository.findById(1L)).thenReturn(Optional.of(record_2));
+        Mockito.when(activityRepository.existsById(0L)).thenReturn(true);
+        Mockito.when(activityRepository.existsById(1L)).thenReturn(true);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/activity/0")
                         .contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
-                        .andExpect(jsonPath("$", hasSize(1)))
-                        .andExpect(jsonPath("$[0].title", is("title")));
+                        .andExpect(jsonPath("$.title", is("title")))
+                        .andExpect(jsonPath("$.wh", is(2)));
+
+
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/activity/1")
                         .contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
-                        .andExpect(jsonPath("$", hasSize(1)))
-                        .andExpect(jsonPath("$[1].title", is("title2")));
+                        .andExpect(jsonPath("$.title", is("title2")))
+                        .andExpect(jsonPath("$.wh", is(3)));
     }
 
-    //Tests for delete and post are missing because they also use this functionality of optional which
-    // automatically fails them.
+    @Test
+    @DisplayName("Check whether the post mapping works correctly")
+    public void addTest() throws Exception{
+        Mockito.when(activityRepository.save(Mockito.any(Activity.class))).thenReturn(record_1);
+
+
+        String mockRecord1 = "{\n" +
+                "    \"id\": 0,\n" +
+                "    \"title\": \"title\",\n" +
+                "    \"wh\": 2,\n" +
+                "    \"image\": \"18763671972912763726319376237108\"\n" +
+                "}";
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/activity/")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(mockRecord1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.title", is("title")))
+                        .andExpect(jsonPath("$.wh", is(2)));
+    }
+
+    @Test
+    @DisplayName("Check whether the delete mapping works correctly")
+    public void deleteTest() throws Exception {
+        Mockito.when(activityRepository.existsById(0L)).thenReturn(true);
+        Mockito.when(activityRepository.findById(0L)).thenReturn(Optional.of(record_1));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .delete("/api/activity/0")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Checks whether the connection check works")
+    public void checkTest() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/activity/check"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"));
+    }
+
+    @Test
+    @DisplayName("Checks whether the activity number check works")
+    public void checkActivityCountTest() throws Exception{
+
+        Mockito.when(activityRepository.count()).thenReturn(4l);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/activity/check/activity"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"));
+    }
 }

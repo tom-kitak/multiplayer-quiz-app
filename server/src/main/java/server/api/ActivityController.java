@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import server.database.ActivityRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -19,25 +20,49 @@ import java.util.List;
 public class ActivityController {
     private final ActivityRepository repo;
 
+    /**
+     * Creates a new ActivityController and assigns the repository.
+     * @param repo the repository we assign to the repo attribute
+     */
     public ActivityController(ActivityRepository repo) {
         this.repo = repo;
     }
 
     /**
+     * Responds to the get method and getting all the activities.
      * @return Returns all objects stored in the database.
      */
     @GetMapping(path = {"", "/", "/getAll"})
     public List<Activity> getAll() {
-        return repo.findAll();
+        if(repo.count() > 0) {
+            return repo.findAll();
+        }else {
+            return new ArrayList<Activity>();
+        }
     }
 
+    /**
+     * checks if the server is alive and if there are enough activities in the repository.
+     * @return always true
+     */
     @GetMapping("/check")
     public Boolean returnCheck() {
         return true;
     }
 
+
     /**
-     * @param id The identifier of the object to be retrieved.
+     * checks whether there are enough activities.
+     * @return whether there are enough activities
+     */
+    @GetMapping("/check/activity")
+    public Boolean returnSufficientActivities() {
+        return repo.count() >= 4;}
+
+
+    /**
+     * Will get an activity by the specified ID that was a path variable.
+     * @param id The identifier of the object to be retrieved
      * @return Returns only the specified object
      */
     @GetMapping("/{id}")
@@ -45,10 +70,12 @@ public class ActivityController {
         if(id < 0 || !repo.existsById(id)) {
             return ResponseEntity.badRequest().build();
         }
+
         return  ResponseEntity.ok(repo.findById(id).orElse(null));
     }
 
     /**
+     * Saves the activity that was sent by the client in the repository.
      * @param activity The activity to be added.
      * @return The activity that was added.
      */
@@ -66,6 +93,7 @@ public class ActivityController {
     }
 
     /**
+     * Will delete the activity that was sent from the client from the repository.
      * @param id The identifier of the object to be deleted
      * @return The deleted object
      */

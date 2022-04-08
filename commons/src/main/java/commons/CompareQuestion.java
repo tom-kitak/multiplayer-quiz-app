@@ -10,8 +10,8 @@ public class CompareQuestion extends Question {
      * @param answers The answers for this question, index 0 is the correct one.
      * @param wattage The wattage's for this question, index 0 is the correct one.
      */
-    public CompareQuestion(String[] answers, long[] wattage) {
-        super(answers, wattage);
+    public CompareQuestion(String[] answers, long[] wattage, byte[] questionImage) {
+        super(answers, wattage, questionImage);
     }
 
     /**
@@ -35,7 +35,6 @@ public class CompareQuestion extends Question {
 
     /**
      * Hashcode generator for questions.
-     *
      * @return Hashcode of this question.
      */
     @Override
@@ -45,7 +44,6 @@ public class CompareQuestion extends Question {
 
     /**
      * Equals method for this object.
-     *
      * @param o Object to be compared against.
      * @return True if the objects are equal, false otherwise.
      */

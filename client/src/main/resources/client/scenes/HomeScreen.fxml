@@ -9,7 +9,7 @@
 
 <AnchorPane prefHeight="526.0" prefWidth="836.0" style="-fx-background-color: #3b3f46ff#3b3f46ff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.HomeScreenCtrl">
    <children>
-      <Text layoutX="361.0" layoutY="196.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Quiz">
+      <Text fill="WHITE" layoutX="274.0" layoutY="223.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Quizzzz" textAlignment="CENTER" wrappingWidth="265.83544921875">
          <font>
             <Font size="59.0" />
          </font>

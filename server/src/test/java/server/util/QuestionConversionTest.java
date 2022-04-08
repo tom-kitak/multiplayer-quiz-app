@@ -59,11 +59,11 @@ class QuestionConversionTest {
     void convertActivity_success(){
         Activity[] activities = Arrays.copyOf(this.activities, 4);
         Question compare = new CompareQuestion(Arrays.copyOf(this.titles, 4),
-                Arrays.copyOf(this.wattages, 4));
+                Arrays.copyOf(this.wattages, 4), tempImage);
         Question wattage = new WattageQuestion(Arrays.copyOf(this.titles, 4),
-                Arrays.copyOf(this.wattages, 4));
+                Arrays.copyOf(this.wattages, 4), tempImage);
         Question open = new OpenQuestion(Arrays.copyOf(this.titles, 4),
-                Arrays.copyOf(this.wattages, 4));
+                Arrays.copyOf(this.wattages, 4), tempImage);
         Question result = QuestionConversion.convertActivity(activities);
         assertTrue(result.equals(compare) || result.equals(wattage) || result.equals(open));
     }

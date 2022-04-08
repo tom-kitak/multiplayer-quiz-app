@@ -62,6 +62,14 @@ public class ServerUtils {
                 .get(new GenericType<Boolean>() {});
     }
 
+    public Boolean checkActivities() {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/activity/check/activity")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<Boolean>() {});
+    }
+
     public Question getQuestion() {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("/api/question")
@@ -117,12 +125,20 @@ public class ServerUtils {
                 .get(new GenericType<MultiGame>() {});
     }
 
-    public List<Score> getAllScores() {
+    public List<Score> getTopScores() {
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("/api/score/get")
+                .target(SERVER).path("/api/score/top")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<Score>>() {});
+    }
+
+    public Question getImage(int Id) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/multi/" + Id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<Question>() {});
     }
 
 

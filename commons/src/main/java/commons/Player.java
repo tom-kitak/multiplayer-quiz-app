@@ -33,14 +33,16 @@ public class Player {
         return score;
     }
 
-    /** we set the score of this Player.
+    /**
+     * we set the score of this Player.
      * @param score the score we want to assign to this player
      */
     public void setScore(int score) {
         this.score = score;
     }
 
-    /**checks if this Player and Object o are equal.
+    /**
+     * checks if this Player and Object o are equal.
      * @param o the object we compare with
      * @return true iff Player and o are both instances of Player
      * and have the same score and username
