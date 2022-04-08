@@ -7,7 +7,8 @@ This application consists of a game with 2 possible game modes. First, you can p
 
 The game consists of a 20 rounds, each taking up to 15 seconds to answer. Anybody can choose from playing singleplayer or multiplayer. An addition has to be made regarding the rules of the multiplayer game: everybody has the option of choosing a joker card in any round, with a maximum of 3 per game. The 3 jokers have special effects which could help you obtain the victory: eliminate a wrong answer, shortening the answer time of the other players and double points. Each effect is applied in during only the respective round.
 
-In addition, every user has the possibility of editing the activities already existing in the database. They can choose from adding, deleting and updating any activity by changing them in the admin tools screen, connected with a button in the home screen. 
+In addition, every user has the possibility of editing the activities already existing in the database. They can choose from adding, deleting and updating any activity by changing them in the admin tools screen, connected with a button in the home screen. The activities are needed for generating questions. You can obtain the activities in the shared repository and in the application will be clear instructions on how to import them.
+
 ## Group members
 
 | Profile Picture                                                  | Name                     | Email                              |
