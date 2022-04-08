@@ -1,7 +1,6 @@
 package server.api;
 
 
-import com.fasterxml.classmate.GenericType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

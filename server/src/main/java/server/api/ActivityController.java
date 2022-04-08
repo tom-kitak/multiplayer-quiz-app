@@ -51,11 +51,14 @@ public class ActivityController {
     }
 
 
-    /**checks whether there are enough activities
+    /**
+     * checks whether there are enough activities.
      * @return whether there are enough activities
      */
     @GetMapping("/check/activity")
-    public Boolean returnSufficientActivities() {return repo.count() >= 4; }
+    public Boolean returnSufficientActivities() {
+        return repo.count() >= 4;}
+
 
     /**
      * Will get an activity by the specified ID that was a path variable.
