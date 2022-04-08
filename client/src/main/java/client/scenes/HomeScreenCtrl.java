@@ -44,7 +44,7 @@ public class HomeScreenCtrl {
      */
     @FXML
     void playSinglePlayerButtonPressed(ActionEvent event) {
-        if (server.checkConnection()) {
+        if (server.checkActivities()) {
             String name;
             if (nameField.getText().length() == 0) {
                 name = generateRandomString();
@@ -106,7 +106,7 @@ public class HomeScreenCtrl {
     @FXML
     void playMultiPlayerButtonPressed(ActionEvent event) {
 
-        if (!server.checkConnection()) {
+        if (!server.checkActivities()) {
             throwError("There are not enough activities on this server to start a game!");
         } else {
 

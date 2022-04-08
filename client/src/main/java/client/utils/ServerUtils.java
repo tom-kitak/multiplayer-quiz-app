@@ -62,6 +62,14 @@ public class ServerUtils {
                 .get(new GenericType<Boolean>() {});
     }
 
+    public Boolean checkActivities() {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/activity/check/activity")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<Boolean>() {});
+    }
+
     public Question getQuestion() {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("/api/question")

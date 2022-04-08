@@ -1,6 +1,7 @@
 package server.api;
 
 
+import com.fasterxml.classmate.GenericType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -113,5 +114,25 @@ public class ActivityControllerTest {
                 .delete("/api/activity/0")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Checks whether the connection check works")
+    public void checkTest() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/activity/check"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"));
+    }
+
+    @Test
+    @DisplayName("Checks whether the activity number check works")
+    public void checkActivityCountTest() throws Exception{
+
+        Mockito.when(activityRepository.count()).thenReturn(4l);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/activity/check/activity"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"));
     }
 }
